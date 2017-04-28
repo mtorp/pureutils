@@ -1,7 +1,7 @@
 import { sequenceEquals, shallowEquals, flatten, groupBy, Grouping, deepEquals, pipe } from "./index";
 test("sequence equals", () => {
-    expect(sequenceEquals(null, [])).toBe(false);
-    expect(sequenceEquals(null, null)).toBe(true);
+    expect(sequenceEquals<any>(null as any, [])).toBe(false);
+    expect(sequenceEquals<any>(null as any, null as any)).toBe(true);
     expect(sequenceEquals([], [])).toBe(true);
     expect(sequenceEquals([1, 2], [1, 2])).toBe(true);
     expect(sequenceEquals([1, 2], [1, 2, 3])).toBe(false);

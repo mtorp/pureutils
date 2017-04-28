@@ -72,10 +72,10 @@ export type Grouping<TKey, TItem> = { key: TKey, items: TItem[] };
  */
 export function groupBy<T, TKey>(arr: T[], groupBy: (item: T) => TKey, comparer?: (a: TKey, b: TKey) => boolean) {
     const ret: Grouping<TKey, T>[] = [];
-    comparer = comparer || shallowEquals;
+    const comparerDefault = comparer || shallowEquals;
     for (var x of arr) {
         const key = groupBy(x);
-        const firstItem = first(ret, x => comparer(x.key, key));
+        const firstItem = first(ret, x => comparerDefault(x.key, key));
         if (firstItem === undefined) {
             ret.push({ key: key, items: [x] });
         } else {

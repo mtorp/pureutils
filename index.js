@@ -80,10 +80,10 @@ exports.first = first;
  */
 function groupBy(arr, groupBy, comparer) {
     var ret = [];
-    comparer = comparer || shallowEquals;
+    var comparerDefault = comparer || shallowEquals;
     var _loop_1 = function () {
         var key = groupBy(x);
-        var firstItem = first(ret, function (x) { return comparer(x.key, key); });
+        var firstItem = first(ret, function (x) { return comparerDefault(x.key, key); });
         if (firstItem === undefined) {
             ret.push({ key: key, items: [x] });
         }
