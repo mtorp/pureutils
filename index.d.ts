@@ -1,3 +1,4 @@
+export * from "./pipe";
 /**Compara dos arreglos valor por valor */
 export declare function sequenceEquals<T>(a: T[], b: T[], comparer?: (a: T, b: T) => boolean): boolean;
 /**Compara dos objetos propiedad por propiedad */

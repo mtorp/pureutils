@@ -1,3 +1,5 @@
+export * from "./pipe"
+
 /**Compara dos arreglos valor por valor */
 export function sequenceEquals<T>(a: T[], b: T[], comparer?: (a: T, b: T) => boolean) {
     if (a === b) return true;

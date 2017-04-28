@@ -1,4 +1,4 @@
-import { sequenceEquals, shallowEquals, flatten, groupBy, Grouping, deepEquals } from "./index";
+import { sequenceEquals, shallowEquals, flatten, groupBy, Grouping, deepEquals, pipe } from "./index";
 test("sequence equals", () => {
     expect(sequenceEquals(null, [])).toBe(false);
     expect(sequenceEquals(null, null)).toBe(true);
@@ -28,7 +28,7 @@ test("shallow equals", () => {
     expect(eq([1, 2], [2])).toBe(false);
     expect(eq([1, 2], [3, 4])).toBe(false);
 
-   
+
 });
 
 test("deep equals", () => {
@@ -53,7 +53,7 @@ test("deep equals", () => {
     expect(eq([1, 2], [2])).toBe(false);
     expect(eq([1, 2], [3, 4])).toBe(false);
 
- const a1 = [
+    const a1 = [
         { key: [1, 1], items: ["A", "E"] },
         { key: [1, { x: 10, b: "hello" }], items: ["B", "C", "F"] },
         { key: [2, 1], items: ["D"] },
@@ -127,4 +127,17 @@ test("group by composed key", () => {
 
     const ret = groupBy(data, x => x.id).map(x => ({ ...x, items: x.items.map(y => y.name) }));
     expect(deepEquals(ret, expected)).toBe(true);
+});
+
+test("pipe", () => {
+    const input = [1, 2, 3, 4];
+
+    const r: string = pipe(
+        input,
+        (x: number[]) => x.map(y => y * 2),
+        (x: number[]) => x.reduce((a, b) => a + b, 0),
+        (x: number) => "El numero es " + (x / 2)
+    );
+
+    expect(r).toBe("El numero es 10");
 });

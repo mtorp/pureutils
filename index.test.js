@@ -119,3 +119,8 @@ test("group by composed key", function () {
     var ret = index_1.groupBy(data, function (x) { return x.id; }).map(function (x) { return (__assign({}, x, { items: x.items.map(function (y) { return y.name; }) })); });
     expect(index_1.deepEquals(ret, expected)).toBe(true);
 });
+test("pipe", function () {
+    var input = [1, 2, 3, 4];
+    var r = index_1.pipe(input, function (x) { return x.map(function (y) { return y * 2; }); }, function (x) { return x.reduce(function (a, b) { return a + b; }, 0); }, function (x) { return "El numero es " + (x / 2); });
+    expect(r).toBe("El numero es 10");
+});

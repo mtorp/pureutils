@@ -1,5 +1,9 @@
 "use strict";
+function __export(m) {
+    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
+}
 Object.defineProperty(exports, "__esModule", { value: true });
+__export(require("./pipe"));
 /**Compara dos arreglos valor por valor */
 function sequenceEquals(a, b, comparer) {
     if (a === b)
