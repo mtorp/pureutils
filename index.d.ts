@@ -1,4 +1,10 @@
 export * from "./pipe";
+/**Devuelve true si todos los elementos de un arreglo encajan con el predicado */
+export declare function all<T>(arr: T[], pred: (x: T) => boolean): boolean;
+/**Devuelve true si por lo menos un elemento del arreglo encaja con el predicado, o si existe por lo menos un elemento en caso
+ * de que el predicado este indefinido
+ */
+export declare function any<T>(arr: T[], pred?: (x: T) => boolean): boolean;
 /**Compara dos arreglos valor por valor */
 export declare function sequenceEquals<T>(a: T[], b: T[], comparer?: (a: T, b: T) => boolean): boolean;
 /**Compara dos objetos propiedad por propiedad */

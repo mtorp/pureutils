@@ -4,6 +4,33 @@ function __export(m) {
 }
 Object.defineProperty(exports, "__esModule", { value: true });
 __export(require("./pipe"));
+/**Devuelve true si todos los elementos de un arreglo encajan con el predicado */
+function all(arr, pred) {
+    for (var _i = 0, arr_1 = arr; _i < arr_1.length; _i++) {
+        var x = arr_1[_i];
+        if (!pred(x))
+            return false;
+    }
+    return true;
+}
+exports.all = all;
+/**Devuelve true si por lo menos un elemento del arreglo encaja con el predicado, o si existe por lo menos un elemento en caso
+ * de que el predicado este indefinido
+ */
+function any(arr, pred) {
+    if (pred) {
+        for (var _i = 0, arr_2 = arr; _i < arr_2.length; _i++) {
+            var x = arr_2[_i];
+            if (pred(x))
+                return true;
+        }
+        return false;
+    }
+    else {
+        return arr.length > 0;
+    }
+}
+exports.any = any;
 /**Compara dos arreglos valor por valor */
 function sequenceEquals(a, b, comparer) {
     if (a === b)
@@ -46,8 +73,8 @@ exports.deepEquals = deepEquals;
 /**Convierte un arreglo a un objeto */
 function toMap(arr, key, value) {
     var ret = {};
-    for (var _i = 0, arr_1 = arr; _i < arr_1.length; _i++) {
-        var x = arr_1[_i];
+    for (var _i = 0, arr_3 = arr; _i < arr_3.length; _i++) {
+        var x = arr_3[_i];
         ret[key(x)] = value(x);
     }
     return ret;
@@ -56,8 +83,8 @@ exports.toMap = toMap;
 /**Aplana una colección de colecciones */
 function flatten(arr) {
     var ret = [];
-    for (var _i = 0, arr_2 = arr; _i < arr_2.length; _i++) {
-        var a = arr_2[_i];
+    for (var _i = 0, arr_4 = arr; _i < arr_4.length; _i++) {
+        var a = arr_4[_i];
         ret.push.apply(ret, a);
     }
     return ret;
@@ -67,8 +94,8 @@ exports.flatten = flatten;
  * filtrado por un predicado
  */
 function first(arr, pred) {
-    for (var _i = 0, arr_3 = arr; _i < arr_3.length; _i++) {
-        var a = arr_3[_i];
+    for (var _i = 0, arr_5 = arr; _i < arr_5.length; _i++) {
+        var a = arr_5[_i];
         if (!pred || pred(a))
             return a;
     }
@@ -81,7 +108,7 @@ exports.first = first;
 function groupBy(arr, groupBy, comparer) {
     var ret = [];
     var comparerDefault = comparer || shallowEquals;
-    var _loop_1 = function () {
+    var _loop_1 = function (x) {
         var key = groupBy(x);
         var firstItem = first(ret, function (x) { return comparerDefault(x.key, key); });
         if (firstItem === undefined) {
@@ -91,9 +118,9 @@ function groupBy(arr, groupBy, comparer) {
             firstItem.items.push(x);
         }
     };
-    for (var _i = 0, arr_4 = arr; _i < arr_4.length; _i++) {
-        var x = arr_4[_i];
-        _loop_1();
+    for (var _i = 0, arr_6 = arr; _i < arr_6.length; _i++) {
+        var x = arr_6[_i];
+        _loop_1(x);
     }
     return ret;
 }

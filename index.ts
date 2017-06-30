@@ -1,5 +1,28 @@
 export * from "./pipe"
 
+/**Devuelve true si todos los elementos de un arreglo encajan con el predicado */
+export function all<T>(arr: T[], pred: (x: T) => boolean): boolean {
+    for (const x of arr) {
+        if (!pred(x))
+            return false;
+    }
+    return true;
+}
+
+/**Devuelve true si por lo menos un elemento del arreglo encaja con el predicado, o si existe por lo menos un elemento en caso
+ * de que el predicado este indefinido
+ */
+export function any<T>(arr: T[], pred?: (x: T) => boolean): boolean {
+    if (pred) {
+        for (const x of arr) {
+            if (pred(x)) return true;
+        }
+        return false;
+    } else {
+        return arr.length > 0;
+    }
+}
+
 /**Compara dos arreglos valor por valor */
 export function sequenceEquals<T>(a: T[], b: T[], comparer?: (a: T, b: T) => boolean) {
     if (a === b) return true;
@@ -39,7 +62,7 @@ export function deepEquals<T>(a: T, b: T) {
 /**Convierte un arreglo a un objeto */
 export function toMap<T, TValue>(arr: T[], key: (value: T) => string, value: (value: T) => TValue) {
     const ret: { [index: string]: TValue } = {}
-    for (let x of arr)
+    for (const x of arr)
         ret[key(x)] = value(x);
 
     return ret;
@@ -48,7 +71,7 @@ export function toMap<T, TValue>(arr: T[], key: (value: T) => string, value: (va
 /**Aplana una colección de colecciones */
 export function flatten<T>(arr: T[][]) {
     const ret: T[] = [];
-    for (var a of arr)
+    for (const a of arr)
         ret.push(...a);
     return ret;
 }
@@ -58,7 +81,7 @@ export function flatten<T>(arr: T[][]) {
  * filtrado por un predicado
  */
 export function first<T>(arr: T[], pred?: (item: T) => boolean): T | undefined {
-    for (var a of arr) {
+    for (const a of arr) {
         if (!pred || pred(a))
             return a;
     }
@@ -73,7 +96,7 @@ export type Grouping<TKey, TItem> = { key: TKey, items: TItem[] };
 export function groupBy<T, TKey>(arr: T[], groupBy: (item: T) => TKey, comparer?: (a: TKey, b: TKey) => boolean) {
     const ret: Grouping<TKey, T>[] = [];
     const comparerDefault = comparer || shallowEquals;
-    for (var x of arr) {
+    for (const x of arr) {
         const key = groupBy(x);
         const firstItem = first(ret, x => comparerDefault(x.key, key));
         if (firstItem === undefined) {
