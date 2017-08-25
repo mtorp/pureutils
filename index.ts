@@ -67,12 +67,45 @@ export function shallowEquals<T>(a: T, b: T, comparer?: (a: T[keyof T], b: T[key
 
     if (a === b) return true;
     if (a == null || b == null) return false;
+
+    if (canBeArray(a) && canBeArray(b)) {
+        return sequenceEquals(toArray(a), toArray(b), comparer);
+    }
+
     const aKeys = Object.keys(a).map(x => x as keyof T);
     const bKeys = Object.keys(b).map(x => x as keyof T);
 
     if (aKeys.length != bKeys.length) return false;
     return sequenceEquals(aKeys.map(x => a[x]), aKeys.map(x => b[x]), comparer);
 }
+
+/**Convierte un ArrayLike o Iterable en un arreglo. Si el valor ya es un arreglo devuelve el valor */
+export function toArray<T>(arr: ArrayLike<T> | Iterable<T>): T[] {
+    if (arr instanceof Array) {
+        return arr;
+    }
+
+    const isArrayLike = (x: any): x is ArrayLike<any> => x.lenght !== undefined;
+    const ret: T[] = [];
+    if (isArrayLike(arr)) {
+        for (let i = 0; i < arr.length; i++) {
+            ret.push(arr[i]);
+        }
+    } else {
+        for (const a of arr) {
+            ret.push(a);
+        }
+    }
+    return ret;
+}
+
+/**Devuelve true si un objeeto se puede convertir a un arreglo utilizando la función toArray */
+export function canBeArray(arr: any): arr is ArrayLike<any> | Iterable<any> {
+    return isArrayLike(arr) || hasIterationProtocol(arr);
+}
+
+const isArrayLike = (x: any): x is ArrayLike<any> => x.lenght !== undefined;
+const hasIterationProtocol = (variable: any): variable is Iterable<any> => variable !== null && Symbol.iterator in Object(variable);
 
 export function deepEquals<T>(a: T, b: T) {
     const deep = (a, b) => shallowEquals(a, b, deep);
@@ -166,10 +199,10 @@ export function arrayToMap<TKey extends string, TValue>(array: { key: TKey, valu
 export function arrayToMap<T, TValue>(array: T[], keySelector: (item: T) => string, valueSelector: (item: T) => TValue): ObjMap<TValue>
 export function arrayToMap<T, TValue>(array: T[], keySelector?: (item: T) => string, valueSelector?: (item: T) => TValue): ObjMap<T[keyof T]> {
     const defaultKeySelector = (item: any) => item.key;
-    const defaultValueSelector = (item: any) => item.value ;
+    const defaultValueSelector = (item: any) => item.value;
 
     const effectiveKeySelector = keySelector || defaultKeySelector;
-    const effectiveValueSelector = valueSelector|| defaultValueSelector;
+    const effectiveValueSelector = valueSelector || defaultValueSelector;
     const ret = {};
     for (const a of array) {
         const key = effectiveKeySelector(a);
@@ -215,4 +248,47 @@ export function filterObject<T extends { [key: string]: any }>(obj: T, pred: (va
  */
 export function omit<T>(obj: T, keys: (keyof T)[]): T {
     return filterObject(obj, (value, key) => !contains(keys, key));
+}
+
+/**Intercambia 2 elementos de un arreglo, si los indices dados estan afuera del arreglo, lanza una excepción */
+export function swapItems<T>(array: T[], a: number, b: number) {
+    const inside = (x: number) => x >= 0 && x < array.length;
+    if (!inside(a) || !inside(b))
+        throw new Error("Indice fuera de rango");
+
+    return array.map((x, i, arr) =>
+        i == a ? arr[b] :
+            i == b ? arr[a] :
+                arr[i]);
+}
+
+/**Mueve un elemento del arreglo de un indice a otro, note que no es igual a swapItems ya que al mover un elemento se conserva el orden de todos los de más elemento, esto no ocurre con el swap que 
+ * simplemente intercambia de posición 2 elementos. Si los indices estan fuera de rango lanza uan excepción
+*/
+export function moveItem<T>(array: T[], sourceIndex: number, destIndex: number) {
+    const inside = (x: number) => x >= 0 && x < array.length;
+    if (!inside(sourceIndex) || !inside(destIndex))
+        throw new Error("Indice fuera de rango");
+
+    //Si los valroes son iguales devuelve el arreglo tal cual
+    if (sourceIndex == destIndex) return array;
+
+    //Dirección del movimiento, puede ser -1 o +1
+    const dir = Math.sign(destIndex - sourceIndex) as (-1 | 1);
+    const min = Math.min(sourceIndex, destIndex);
+    const max = Math.max(sourceIndex, destIndex);
+    return array.map((x, i, arr) =>
+        (i < min || i > max) ? x :
+            (i == destIndex) ? arr[sourceIndex] :
+                arr[i + dir]);
+
+}
+
+/**Mueve un elemento hacia array o hacia abajo, si el elemento no se puede mover ya que esta en el borde del arreglo devuelve el arreglo tal cual */
+export function upDownItem<T>(array: T[], index: number, direction: "up" | "down") {
+    if ((index == 0 && direction == "up") || (index == array.length - 1 && direction == "down")) {
+        return array;
+    } else {
+        return moveItem(array, index, index + (direction == "up" ? -1 : +1));
+    }
 }

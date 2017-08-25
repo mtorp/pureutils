@@ -1,4 +1,4 @@
-import { sequenceEquals, shallowEquals, flatten, groupBy, Grouping, deepEquals, pipe, enumObject, setEquals, all, any, arrayToMap, contains, filterObject, first, mapObject, omit, ObjMap, toMap } from "./index";
+import { sequenceEquals, shallowEquals, flatten, groupBy, Grouping, deepEquals, pipe, enumObject, setEquals, all, any, arrayToMap, contains, filterObject, first, mapObject, omit, ObjMap, toMap, moveItem, swapItems, upDownItem } from "./index";
 test("sequence equals", () => {
     expect(sequenceEquals<any>(null as any, [])).toBe(false);
     expect(sequenceEquals<any>(null as any, null as any)).toBe(true);
@@ -202,7 +202,6 @@ test("arrayToObject", () => {
     ];
 
     const result = arrayToMap(array);
-    console.log(result);
     const expected = { a: 10, b: 20, c: "rafa" };
     expect(shallowEquals(result, expected)).toBe(true);
 });
@@ -224,8 +223,54 @@ test("filterObject", () => {
 
 test("omit", () => {
     const input = { a: 1, b: 2, c: 3, d: 4 };
-    const expeceted = { c: 3, d: 4 };
+    const expected = { c: 3, d: 4 };
     const result = omit(input, ["a", "b"]);
 
     expect(shallowEquals(expected, result)).toBe(true);
+});
+
+test("swapItems", () => {
+    const input = [1, 2, 3, 4, 5];
+    const expected = [3, 2, 1, 4, 5];
+
+    const result = swapItems(input, 0, 2);
+    expect(sequenceEquals(result, expected)).toBe(true);
+});
+
+test("upDownItem", () => {
+    const input = [1, 2, 3];
+    const a1 = [2, 1, 3];
+    const a2 = [1, 3, 2];
+
+    expect(sequenceEquals(a1, upDownItem(input, 1, "up"))).toBe(true);
+    expect(sequenceEquals(a1, upDownItem(input, 0, "down"))).toBe(true);
+
+    expect(sequenceEquals(a2, upDownItem(input, 2, "up"))).toBe(true);
+    expect(sequenceEquals(a2, upDownItem(input, 1, "down"))).toBe(true);
+
+    expect(sequenceEquals(input, upDownItem(input, 0, "up"))).toBe(true);
+    expect(sequenceEquals(input, upDownItem(input, 2, "down"))).toBe(true);
+});
+
+test("moveItem", () => {
+    const input = [1, 2, 3, 4, 5, 6];
+    //mover: 1 al 3
+    const a1_3 = [1, 3, 4, 2, 5, 6];
+
+    //mover: 3 al 2
+    const a3_1 = [1, 4, 2, 3, 5, 6];
+
+    //mover: 0 al 5
+    const a0_5 = [2, 3, 4, 5, 6, 1];
+    //mover: 5 al 0
+    const a5_0 = [6, 1, 2, 3, 4, 5];
+
+    //mover: 3 al 3
+    const a3_3 = input;
+
+    expect(sequenceEquals(a1_3, moveItem(input, 1, 3))).toBe(true);
+    expect(sequenceEquals(a3_1, moveItem(input, 3, 1))).toBe(true);
+    expect(sequenceEquals(a0_5, moveItem(input, 0, 5))).toBe(true);
+    expect(sequenceEquals(a5_0, moveItem(input, 5, 0))).toBe(true);
+    expect(sequenceEquals(a3_3, moveItem(input, 3, 3))).toBe(true);
 });
