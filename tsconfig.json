@@ -5,6 +5,12 @@
         "noImplicitAny": false,
         "sourceMap": false,
         "declaration": true,
-        "strictNullChecks": true
+        "strictNullChecks": true,
+        "lib": [
+            "es6",
+            "dom",
+            "dom.iterable"
+        ],
+        "downlevelIteration": true
     }
 }

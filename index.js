@@ -31,6 +31,11 @@ function any(arr, pred) {
     }
 }
 exports.any = any;
+/**Devuelve true si el valor existe en el arreglo */
+function contains(arr, value) {
+    return any(arr, function (x) { return x == value; });
+}
+exports.contains = contains;
 /**Compara dos arreglos valor por valor */
 function sequenceEquals(a, b, comparer) {
     if (a === b)
@@ -47,6 +52,11 @@ function sequenceEquals(a, b, comparer) {
     return true;
 }
 exports.sequenceEquals = sequenceEquals;
+/**Devuelve true si 2 arreglos contienen los mismos valores, sin considerar el orden o la cantidad de veces que el mismo valor esta repetido en el arreglo */
+function setEquals(a, b) {
+    var aSet = new Set(a);
+}
+exports.setEquals = setEquals;
 /**Compara dos objetos propiedad por propiedad */
 function shallowEquals(a, b, comparer) {
     if ((typeof a) != (typeof b))
@@ -125,3 +135,69 @@ function groupBy(arr, groupBy, comparer) {
     return ret;
 }
 exports.groupBy = groupBy;
+function enumObject(obj, selector) {
+    var defaultSelector = (function (key, value) { return ({ key: key, value: value }); });
+    var effectiveSelector = selector || defaultSelector;
+    if (selector) {
+        return Object.keys(obj).map(function (key) { return selector(key, obj[key]); });
+    }
+    else {
+        return Object.keys(obj).map(function (key) { return defaultSelector(key, obj[key]); });
+    }
+}
+exports.enumObject = enumObject;
+function arrayToMap(array, keySelector) {
+    var defaultSelector = function (item) { return item.key; };
+    var effectiveSelector = keySelector || defaultSelector;
+    var ret = {};
+    for (var _i = 0, array_1 = array; _i < array_1.length; _i++) {
+        var a = array_1[_i];
+        var key = effectiveSelector(a);
+        ret[key] = a;
+    }
+    return ret;
+}
+exports.arrayToMap = arrayToMap;
+/**
+ * Aplica una función a cada propiedad de un objeto, conservando los keys
+ * @param obj Objeto a mapear
+ * @param map Función que toma el valor y el "key" y devuelve el nuevo valor
+ */
+function mapObject(obj, map) {
+    var ret = {};
+    for (var key in obj) {
+        var value = obj[key];
+        ret[key] = map(value, key);
+    }
+    return ret;
+}
+exports.mapObject = mapObject;
+/**
+ * Filtra las propiedades de un objeto
+ * @param obj Objeto que se va a filtrar
+ * @param pred Predicado que va a determinar que propiedades si se van a conservar
+ */
+function filterObject(obj, pred) {
+    var ret = {};
+    for (var key in obj) {
+        var value = obj[key];
+        if (pred(value, key)) {
+            ret[key] = value;
+        }
+    }
+    return ret;
+}
+exports.filterObject = filterObject;
+/**
+ * Quita un conjunto de propiedades de un objeto
+ * @param obj El objeto original
+ * @param keys Las propiedades que se desean quitar
+ */
+function omit(obj) {
+    var keys = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        keys[_i - 1] = arguments[_i];
+    }
+    return filterObject(obj, function (value, key) { return !contains(keys, key); });
+}
+exports.omit = omit;

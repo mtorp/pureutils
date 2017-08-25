@@ -24,8 +24,10 @@ export function any<T>(arr: T[], pred?: (x: T) => boolean): boolean {
 }
 
 /**Devuelve true si el valor existe en el arreglo */
-export function contains<T>(arr: T[], value: T): boolean {
-    return any(arr, x => x == value);
+export function contains<T>(arr: T[], value: T, comparer?: (a: T, b: T) => boolean): boolean {
+    const effectiveComparer = comparer || ((a, b) => a == b);
+
+    return any(arr, x => effectiveComparer(x, value));
 }
 
 /**Compara dos arreglos valor por valor */
@@ -37,6 +39,19 @@ export function sequenceEquals<T>(a: T[], b: T[], comparer?: (a: T, b: T) => boo
     comparer = comparer || ((a, b) => a === b);
     for (let i = 0; i < a.length; i++) {
         if (!comparer(a[i], b[i])) return false;
+    }
+    return true;
+}
+
+/**Devuelve true si 2 arreglos contienen los mismos valores, sin considerar el orden o la cantidad de veces que el mismo valor esta repetido en el arreglo
+ * @param comparer Función que se usa para comparar los elementos, si no se especifica, se usa el operador == 
+ */
+export function setEquals<T>(a: T[], b: T[], comparer?: (a: T, b: T) => boolean): boolean {
+    for (const aItem of a) {
+        if (!contains(b, aItem, comparer)) return false;
+    }
+    for (const bItem of b) {
+        if (!contains(a, bItem, comparer)) return false;
     }
     return true;
 }
@@ -121,20 +136,20 @@ export interface ObjMap<T> {
 /**Enumera todas las propiedades de un objeto en un arreglo
  * @param obj Objeto que se va a enumerar. Se devulve un arreglo de {value: T, key: string}
  */
-export function enumObject<T>(obj: ObjMap<T>): ({ key: string, value: T })[]
+export function enumObject<T>(obj: T): ({ key: keyof T, value: T[keyof T] })[]
 /**
  * Enumera todas las propiedades de un objeto en un arreglo
  * @param obj Objeto que se va a enumerar
  * @param selector Función que obtiene cada elemento del arreglo
  */
-export function enumObject<T, TR>(obj: ObjMap<T>, selector: (key: string, value: T) => TR): TR[]
-export function enumObject<T, TR>(obj: ObjMap<T>, selector?: (key: string, value: T) => TR): TR[] | ({ key: string, value: T })[] {
-    const defaultSelector = ((key: string, value: T) => ({ key, value }));
+export function enumObject<T, TR>(obj: T, selector: (key: keyof T, value: T[keyof T]) => TR): TR[]
+export function enumObject<T, TR>(obj: T, selector?: (key: keyof T, value: T[keyof T]) => TR): TR[] | ({ key: keyof T, value: T[keyof T] })[] {
+    const defaultSelector = ((key: keyof T, value: T[keyof T]) => ({ key, value }));
     const effectiveSelector = selector || defaultSelector;
     if (selector) {
-        return Object.keys(obj).map(key => selector(key, obj[key]));
+        return Object.keys(obj).map(key => selector(key as keyof T, obj[key]));
     } else {
-        return Object.keys(obj).map(key => defaultSelector(key, obj[key]));
+        return Object.keys(obj).map(key => key as keyof T).map(key => defaultSelector(key, obj[key]));
     }
 }
 
@@ -142,20 +157,24 @@ export function enumObject<T, TR>(obj: ObjMap<T>, selector?: (key: string, value
  * Convierte un arreglo en un objeto
  * @param array Arreglo donde se toma la propiedad "key" de cada elemento como key del objeto
  */
-export function arrayToMap<T extends { key: string | number }>(array: T[]): ObjMap<T[keyof T]>
+export function arrayToMap<TKey extends string, TValue>(array: { key: TKey, value: TValue }[]): ObjMap<TValue>
 /**
  * Convierte un arreglo a un objeto
  * @param array Arreglo de valores
  * @param keySelector Función que obtiene la cadena que se tomada como el "key" de cada elemento
  */
-export function arrayToMap<T>(array: T[], keySelector: (item: T) => string): ObjMap<T[keyof T]>
-export function arrayToMap<T>(array: T[], keySelector?: (item: T) => string): ObjMap<T[keyof T]> {
-    const defaultSelector = (item: T) => ((item as any).key as string);
-    const effectiveSelector = keySelector || defaultSelector;
+export function arrayToMap<T, TValue>(array: T[], keySelector: (item: T) => string, valueSelector: (item: T) => TValue): ObjMap<TValue>
+export function arrayToMap<T, TValue>(array: T[], keySelector?: (item: T) => string, valueSelector?: (item: T) => TValue): ObjMap<T[keyof T]> {
+    const defaultKeySelector = (item: any) => item.key;
+    const defaultValueSelector = (item: any) => item.value ;
+
+    const effectiveKeySelector = keySelector || defaultKeySelector;
+    const effectiveValueSelector = valueSelector|| defaultValueSelector;
     const ret = {};
     for (const a of array) {
-        const key = effectiveSelector(a);
-        ret[key] = a;
+        const key = effectiveKeySelector(a);
+        const value = effectiveValueSelector(a);
+        ret[key] = value;
     }
     return ret;
 }
@@ -194,6 +213,6 @@ export function filterObject<T extends { [key: string]: any }>(obj: T, pred: (va
  * @param obj El objeto original
  * @param keys Las propiedades que se desean quitar
  */
-export function omit<T>(obj: T, ...keys: (keyof T)[]): T {
+export function omit<T>(obj: T, keys: (keyof T)[]): T {
     return filterObject(obj, (value, key) => !contains(keys, key));
 }

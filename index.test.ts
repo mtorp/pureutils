@@ -1,4 +1,4 @@
-import { sequenceEquals, shallowEquals, flatten, groupBy, Grouping, deepEquals, pipe } from "./index";
+import { sequenceEquals, shallowEquals, flatten, groupBy, Grouping, deepEquals, pipe, enumObject, setEquals, all, any, arrayToMap, contains, filterObject, first, mapObject, omit, ObjMap, toMap } from "./index";
 test("sequence equals", () => {
     expect(sequenceEquals<any>(null as any, [])).toBe(false);
     expect(sequenceEquals<any>(null as any, null as any)).toBe(true);
@@ -140,4 +140,92 @@ test("pipe", () => {
     );
 
     expect(r).toBe("El numero es 10");
+});
+
+test("setEquals", () => {
+    const a = [1, 2, 3];
+    const b = [2, 3, 4];
+    const c = [1, 2];
+    const d = [3, 3, 2];
+
+    const a2 = [2, 3, 1];
+    const a3 = [2, 2, 3, 1];
+    const a4 = [3, 2, 1, 1, 2, 3, 1];
+
+    expect(setEquals(a, a2)).toBe(true);
+    expect(setEquals(a, a3)).toBe(true);
+
+    expect(setEquals(a, a3)).toBe(true);
+    expect(setEquals(a2, a3)).toBe(true);
+    expect(setEquals(a2, a4)).toBe(true);
+    expect(setEquals(a3, a4)).toBe(true);
+    expect(setEquals(a4, a3)).toBe(true);
+
+    expect(setEquals(a, b)).toBe(false);
+    expect(setEquals(b, c)).toBe(false);
+    expect(setEquals(a, c)).toBe(false);
+    expect(setEquals(a, d)).toBe(false);
+    expect(setEquals(c, d)).toBe(false);
+});
+
+test("setEquals shallowEquals", () => {
+    const a1 = [{ x: 1, b: 2 }, { y: 3, z: 2 }];
+    const a2 = [{ y: 3, z: 2 }, { b: 2, x: 1 }];
+
+    expect(sequenceEquals(a1, a2)).toBe(false);
+    expect(setEquals(a1, a2)).toBe(false);
+    expect(setEquals(a1, a2, shallowEquals)).toBe(true);
+});
+
+test("enumObject", () => {
+    const object = {
+        a: 10,
+        b: 20,
+        c: "rafa"
+    };
+
+    const result = enumObject(object);
+    const expected: typeof result = [
+        { key: "a", value: 10 },
+        { key: "b", value: 20 },
+        { key: "c", value: "rafa" }
+    ];
+
+    expect(sequenceEquals(expected, result, shallowEquals)).toBe(true);
+});
+
+test("arrayToObject", () => {
+    const array: { key: string, value: string | number }[] = [
+        { key: "a", value: 10 },
+        { key: "b", value: 20 },
+        { key: "c", value: "rafa" }
+    ];
+
+    const result = arrayToMap(array);
+    console.log(result);
+    const expected = { a: 10, b: 20, c: "rafa" };
+    expect(shallowEquals(result, expected)).toBe(true);
+});
+
+test("mapObject", () => {
+    const input = { a: 1, b: 2, c: 3 };
+    const expected = { a: 10, b: 20, c: 30 };
+    const result = mapObject(input, x => x * 10);
+    expect(shallowEquals(expected, result)).toBe(true);
+});
+
+test("filterObject", () => {
+    const input = { a: 1, b: 2, c: 3, d: 4 };
+    const expected = { c: 3, d: 4 };
+
+    const result = filterObject(input, (value, key) => key == "c" || key == "d");
+    expect(shallowEquals(expected, result)).toBe(true);
+});
+
+test("omit", () => {
+    const input = { a: 1, b: 2, c: 3, d: 4 };
+    const expeceted = { c: 3, d: 4 };
+    const result = omit(input, ["a", "b"]);
+
+    expect(shallowEquals(expected, result)).toBe(true);
 });

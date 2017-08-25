@@ -124,3 +124,5 @@ test("pipe", function () {
     var r = index_1.pipe(input, function (x) { return x.map(function (y) { return y * 2; }); }, function (x) { return x.reduce(function (a, b) { return a + b; }, 0); }, function (x) { return "El numero es " + (x / 2); });
     expect(r).toBe("El numero es 10");
 });
+test("enumObject", function () {
+});
