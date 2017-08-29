@@ -142,6 +142,11 @@ export function first<T>(arr: T[], pred?: (item: T) => boolean): T | undefined {
     return undefined;
 }
 
+/**Devuelve el ultimo elemento de un arreglo */
+export function last<T>(arr: T[]): T | undefined {
+    return arr[arr.length - 1];
+}
+
 export type Grouping<TKey, TItem> = { key: TKey, items: TItem[] };
 
 /**Agrupa un arreglo por una llave
