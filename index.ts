@@ -299,9 +299,12 @@ export function upDownItem<T>(array: T[], index: number, direction: "up" | "down
 }
 
 /**Aplica una función Promise.all a un objeto,  */
-export function promiseAllObj<T>(obj: T)  {
+export function promiseAllObj<T>(obj: ObjMap<PromiseLike<T>>): Promise<ObjMap<T>>
+export function promiseAllObj(obj: any): Promise<ObjMap<any>>
+export function promiseAllObj(obj: any) {
     const keys = Object.keys(obj);
     const values = keys.map(key => obj[key]);
     const all = Promise.all(values);
-    return all.then(arr => arr.map((value, index) => ({ key: keys[index], value: value }))).then(x => arrayToMap(x));
+    const ret = all.then(arr => arr.map((value, index) => ({ key: keys[index], value: value }))).then(x => arrayToMap(x));
+    return ret;
 }

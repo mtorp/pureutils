@@ -278,19 +278,18 @@ test("moveItem", () => {
 
 test("promise all obj", async () => {
 
-    function prom(value: any) {
-        return new Promise(resolve => resolve(value));
+    function prom<T>(value: T) {
+        return new Promise<T>(resolve => resolve(value));
     }
 
     const objProm = {
         a: prom("valor a"),
-        b: prom("valor b")
+        b: prom("valor b"),
     };
 
-
-    const allProm = promiseAllObj(objProm);
+    const allProm: Promise<ObjMap<string>> = promiseAllObj(objProm);
     expect(allProm instanceof Promise).toBe(true);
-    
+
     const all = await allProm;
     expect(shallowEquals(all, { a: "valor a", b: "valor b" })).toBe(true);
 });
