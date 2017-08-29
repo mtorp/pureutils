@@ -297,3 +297,11 @@ export function upDownItem<T>(array: T[], index: number, direction: "up" | "down
         return moveItem(array, index, index + (direction == "up" ? -1 : +1));
     }
 }
+
+/**Aplica una función Promise.all a un objeto,  */
+export function promiseAllObj<T>(obj: T)  {
+    const keys = Object.keys(obj);
+    const values = keys.map(key => obj[key]);
+    const all = Promise.all(values);
+    return all.then(arr => arr.map((value, index) => ({ key: keys[index], value: value }))).then(x => arrayToMap(x));
+}

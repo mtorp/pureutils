@@ -1,4 +1,4 @@
-import { sequenceEquals, shallowEquals, flatten, groupBy, Grouping, deepEquals, pipe, enumObject, setEquals, all, any, arrayToMap, contains, filterObject, first, mapObject, omit, ObjMap, toMap, moveItem, swapItems, upDownItem } from "./index";
+import { sequenceEquals, shallowEquals, flatten, groupBy, Grouping, deepEquals, pipe, enumObject, setEquals, all, any, arrayToMap, contains, filterObject, first, mapObject, omit, ObjMap, toMap, moveItem, swapItems, upDownItem, promiseAllObj } from "./index";
 test("sequence equals", () => {
     expect(sequenceEquals<any>(null as any, [])).toBe(false);
     expect(sequenceEquals<any>(null as any, null as any)).toBe(true);
@@ -273,4 +273,24 @@ test("moveItem", () => {
     expect(sequenceEquals(a0_5, moveItem(input, 0, 5))).toBe(true);
     expect(sequenceEquals(a5_0, moveItem(input, 5, 0))).toBe(true);
     expect(sequenceEquals(a3_3, moveItem(input, 3, 3))).toBe(true);
+});
+
+
+test("promise all obj", async () => {
+
+    function prom(value: any) {
+        return new Promise(resolve => resolve(value));
+    }
+
+    const objProm = {
+        a: prom("valor a"),
+        b: prom("valor b")
+    };
+
+
+    const allProm = promiseAllObj(objProm);
+    expect(allProm instanceof Promise).toBe(true);
+    
+    const all = await allProm;
+    expect(shallowEquals(all, { a: "valor a", b: "valor b" })).toBe(true);
 });

@@ -30,6 +30,8 @@ export declare function flatten<T>(arr: T[][]): T[];
  * filtrado por un predicado
  */
 export declare function first<T>(arr: T[], pred?: (item: T) => boolean): T | undefined;
+/**Devuelve el ultimo elemento de un arreglo */
+export declare function last<T>(arr: T[]): T | undefined;
 export declare type Grouping<TKey, TItem> = {
     key: TKey;
     items: TItem[];

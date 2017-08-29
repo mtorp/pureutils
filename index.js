@@ -265,6 +265,11 @@ function first(arr, pred) {
     var e_8, _a;
 }
 exports.first = first;
+/**Devuelve el ultimo elemento de un arreglo */
+function last(arr) {
+    return arr[arr.length - 1];
+}
+exports.last = last;
 /**Agrupa un arreglo por una llave
  * @param comparer Comparador, por default es un shallowEquals
  */
