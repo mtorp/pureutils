@@ -421,11 +421,11 @@ function upDownItem(array, index, direction) {
     }
 }
 exports.upDownItem = upDownItem;
-/**Aplica una función Promise.all a un objeto,  */
 function promiseAllObj(obj) {
     var keys = Object.keys(obj);
     var values = keys.map(function (key) { return obj[key]; });
     var all = Promise.all(values);
-    return all.then(function (arr) { return arr.map(function (value, index) { return ({ key: keys[index], value: value }); }); }).then(function (x) { return arrayToMap(x); });
+    var ret = all.then(function (arr) { return arr.map(function (value, index) { return ({ key: keys[index], value: value }); }); }).then(function (x) { return arrayToMap(x); });
+    return ret;
 }
 exports.promiseAllObj = promiseAllObj;

@@ -275,7 +275,7 @@ test("promise all obj", function () { return __awaiter(_this, void 0, void 0, fu
             case 0:
                 objProm = {
                     a: prom("valor a"),
-                    b: prom("valor b")
+                    b: prom("valor b"),
                 };
                 allProm = index_1.promiseAllObj(objProm);
                 expect(allProm instanceof Promise).toBe(true);

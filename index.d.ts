@@ -99,4 +99,5 @@ export declare function moveItem<T>(array: T[], sourceIndex: number, destIndex: 
 /**Mueve un elemento hacia array o hacia abajo, si el elemento no se puede mover ya que esta en el borde del arreglo devuelve el arreglo tal cual */
 export declare function upDownItem<T>(array: T[], index: number, direction: "up" | "down"): T[];
 /**Aplica una función Promise.all a un objeto,  */
-export declare function promiseAllObj<T>(obj: T): Promise<ObjMap<any>>;
+export declare function promiseAllObj<T>(obj: ObjMap<PromiseLike<T>>): Promise<ObjMap<T>>;
+export declare function promiseAllObj(obj: any): Promise<ObjMap<any>>;
