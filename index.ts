@@ -308,3 +308,5 @@ export function promiseAllObj(obj: any) {
     const ret = all.then(arr => arr.map((value, index) => ({ key: keys[index], value: value }))).then(x => arrayToMap(x));
     return ret;
 }
+
+export const version = 3;

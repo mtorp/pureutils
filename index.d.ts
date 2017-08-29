@@ -101,3 +101,4 @@ export declare function upDownItem<T>(array: T[], index: number, direction: "up"
 /**Aplica una función Promise.all a un objeto,  */
 export declare function promiseAllObj<T>(obj: ObjMap<PromiseLike<T>>): Promise<ObjMap<T>>;
 export declare function promiseAllObj(obj: any): Promise<ObjMap<any>>;
+export declare const version = 3;

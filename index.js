@@ -429,3 +429,4 @@ function promiseAllObj(obj) {
     return ret;
 }
 exports.promiseAllObj = promiseAllObj;
+exports.version = 3;
