@@ -446,3 +446,8 @@ function unique(arr, comparer) {
     return groupBy(arr, function (x) { return x; }, referenceEquals).map(function (x) { return x.key; });
 }
 exports.unique = unique;
+/**Filtra el arreglo sólo si condition == true, si es false devuelve el arreglo tal cual */
+function filterIf(arr, predicate, condition) {
+    return condition ? arr.filter(predicate) : arr;
+}
+exports.filterIf = filterIf;

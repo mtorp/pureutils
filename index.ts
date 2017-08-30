@@ -330,3 +330,15 @@ export function unique<T>(arr: T[], comparer?: (a: T, b: T) => boolean) {
 export function filterIf<T>(arr: T[], predicate: (item: T) => boolean, condition: boolean) {
     return condition ? arr.filter(predicate) : arr;
 }
+
+/**Dado un arreglo de keys, para cada key mapea a el elemento que le corresponde.
+ * Si existen varios elementos con la misma clave, cuando se encuentre esa clave se devolverá el primer elemento en el arreglo values con esa clave
+ * @param keys Claves que se van a mapear
+ * @param values Valores en los que se va a buscar para cada clave, el valor que tiene esa clave
+ * @param keySelector Obtener la clave de un elemento
+ * @param keyComparer Comparador que se usará para determinar si dos claves son iguales. Por default se usa el shallowEquals
+ */
+export function mapKeys<T, TKey>(keys: TKey[], values: T[], keySelector: (item: T) => TKey, keyComparer?: (a: TKey, b: TKey) => boolean) {
+    const effectiveKeyComparer = keyComparer || shallowEquals;
+    return keys.map(key => first(values, value => shallowEquals(key, keySelector(value))));
+}

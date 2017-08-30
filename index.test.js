@@ -293,3 +293,11 @@ test("unique", function () {
     var result = index_1.unique(input);
     expect(index_1.shallowEquals(expected, result)).toBe(true);
 });
+test("filterIf", function () {
+    var input = [1, 2, 3, 4, 5];
+    var expected = [3, 4, 5];
+    var resultA = index_1.filterIf(input, function (x) { return x > 2; }, true);
+    expect(index_1.shallowEquals(expected, resultA)).toBe(true);
+    var resultB = index_1.filterIf(input, function (x) { return x > 2; }, false);
+    expect(index_1.shallowEquals(input, resultB)).toBe(true);
+});

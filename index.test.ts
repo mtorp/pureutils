@@ -1,4 +1,4 @@
-import { sequenceEquals, shallowEquals, flatten, groupBy, Grouping, deepEquals, pipe, enumObject, setEquals, all, any, arrayToMap, contains, filterObject, first, mapObject, omit, ObjMap, toMap, moveItem, swapItems, upDownItem, promiseAllObj, unique, filterIf } from "./index";
+import { sequenceEquals, shallowEquals, flatten, groupBy, Grouping, deepEquals, pipe, enumObject, setEquals, all, any, arrayToMap, contains, filterObject, first, mapObject, omit, ObjMap, toMap, moveItem, swapItems, upDownItem, promiseAllObj, unique, filterIf, mapKeys } from "./index";
 test("sequence equals", () => {
     expect(sequenceEquals<any>(null as any, [])).toBe(false);
     expect(sequenceEquals<any>(null as any, null as any)).toBe(true);
@@ -311,5 +311,20 @@ test("filterIf", () => {
 
     const resultB = filterIf(input, x => x > 2, false);
     expect(shallowEquals(input, resultB)).toBe(true);
-    
-})
+
+});
+
+test("mapKeys", () => {
+    const { a, b, c } = {
+        a: { key: "A", value: 20 },
+        b: { key: "B", value: 10 },
+        c: { key: "C", value: 15 }
+    };
+    const values = [a, b, c];
+
+    const keys = ["B", "C", "C", "A", "B"];
+    const expected = [b, c, c, a, b];
+
+    const result = mapKeys(keys, values, x => x.key);
+    expect(shallowEquals(expected, result)).toBe(true);
+});

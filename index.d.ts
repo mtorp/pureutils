@@ -112,3 +112,5 @@ export declare function promiseAllObj(obj: any): Promise<ObjMap<any>>;
  * @param comparer Comparador que determina si 2 elementos son iguales. Se usa el operador ===
 */
 export declare function unique<T>(arr: T[], comparer?: (a: T, b: T) => boolean): T[];
+/**Filtra el arreglo sólo si condition == true, si es false devuelve el arreglo tal cual */
+export declare function filterIf<T>(arr: T[], predicate: (item: T) => boolean, condition: boolean): T[];
