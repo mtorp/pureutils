@@ -25,9 +25,18 @@ export function any<T>(arr: T[], pred?: (x: T) => boolean): boolean {
 
 /**Devuelve true si el valor existe en el arreglo */
 export function contains<T>(arr: T[], value: T, comparer?: (a: T, b: T) => boolean): boolean {
-    const effectiveComparer = comparer || ((a, b) => a == b);
+    const effectiveComparer = comparer || referenceEquals;
 
     return any(arr, x => effectiveComparer(x, value));
+}
+
+/**
+ * Alias para el operador ===
+ * @param a 
+ * @param b 
+ */
+export function referenceEquals<T>(a: T, b: T) {
+    return a === b;
 }
 
 /**Compara dos arreglos valor por valor */
@@ -44,7 +53,7 @@ export function sequenceEquals<T>(a: T[], b: T[], comparer?: (a: T, b: T) => boo
 }
 
 /**Devuelve true si 2 arreglos contienen los mismos valores, sin considerar el orden o la cantidad de veces que el mismo valor esta repetido en el arreglo
- * @param comparer Función que se usa para comparar los elementos, si no se especifica, se usa el operador == 
+ * @param comparer Función que se usa para comparar los elementos, si no se especifica, se usa el referenceEquals
  */
 export function setEquals<T>(a: T[], b: T[], comparer?: (a: T, b: T) => boolean): boolean {
     for (const aItem of a) {
@@ -149,7 +158,8 @@ export function last<T>(arr: T[]): T | undefined {
 
 export type Grouping<TKey, TItem> = { key: TKey, items: TItem[] };
 
-/**Agrupa un arreglo por una llave
+/**Agrupa un arreglo por una llave. Se preserva el orden original de los elementos del arreglo, segun los elementos agrupadores que aparezcan primero, tambien
+ * el orden adentro del grupo es preservado
  * @param comparer Comparador, por default es un shallowEquals
  */
 export function groupBy<T, TKey>(arr: T[], groupBy: (item: T) => TKey, comparer?: (a: TKey, b: TKey) => boolean) {
@@ -309,4 +319,11 @@ export function promiseAllObj(obj: any) {
     return ret;
 }
 
-export const version = 3;
+/**Devuelve todos los elementos de un arreglo que no estan repetidos, respetando el orden original en el que aparecen primero.
+ * @param comparer Comparador que determina si 2 elementos son iguales. Se usa el operador ===
+*/
+export function unique<T>(arr: T[], comparer?: (a: T, b: T) => boolean) {
+    return groupBy<T,T>(arr, x => x, referenceEquals).map(x => x.key)
+}
+
+
