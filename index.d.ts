@@ -7,10 +7,16 @@ export declare function all<T>(arr: T[], pred: (x: T) => boolean): boolean;
 export declare function any<T>(arr: T[], pred?: (x: T) => boolean): boolean;
 /**Devuelve true si el valor existe en el arreglo */
 export declare function contains<T>(arr: T[], value: T, comparer?: (a: T, b: T) => boolean): boolean;
+/**
+ * Alias para el operador ===
+ * @param a
+ * @param b
+ */
+export declare function referenceEquals<T>(a: T, b: T): boolean;
 /**Compara dos arreglos valor por valor */
 export declare function sequenceEquals<T>(a: T[], b: T[], comparer?: (a: T, b: T) => boolean): boolean;
 /**Devuelve true si 2 arreglos contienen los mismos valores, sin considerar el orden o la cantidad de veces que el mismo valor esta repetido en el arreglo
- * @param comparer Función que se usa para comparar los elementos, si no se especifica, se usa el operador ==
+ * @param comparer Función que se usa para comparar los elementos, si no se especifica, se usa el referenceEquals
  */
 export declare function setEquals<T>(a: T[], b: T[], comparer?: (a: T, b: T) => boolean): boolean;
 /**Compara dos objetos propiedad por propiedad */
@@ -36,7 +42,8 @@ export declare type Grouping<TKey, TItem> = {
     key: TKey;
     items: TItem[];
 };
-/**Agrupa un arreglo por una llave
+/**Agrupa un arreglo por una llave. Se preserva el orden original de los elementos del arreglo, segun los elementos agrupadores que aparezcan primero, tambien
+ * el orden adentro del grupo es preservado
  * @param comparer Comparador, por default es un shallowEquals
  */
 export declare function groupBy<T, TKey>(arr: T[], groupBy: (item: T) => TKey, comparer?: (a: TKey, b: TKey) => boolean): Grouping<TKey, T>[];
@@ -101,4 +108,7 @@ export declare function upDownItem<T>(array: T[], index: number, direction: "up"
 /**Aplica una función Promise.all a un objeto,  */
 export declare function promiseAllObj<T>(obj: ObjMap<PromiseLike<T>>): Promise<ObjMap<T>>;
 export declare function promiseAllObj(obj: any): Promise<ObjMap<any>>;
-export declare const version = 3;
+/**Devuelve todos los elementos de un arreglo que no estan repetidos, respetando el orden original en el que aparecen primero.
+ * @param comparer Comparador que determina si 2 elementos son iguales. Se usa el operador ===
+*/
+export declare function unique<T>(arr: T[], comparer?: (a: T, b: T) => boolean): T[];

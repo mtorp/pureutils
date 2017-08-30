@@ -287,3 +287,9 @@ test("promise all obj", function () { return __awaiter(_this, void 0, void 0, fu
         }
     });
 }); });
+test("unique", function () {
+    var input = [1, 1, 2, 4, 2, 1, 2, 3, 3, 2, 6, 2, 1, 3];
+    var expected = [1, 2, 4, 3, 6];
+    var result = index_1.unique(input);
+    expect(index_1.shallowEquals(expected, result)).toBe(true);
+});

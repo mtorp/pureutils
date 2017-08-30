@@ -83,10 +83,19 @@ function any(arr, pred) {
 exports.any = any;
 /**Devuelve true si el valor existe en el arreglo */
 function contains(arr, value, comparer) {
-    var effectiveComparer = comparer || (function (a, b) { return a == b; });
+    var effectiveComparer = comparer || referenceEquals;
     return any(arr, function (x) { return effectiveComparer(x, value); });
 }
 exports.contains = contains;
+/**
+ * Alias para el operador ===
+ * @param a
+ * @param b
+ */
+function referenceEquals(a, b) {
+    return a === b;
+}
+exports.referenceEquals = referenceEquals;
 /**Compara dos arreglos valor por valor */
 function sequenceEquals(a, b, comparer) {
     if (a === b)
@@ -104,7 +113,7 @@ function sequenceEquals(a, b, comparer) {
 }
 exports.sequenceEquals = sequenceEquals;
 /**Devuelve true si 2 arreglos contienen los mismos valores, sin considerar el orden o la cantidad de veces que el mismo valor esta repetido en el arreglo
- * @param comparer Función que se usa para comparar los elementos, si no se especifica, se usa el operador ==
+ * @param comparer Función que se usa para comparar los elementos, si no se especifica, se usa el referenceEquals
  */
 function setEquals(a, b, comparer) {
     try {
@@ -270,7 +279,8 @@ function last(arr) {
     return arr[arr.length - 1];
 }
 exports.last = last;
-/**Agrupa un arreglo por una llave
+/**Agrupa un arreglo por una llave. Se preserva el orden original de los elementos del arreglo, segun los elementos agrupadores que aparezcan primero, tambien
+ * el orden adentro del grupo es preservado
  * @param comparer Comparador, por default es un shallowEquals
  */
 function groupBy(arr, groupBy, comparer) {
@@ -429,4 +439,10 @@ function promiseAllObj(obj) {
     return ret;
 }
 exports.promiseAllObj = promiseAllObj;
-exports.version = 3;
+/**Devuelve todos los elementos de un arreglo que no estan repetidos, respetando el orden original en el que aparecen primero.
+ * @param comparer Comparador que determina si 2 elementos son iguales. Se usa el operador ===
+*/
+function unique(arr, comparer) {
+    return groupBy(arr, function (x) { return x; }, referenceEquals).map(function (x) { return x.key; });
+}
+exports.unique = unique;

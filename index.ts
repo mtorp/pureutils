@@ -323,7 +323,10 @@ export function promiseAllObj(obj: any) {
  * @param comparer Comparador que determina si 2 elementos son iguales. Se usa el operador ===
 */
 export function unique<T>(arr: T[], comparer?: (a: T, b: T) => boolean) {
-    return groupBy<T,T>(arr, x => x, referenceEquals).map(x => x.key)
+    return groupBy<T, T>(arr, x => x, referenceEquals).map(x => x.key)
 }
 
-
+/**Filtra el arreglo sólo si condition == true, si es false devuelve el arreglo tal cual */
+export function filterIf<T>(arr: T[], predicate: (item: T) => boolean, condition: boolean) {
+    return condition ? arr.filter(predicate) : arr;
+}

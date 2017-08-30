@@ -1,4 +1,4 @@
-import { sequenceEquals, shallowEquals, flatten, groupBy, Grouping, deepEquals, pipe, enumObject, setEquals, all, any, arrayToMap, contains, filterObject, first, mapObject, omit, ObjMap, toMap, moveItem, swapItems, upDownItem, promiseAllObj, unique } from "./index";
+import { sequenceEquals, shallowEquals, flatten, groupBy, Grouping, deepEquals, pipe, enumObject, setEquals, all, any, arrayToMap, contains, filterObject, first, mapObject, omit, ObjMap, toMap, moveItem, swapItems, upDownItem, promiseAllObj, unique, filterIf } from "./index";
 test("sequence equals", () => {
     expect(sequenceEquals<any>(null as any, [])).toBe(false);
     expect(sequenceEquals<any>(null as any, null as any)).toBe(true);
@@ -301,3 +301,15 @@ test("unique", () => {
     const result = unique(input);
     expect(shallowEquals(expected, result)).toBe(true);
 });
+
+test("filterIf", () => {
+    const input = [1, 2, 3, 4, 5];
+    const expected = [3, 4, 5];
+
+    const resultA = filterIf(input, x => x > 2, true);
+    expect(shallowEquals(expected, resultA)).toBe(true);
+
+    const resultB = filterIf(input, x => x > 2, false);
+    expect(shallowEquals(input, resultB)).toBe(true);
+    
+})
