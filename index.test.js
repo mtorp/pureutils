@@ -301,3 +301,15 @@ test("filterIf", function () {
     var resultB = index_1.filterIf(input, function (x) { return x > 2; }, false);
     expect(index_1.shallowEquals(input, resultB)).toBe(true);
 });
+test("mapKeys", function () {
+    var _a = {
+        a: { key: "A", value: 20 },
+        b: { key: "B", value: 10 },
+        c: { key: "C", value: 15 }
+    }, a = _a.a, b = _a.b, c = _a.c;
+    var values = [a, b, c];
+    var keys = ["B", "C", "C", "A", "B"];
+    var expected = [b, c, c, a, b];
+    var result = index_1.mapKeys(keys, values, function (x) { return x.key; });
+    expect(index_1.shallowEquals(expected, result)).toBe(true);
+});

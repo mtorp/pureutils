@@ -1,4 +1,4 @@
-import { sequenceEquals, shallowEquals, flatten, groupBy, Grouping, deepEquals, pipe, enumObject, setEquals, all, any, arrayToMap, contains, filterObject, first, mapObject, omit, ObjMap, toMap, moveItem, swapItems, upDownItem, promiseAllObj, unique, filterIf, mapKeys } from "./index";
+import { sequenceEquals, shallowEquals, flatten, groupBy, Grouping, deepEquals, pipe, enumObject, setEquals, all, any, arrayToMap, contains, filterObject, first, mapObject, omit, ObjMap, toMap, moveItem, swapItems, upDownItem, promiseAllObj, unique, filterIf, mapKeys, intersect } from "./index";
 test("sequence equals", () => {
     expect(sequenceEquals<any>(null as any, [])).toBe(false);
     expect(sequenceEquals<any>(null as any, null as any)).toBe(true);
@@ -327,4 +327,13 @@ test("mapKeys", () => {
 
     const result = mapKeys(keys, values, x => x.key);
     expect(shallowEquals(expected, result)).toBe(true);
+});
+
+test ("insersect", () => {
+    const a = [1,2,3,4,5,6,7];
+    const b = [3,2,1, 7];
+
+    const expected = [1,2,3, 7];
+    const result = intersect(a, b);
+    expect(shallowEquals(expected,result)).toBe(true);
 });
