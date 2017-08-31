@@ -1,5 +1,5 @@
-export * from "./pipe"
-
+export { pipe } from "./pipe";
+import { pipe } from "./pipe";
 
 /**Devuelve true si todos los elementos de un arreglo encajan con el predicado */
 export function all<T>(arr: T[], pred: (x: T) => boolean): boolean {
@@ -268,7 +268,7 @@ export function mapObject<TIn, TOut>(obj: ObjMap<TIn>, map: (value: TIn, key: st
  * @param obj Objeto que se va a filtrar
  * @param pred Predicado que va a determinar que propiedades si se van a conservar
  */
-export function filterObject<T extends { [key: string]: any }>(obj: T, pred: (value: T, key: keyof T) => boolean): T {
+export function filterObject<T extends { [key: string]: any }>(obj: T, pred: (value: T[keyof T], key: keyof T) => boolean): T {
     const ret = {};
     for (const key in obj) {
         const value = obj[key];
@@ -347,6 +347,19 @@ export function promiseAllObj(obj: any) {
     const all = Promise.all(values);
     const ret = all.then(arr => arr.map((value, index) => ({ key: keys[index], value: value }))).then(x => arrayToMap(x));
     return ret;
+}
+
+/**Convierte una promesa de un objeto a un objeto de promesas
+ * @param include Nombres de las propiedades que se desean incluir en el objeto resultante
+ */
+export function awaitObj<T>(obj: PromiseLike<T>, include: {[K in keyof T]?: true }): Promisify<T> {
+    const ret = pipe (
+        include,
+        inc => filterObject(inc, x => !!x),
+        inc => mapObject<true | undefined, Promise<T[keyof T]>>(inc as any, (value, key: keyof T) => obj.then(x => x[key]) as any )
+    );
+
+    return ret as any;
 }
 
 /**Devuelve todos los elementos de un arreglo que no estan repetidos, respetando el orden original en el que aparecen primero.

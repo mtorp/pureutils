@@ -36,6 +36,10 @@ export declare function flatten<T>(arr: T[][]): T[];
  * filtrado por un predicado
  */
 export declare function first<T>(arr: T[], pred?: (item: T) => boolean): T | undefined;
+/**
+ * Devuelve el unico elemento de un arreglo que cumpla con la condición, si no se encontró ninguo o mas de uno devuelve null
+ */
+export declare function single<T>(arr: T[], pred?: (item: T) => boolean): T | undefined;
 /**Devuelve el ultimo elemento de un arreglo */
 export declare function last<T>(arr: T[]): T | undefined;
 export declare type Grouping<TKey, TItem> = {
@@ -97,6 +101,8 @@ export declare function filterObject<T extends {
  * @param keys Las propiedades que se desean quitar
  */
 export declare function omit<T>(obj: T, keys: (keyof T)[]): T;
+/**Quita las propiedades que esten indefinidas en un objeto */
+export declare function omitUndefined<T>(obj: T): Partial<T>;
 /**Intercambia 2 elementos de un arreglo, si los indices dados estan afuera del arreglo, lanza una excepción */
 export declare function swapItems<T>(array: T[], a: number, b: number): T[];
 /**Mueve un elemento del arreglo de un indice a otro, note que no es igual a swapItems ya que al mover un elemento se conserva el orden de todos los de más elemento, esto no ocurre con el swap que

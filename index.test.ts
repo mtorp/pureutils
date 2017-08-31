@@ -1,4 +1,4 @@
-import { sequenceEquals, shallowEquals, flatten, groupBy, Grouping, deepEquals, pipe, enumObject, setEquals, all, any, arrayToMap, contains, filterObject, first, mapObject, omit, ObjMap, toMap, moveItem, swapItems, upDownItem, promiseAllObj, unique, filterIf, mapKeys, intersect, omitUndefined, single } from "./index";
+import { sequenceEquals, shallowEquals, flatten, groupBy, Grouping, deepEquals, pipe, enumObject, setEquals, all, any, arrayToMap, contains, filterObject, first, mapObject, omit, ObjMap, toMap, moveItem, swapItems, upDownItem, promiseAllObj, unique, filterIf, mapKeys, intersect, omitUndefined, single, awaitObj } from "./index";
 test("sequence equals", () => {
     expect(sequenceEquals<any>(null as any, [])).toBe(false);
     expect(sequenceEquals<any>(null as any, null as any)).toBe(true);
@@ -354,4 +354,23 @@ test("single", () => {
     expect(single([1, 2, 3], x => x == 2)).toEqual(2);
     expect(single([1, 2, 2], x => x == 2)).toEqual(undefined);
     expect(single([1, 2, 2], x => x == 2)).toEqual(undefined);
+});
+
+test("awaitObj", async () => {
+
+    function prom<T>(value: T) {
+        return new Promise<T>(resolve => resolve(value));
+    }
+
+    const objProm = prom({
+        a: 10,
+        b: 20,
+        c: "que rollo"
+    });
+
+    const result = awaitObj(objProm, { a: true, b: true, c: true });
+
+    expect(await result.a).toBe(10);
+    expect(await result.b).toBe(20);
+    expect(await result.c).toBe("que rollo");
 });

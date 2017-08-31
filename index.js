@@ -274,6 +274,39 @@ function first(arr, pred) {
     var e_8, _a;
 }
 exports.first = first;
+/**
+ * Devuelve el unico elemento de un arreglo que cumpla con la condición, si no se encontró ninguo o mas de uno devuelve null
+ */
+function single(arr, pred) {
+    var firstItem = undefined;
+    var first = false;
+    try {
+        for (var arr_7 = __values(arr), arr_7_1 = arr_7.next(); !arr_7_1.done; arr_7_1 = arr_7.next()) {
+            var a = arr_7_1.value;
+            var pass = !pred || pred(a);
+            if (pass) {
+                if (first) {
+                    //mas de uno
+                    return undefined;
+                }
+                else {
+                    firstItem = a;
+                    first = true;
+                }
+            }
+        }
+    }
+    catch (e_9_1) { e_9 = { error: e_9_1 }; }
+    finally {
+        try {
+            if (arr_7_1 && !arr_7_1.done && (_a = arr_7.return)) _a.call(arr_7);
+        }
+        finally { if (e_9) throw e_9.error; }
+    }
+    return firstItem;
+    var e_9, _a;
+}
+exports.single = single;
 /**Devuelve el ultimo elemento de un arreglo */
 function last(arr) {
     return arr[arr.length - 1];
@@ -297,20 +330,20 @@ function groupBy(arr, groupBy, comparer) {
         }
     };
     try {
-        for (var arr_7 = __values(arr), arr_7_1 = arr_7.next(); !arr_7_1.done; arr_7_1 = arr_7.next()) {
-            var x = arr_7_1.value;
+        for (var arr_8 = __values(arr), arr_8_1 = arr_8.next(); !arr_8_1.done; arr_8_1 = arr_8.next()) {
+            var x = arr_8_1.value;
             _loop_1(x);
         }
     }
-    catch (e_9_1) { e_9 = { error: e_9_1 }; }
+    catch (e_10_1) { e_10 = { error: e_10_1 }; }
     finally {
         try {
-            if (arr_7_1 && !arr_7_1.done && (_a = arr_7.return)) _a.call(arr_7);
+            if (arr_8_1 && !arr_8_1.done && (_a = arr_8.return)) _a.call(arr_8);
         }
-        finally { if (e_9) throw e_9.error; }
+        finally { if (e_10) throw e_10.error; }
     }
     return ret;
-    var e_9, _a;
+    var e_10, _a;
 }
 exports.groupBy = groupBy;
 function enumObject(obj, selector) {
@@ -338,15 +371,15 @@ function arrayToMap(array, keySelector, valueSelector) {
             ret[key] = value;
         }
     }
-    catch (e_10_1) { e_10 = { error: e_10_1 }; }
+    catch (e_11_1) { e_11 = { error: e_11_1 }; }
     finally {
         try {
             if (array_1_1 && !array_1_1.done && (_a = array_1.return)) _a.call(array_1);
         }
-        finally { if (e_10) throw e_10.error; }
+        finally { if (e_11) throw e_11.error; }
     }
     return ret;
-    var e_10, _a;
+    var e_11, _a;
 }
 exports.arrayToMap = arrayToMap;
 /**
@@ -388,6 +421,11 @@ function omit(obj, keys) {
     return filterObject(obj, function (value, key) { return !contains(keys, key); });
 }
 exports.omit = omit;
+/**Quita las propiedades que esten indefinidas en un objeto */
+function omitUndefined(obj) {
+    return filterObject(obj, function (value) { return value !== undefined; });
+}
+exports.omitUndefined = omitUndefined;
 /**Intercambia 2 elementos de un arreglo, si los indices dados estan afuera del arreglo, lanza una excepción */
 function swapItems(array, a, b) {
     var inside = function (x) { return x >= 0 && x < array.length; };

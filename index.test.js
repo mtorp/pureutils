@@ -320,3 +320,18 @@ test("insersect", function () {
     var result = index_1.intersect(a, b);
     expect(index_1.shallowEquals(expected, result)).toBe(true);
 });
+test("omitUndefined", function () {
+    var a = { x: 1, y: undefined };
+    var expected = { x: 1 };
+    var actual = index_1.omitUndefined(a);
+    expect(actual).toEqual(expected);
+});
+test("single", function () {
+    expect(index_1.single([])).toEqual(undefined);
+    expect(index_1.single([1, 2])).toEqual(undefined);
+    expect(index_1.single([1])).toEqual(1);
+    expect(index_1.single([1, 2], function (x) { return x == 2; })).toEqual(2);
+    expect(index_1.single([1, 2, 3], function (x) { return x == 2; })).toEqual(2);
+    expect(index_1.single([1, 2, 2], function (x) { return x == 2; })).toEqual(undefined);
+    expect(index_1.single([1, 2, 2], function (x) { return x == 2; })).toEqual(undefined);
+});
