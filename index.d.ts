@@ -105,9 +105,11 @@ export declare function swapItems<T>(array: T[], a: number, b: number): T[];
 export declare function moveItem<T>(array: T[], sourceIndex: number, destIndex: number): T[];
 /**Mueve un elemento hacia array o hacia abajo, si el elemento no se puede mover ya que esta en el borde del arreglo devuelve el arreglo tal cual */
 export declare function upDownItem<T>(array: T[], index: number, direction: "up" | "down"): T[];
+export declare type Promisify<T> = {
+    [K in keyof T]: PromiseLike<T[K]>;
+};
 /**Aplica una función Promise.all a un objeto,  */
-export declare function promiseAllObj<T>(obj: ObjMap<PromiseLike<T>>): Promise<ObjMap<T>>;
-export declare function promiseAllObj(obj: any): Promise<ObjMap<any>>;
+export declare function promiseAllObj<T>(obj: Promisify<T>): Promise<T>;
 /**Devuelve todos los elementos de un arreglo que no estan repetidos, respetando el orden original en el que aparecen primero.
  * @param comparer Comparador que determina si 2 elementos son iguales. Se usa el operador ===
 */

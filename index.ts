@@ -152,6 +152,28 @@ export function first<T>(arr: T[], pred?: (item: T) => boolean): T | undefined {
     return undefined;
 }
 
+/**
+ * Devuelve el unico elemento de un arreglo que cumpla con la condición, si no se encontró ninguo o mas de uno devuelve null
+ */
+export function single<T>(arr: T[], pred?: (item: T) => boolean): T | undefined {
+    let firstItem: T | undefined = undefined;
+    let first: boolean = false;
+    for (const a of arr) {
+        const pass = !pred || pred(a);
+
+        if (pass) {
+            if (first) {
+                //mas de uno
+                return undefined;
+            } else {
+                firstItem = a;
+                first = true;
+            }
+        }
+    }
+    return firstItem;
+}
+
 /**Devuelve el ultimo elemento de un arreglo */
 export function last<T>(arr: T[]): T | undefined {
     return arr[arr.length - 1];
@@ -265,6 +287,12 @@ export function filterObject<T extends { [key: string]: any }>(obj: T, pred: (va
 export function omit<T>(obj: T, keys: (keyof T)[]): T {
     return filterObject(obj, (value, key) => !contains(keys, key));
 }
+
+/**Quita las propiedades que esten indefinidas en un objeto */
+export function omitUndefined<T>(obj: T): Partial<T> {
+    return filterObject(obj, value => value !== undefined);
+}
+
 
 /**Intercambia 2 elementos de un arreglo, si los indices dados estan afuera del arreglo, lanza una excepción */
 export function swapItems<T>(array: T[], a: number, b: number) {

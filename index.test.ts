@@ -1,4 +1,4 @@
-import { sequenceEquals, shallowEquals, flatten, groupBy, Grouping, deepEquals, pipe, enumObject, setEquals, all, any, arrayToMap, contains, filterObject, first, mapObject, omit, ObjMap, toMap, moveItem, swapItems, upDownItem, promiseAllObj, unique, filterIf, mapKeys, intersect } from "./index";
+import { sequenceEquals, shallowEquals, flatten, groupBy, Grouping, deepEquals, pipe, enumObject, setEquals, all, any, arrayToMap, contains, filterObject, first, mapObject, omit, ObjMap, toMap, moveItem, swapItems, upDownItem, promiseAllObj, unique, filterIf, mapKeys, intersect, omitUndefined, single } from "./index";
 test("sequence equals", () => {
     expect(sequenceEquals<any>(null as any, [])).toBe(false);
     expect(sequenceEquals<any>(null as any, null as any)).toBe(true);
@@ -287,7 +287,7 @@ test("promise all obj", async () => {
         b: prom("valor b"),
     };
 
-    const allProm  = promiseAllObj(objProm);
+    const allProm = promiseAllObj(objProm);
     expect(allProm instanceof Promise).toBe(true);
 
     const all = await allProm;
@@ -336,4 +336,22 @@ test("insersect", () => {
     const expected = [1, 2, 3, 7];
     const result = intersect(a, b);
     expect(shallowEquals(expected, result)).toBe(true);
+});
+
+test("omitUndefined", () => {
+    const a = { x: 1, y: undefined };
+    const expected = { x: 1 };
+    const actual = omitUndefined(a);
+
+    expect(actual).toEqual(expected);
+});
+
+test("single", () => {
+    expect(single([])).toEqual(undefined);
+    expect(single([1, 2])).toEqual(undefined);
+    expect(single([1])).toEqual(1);
+    expect(single([1, 2], x => x == 2)).toEqual(2);
+    expect(single([1, 2, 3], x => x == 2)).toEqual(2);
+    expect(single([1, 2, 2], x => x == 2)).toEqual(undefined);
+    expect(single([1, 2, 2], x => x == 2)).toEqual(undefined);
 });
