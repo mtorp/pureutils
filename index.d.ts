@@ -1,4 +1,4 @@
-export * from "./pipe";
+export { pipe } from "./pipe";
 /**Devuelve true si todos los elementos de un arreglo encajan con el predicado */
 export declare function all<T>(arr: T[], pred: (x: T) => boolean): boolean;
 /**Devuelve true si por lo menos un elemento del arreglo encaja con el predicado, o si existe por lo menos un elemento en caso
@@ -94,7 +94,7 @@ export declare function mapObject<TIn, TOut>(obj: ObjMap<TIn>, map: (value: TIn,
  */
 export declare function filterObject<T extends {
     [key: string]: any;
-}>(obj: T, pred: (value: T, key: keyof T) => boolean): T;
+}>(obj: T, pred: (value: T[keyof T], key: keyof T) => boolean): T;
 /**
  * Quita un conjunto de propiedades de un objeto
  * @param obj El objeto original
@@ -116,6 +116,12 @@ export declare type Promisify<T> = {
 };
 /**Aplica una función Promise.all a un objeto,  */
 export declare function promiseAllObj<T>(obj: Promisify<T>): Promise<T>;
+/**Convierte una promesa de un objeto a un objeto de promesas
+ * @param include Nombres de las propiedades que se desean incluir en el objeto resultante
+ */
+export declare function awaitObj<T>(obj: PromiseLike<T>, include: {
+    [K in keyof T]?: true;
+}): Promisify<T>;
 /**Devuelve todos los elementos de un arreglo que no estan repetidos, respetando el orden original en el que aparecen primero.
  * @param comparer Comparador que determina si 2 elementos son iguales. Se usa el operador ===
 */

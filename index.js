@@ -29,11 +29,10 @@ var __spread = (this && this.__spread) || function () {
     for (var ar = [], i = 0; i < arguments.length; i++) ar = ar.concat(__read(arguments[i]));
     return ar;
 };
-function __export(m) {
-    for (var p in m) if (!exports.hasOwnProperty(p)) exports[p] = m[p];
-}
 Object.defineProperty(exports, "__esModule", { value: true });
-__export(require("./pipe"));
+var pipe_1 = require("./pipe");
+exports.pipe = pipe_1.pipe;
+var pipe_2 = require("./pipe");
 /**Devuelve true si todos los elementos de un arreglo encajan con el predicado */
 function all(arr, pred) {
     try {
@@ -477,6 +476,14 @@ function promiseAllObj(obj) {
     return ret;
 }
 exports.promiseAllObj = promiseAllObj;
+/**Convierte una promesa de un objeto a un objeto de promesas
+ * @param include Nombres de las propiedades que se desean incluir en el objeto resultante
+ */
+function awaitObj(obj, include) {
+    var ret = pipe_2.pipe(include, function (inc) { return filterObject(inc, function (x) { return !!x; }); }, function (inc) { return mapObject(inc, function (value, key) { return obj.then(function (x) { return x[key]; }); }); });
+    return ret;
+}
+exports.awaitObj = awaitObj;
 /**Devuelve todos los elementos de un arreglo que no estan repetidos, respetando el orden original en el que aparecen primero.
  * @param comparer Comparador que determina si 2 elementos son iguales. Se usa el operador ===
 */

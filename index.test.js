@@ -335,3 +335,33 @@ test("single", function () {
     expect(index_1.single([1, 2, 2], function (x) { return x == 2; })).toEqual(undefined);
     expect(index_1.single([1, 2, 2], function (x) { return x == 2; })).toEqual(undefined);
 });
+test("awaitObj", function () { return __awaiter(_this, void 0, void 0, function () {
+    function prom(value) {
+        return new Promise(function (resolve) { return resolve(value); });
+    }
+    var objProm, result, _a, _b, _c;
+    return __generator(this, function (_d) {
+        switch (_d.label) {
+            case 0:
+                objProm = prom({
+                    a: 10,
+                    b: 20,
+                    c: "que rollo"
+                });
+                result = index_1.awaitObj(objProm, { a: true, b: true, c: true });
+                _a = expect;
+                return [4 /*yield*/, result.a];
+            case 1:
+                _a.apply(void 0, [_d.sent()]).toBe(10);
+                _b = expect;
+                return [4 /*yield*/, result.b];
+            case 2:
+                _b.apply(void 0, [_d.sent()]).toBe(20);
+                _c = expect;
+                return [4 /*yield*/, result.c];
+            case 3:
+                _c.apply(void 0, [_d.sent()]).toBe("que rollo");
+                return [2 /*return*/];
+        }
+    });
+}); });
