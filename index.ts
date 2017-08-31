@@ -309,9 +309,10 @@ export function upDownItem<T>(array: T[], index: number, direction: "up" | "down
     }
 }
 
+export type Promisify<T> = {[K in keyof T]: PromiseLike<T[K]> };
+
 /**Aplica una función Promise.all a un objeto,  */
-export function promiseAllObj<T>(obj: ObjMap<PromiseLike<T>>): Promise<ObjMap<T>>
-export function promiseAllObj(obj: any): Promise<ObjMap<any>>
+export function promiseAllObj<T>(obj: Promisify<T>): Promise<T>
 export function promiseAllObj(obj: any) {
     const keys = Object.keys(obj);
     const values = keys.map(key => obj[key]);
@@ -351,7 +352,7 @@ export function intersect<T>(a: T[], b: T[], comparer?: (a: T, b: T) => boolean)
     return intersectKeys(a, b, x => x, comparer || referenceEquals);
 }
 
-/**Devuelve todos los elementos en "items" tal que su key se encuentre tambien en "keys". Conserva el orden original de "items"
+/**Devuelve todos los elementos en "items" tal que su key se encuentre una o mas veces en "keys". Conserva el orden original de "items".
  * @param keySelector Obtiene la clave de un elemento
  * @param comparer Comparedor de igualdad. Por default se usa el shallowEquals
  */

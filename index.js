@@ -463,3 +463,18 @@ function mapKeys(keys, values, keySelector, keyComparer) {
     return keys.map(function (key) { return first(values, function (value) { return shallowEquals(key, keySelector(value)); }); });
 }
 exports.mapKeys = mapKeys;
+/**Devuelve todos los elementos en "a" que se encuentren también en "b". Conserva el orden original de "a"
+ * @param comparer Comparedor de igualdad. Por default se usa el referenceEquals
+ */
+function intersect(a, b, comparer) {
+    return intersectKeys(a, b, function (x) { return x; }, comparer || referenceEquals);
+}
+exports.intersect = intersect;
+/**Devuelve todos los elementos en "items" tal que su key se encuentre una o mas veces en "keys". Conserva el orden original de "items".
+ * @param keySelector Obtiene la clave de un elemento
+ * @param comparer Comparedor de igualdad. Por default se usa el shallowEquals
+ */
+function intersectKeys(items, keys, keySelector, comparer) {
+    return items.filter(function (item) { return contains(keys, keySelector(item), comparer || shallowEquals); });
+}
+exports.intersectKeys = intersectKeys;

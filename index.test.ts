@@ -287,7 +287,7 @@ test("promise all obj", async () => {
         b: prom("valor b"),
     };
 
-    const allProm: Promise<ObjMap<string>> = promiseAllObj(objProm);
+    const allProm  = promiseAllObj(objProm);
     expect(allProm instanceof Promise).toBe(true);
 
     const all = await allProm;
@@ -329,11 +329,11 @@ test("mapKeys", () => {
     expect(shallowEquals(expected, result)).toBe(true);
 });
 
-test ("insersect", () => {
-    const a = [1,2,3,4,5,6,7];
-    const b = [3,2,1, 7];
+test("insersect", () => {
+    const a = [1, 2, 3, 4, 5, 6, 7];
+    const b = [3, 2, 1, 7, 7, 3];
 
-    const expected = [1,2,3, 7];
+    const expected = [1, 2, 3, 7];
     const result = intersect(a, b);
-    expect(shallowEquals(expected,result)).toBe(true);
+    expect(shallowEquals(expected, result)).toBe(true);
 });

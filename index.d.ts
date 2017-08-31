@@ -121,4 +121,13 @@ export declare function filterIf<T>(arr: T[], predicate: (item: T) => boolean, c
  * @param keySelector Obtener la clave de un elemento
  * @param keyComparer Comparador que se usará para determinar si dos claves son iguales. Por default se usa el shallowEquals
  */
-export declare function mapKeys<T, TKey>(keys: TKey[], values: T[], keySelector: (item: T) => TKey, keyComparer?: (a: TKey, b: TKey) => boolean): (T | undefined)[];
+export declare function mapKeys<T, TKey>(keys: TKey[], values: T[], keySelector: (item: T) => TKey, keyComparer?: (a: TKey, b: TKey) => boolean): T[];
+/**Devuelve todos los elementos en "a" que se encuentren también en "b". Conserva el orden original de "a"
+ * @param comparer Comparedor de igualdad. Por default se usa el referenceEquals
+ */
+export declare function intersect<T>(a: T[], b: T[], comparer?: (a: T, b: T) => boolean): T[];
+/**Devuelve todos los elementos en "items" tal que su key se encuentre una o mas veces en "keys". Conserva el orden original de "items".
+ * @param keySelector Obtiene la clave de un elemento
+ * @param comparer Comparedor de igualdad. Por default se usa el shallowEquals
+ */
+export declare function intersectKeys<T, TKey>(items: T[], keys: TKey[], keySelector: (item: T) => TKey, comparer?: (a: TKey, b: TKey) => boolean): T[];

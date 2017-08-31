@@ -313,3 +313,10 @@ test("mapKeys", function () {
     var result = index_1.mapKeys(keys, values, function (x) { return x.key; });
     expect(index_1.shallowEquals(expected, result)).toBe(true);
 });
+test("insersect", function () {
+    var a = [1, 2, 3, 4, 5, 6, 7];
+    var b = [3, 2, 1, 7, 7, 3];
+    var expected = [1, 2, 3, 7];
+    var result = index_1.intersect(a, b);
+    expect(index_1.shallowEquals(expected, result)).toBe(true);
+});
