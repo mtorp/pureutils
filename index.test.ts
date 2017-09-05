@@ -375,7 +375,7 @@ test("awaitObj", async () => {
     expect(await result.c).toBe("que rollo");
 });
 
-test("shallowDiff", () => {
+test("shallowDiff 1", () => {
     const a = {
         name: "rafa",
         age: 23,
@@ -392,4 +392,18 @@ test("shallowDiff", () => {
 
     const props = shallowDiff(a, b);
     expect(props).toEqual( { age: true, other: true });
+});
+
+test("shallowDiff 2", () => {
+    const a = {
+        name: "rafa",
+    };
+
+    const b = {
+        name: "rafa",
+        age: 22,
+    };
+
+    const props = shallowDiff(a, b);
+    expect(props).toEqual( { age: true });
 });

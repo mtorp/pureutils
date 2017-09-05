@@ -108,14 +108,13 @@ export function shallowDiff<T>(a: T, b: T, comparer?: (a: T[keyof T], b: T[keyof
     const eComp = comparer || shallowEquals;
     const props =
         pipe(
-            a,
-            curr => enumObject(curr),
-            curr => curr.map(x => ({ ...x, otherValue: b[x.key] })),
+            union(Object.keys(a), Object.keys(b)),
+            curr => curr.map(x => ({ key: x, value: a[x], otherValue: b[x] })),
             curr => curr.filter(x => !eComp(x.value, x.otherValue)),
             curr => curr.map(x => x.key),
             curr => arrayToMap(curr, item => item, item => true)
         );
-        
+
     return props as any;
 }
 
@@ -397,6 +396,16 @@ export function awaitObj<T>(obj: PromiseLike<T>, include: {[K in keyof T]?: true
 */
 export function unique<T>(arr: T[], comparer?: (a: T, b: T) => boolean) {
     return groupBy<T, T>(arr, x => x, referenceEquals).map(x => x.key)
+}
+
+/**Devuelve todos los elementos de todos los arreglos que no esten repetidos */
+export function union<T>(...arr: T[][]) {
+    return unique(concat(...arr));
+}
+
+/**Pega todos los elementos de los arreglos */
+export function concat<T>(...arr: T[][]) {
+    return arr.reduce((acum, curr) => [...acum, ...curr], []);
 }
 
 /**Filtra el arreglo sólo si condition == true, si es false devuelve el arreglo tal cual */
