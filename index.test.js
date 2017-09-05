@@ -365,3 +365,19 @@ test("awaitObj", function () { return __awaiter(_this, void 0, void 0, function 
         }
     });
 }); });
+test("shallowDiff", function () {
+    var a = {
+        name: "rafa",
+        age: 23,
+        hello: { x: 10, y: 20 },
+        other: { x: 10, y: 30 },
+    };
+    var b = {
+        name: "rafa",
+        age: 22,
+        hello: { x: 10, y: 20 },
+        other: { x: 10, y: 40 }
+    };
+    var props = index_1.shallowDiff(a, b);
+    expect(props).toEqual({ age: true, other: true });
+});

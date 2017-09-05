@@ -21,6 +21,20 @@ export declare function sequenceEquals<T>(a: T[], b: T[], comparer?: (a: T, b: T
 export declare function setEquals<T>(a: T[], b: T[], comparer?: (a: T, b: T) => boolean): boolean;
 /**Compara dos objetos propiedad por propiedad */
 export declare function shallowEquals<T>(a: T, b: T, comparer?: (a: T[keyof T], b: T[keyof T]) => boolean): boolean;
+/**Resultado de un shallow diff */
+export declare type ShallowDiffResult<T> = {
+    [K in keyof T]?: true;
+};
+export declare type ObjSet<T> = {
+    [K in keyof T]?: true;
+};
+/**
+ * Compara 2 objetos propiedad por propiedad, devuelve un objeto con las propiedades que son diferentes asignadas a true
+ * @param a Objeto a
+ * @param b Objecto b
+ * @param comparer Comparador de las propiedades. Se usa por default shallowEquals
+ */
+export declare function shallowDiff<T>(a: T, b: T, comparer?: (a: T[keyof T], b: T[keyof T]) => boolean): ObjSet<T>;
 /**Convierte un ArrayLike o Iterable en un arreglo. Si el valor ya es un arreglo devuelve el valor */
 export declare function toArray<T>(arr: ArrayLike<T> | Iterable<T>): T[];
 /**Devuelve true si un objeeto se puede convertir a un arreglo utilizando la función toArray */

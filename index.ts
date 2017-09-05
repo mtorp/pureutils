@@ -94,21 +94,29 @@ export type ShallowDiffResult<T> = {
     [K in keyof T]?: true
 }
 
+export type ObjSet<T> = {
+    [K in keyof T]?: true
+}
+
 /**
- * Compara 2 objetos propiedad por propiedad, devuelve un arreglo con las propiedades que son diferentes
+ * Compara 2 objetos propiedad por propiedad, devuelve un objeto con las propiedades que son diferentes asignadas a true
  * @param a Objeto a
  * @param b Objecto b
  * @param comparer Comparador de las propiedades. Se usa por default shallowEquals
  */
-export function shallowDiff<T>(a: T, b: T, comparer?: (a: T[keyof T], b: T[keyof T]) => boolean): (keyof T)[] {
+export function shallowDiff<T>(a: T, b: T, comparer?: (a: T[keyof T], b: T[keyof T]) => boolean): ObjSet<T> {
     const eComp = comparer || shallowEquals;
     const props =
-        enumObject(a)
-            .map(x => ({ ...x, otherValue: b[x.key] }))
-            .filter(x => !eComp(x.value, x.otherValue))
-            .map(x => x.key);
-
-    return props;
+        pipe(
+            a,
+            curr => enumObject(curr),
+            curr => curr.map(x => ({ ...x, otherValue: b[x.key] })),
+            curr => curr.filter(x => !eComp(x.value, x.otherValue)),
+            curr => curr.map(x => x.key),
+            curr => arrayToMap(curr, item => item, item => true)
+        );
+        
+    return props as any;
 }
 
 /**Convierte un ArrayLike o Iterable en un arreglo. Si el valor ya es un arreglo devuelve el valor */

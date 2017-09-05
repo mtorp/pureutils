@@ -391,5 +391,5 @@ test("shallowDiff", () => {
     };
 
     const props = shallowDiff(a, b);
-    expect(props).toEqual(["age", "other"]);
+    expect(props).toEqual( { age: true, other: true });
 });
