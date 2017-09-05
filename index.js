@@ -1,12 +1,4 @@
 "use strict";
-var __assign = (this && this.__assign) || Object.assign || function(t) {
-    for (var s, i = 1, n = arguments.length; i < n; i++) {
-        s = arguments[i];
-        for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-            t[p] = s[p];
-    }
-    return t;
-};
 var __values = (this && this.__values) || function (o) {
     var m = typeof Symbol === "function" && o[Symbol.iterator], i = 0;
     if (m) return m.call(o);
@@ -184,7 +176,7 @@ exports.shallowEquals = shallowEquals;
  */
 function shallowDiff(a, b, comparer) {
     var eComp = comparer || shallowEquals;
-    var props = pipe_2.pipe(a, function (curr) { return enumObject(curr); }, function (curr) { return curr.map(function (x) { return (__assign({}, x, { otherValue: b[x.key] })); }); }, function (curr) { return curr.filter(function (x) { return !eComp(x.value, x.otherValue); }); }, function (curr) { return curr.map(function (x) { return x.key; }); }, function (curr) { return arrayToMap(curr, function (item) { return item; }, function (item) { return true; }); });
+    var props = pipe_2.pipe(union(Object.keys(a), Object.keys(b)), function (curr) { return curr.map(function (x) { return ({ key: x, value: a[x], otherValue: b[x] }); }); }, function (curr) { return curr.filter(function (x) { return !eComp(x.value, x.otherValue); }); }, function (curr) { return curr.map(function (x) { return x.key; }); }, function (curr) { return arrayToMap(curr, function (item) { return item; }, function (item) { return true; }); });
     return props;
 }
 exports.shallowDiff = shallowDiff;
@@ -511,6 +503,24 @@ function unique(arr, comparer) {
     return groupBy(arr, function (x) { return x; }, referenceEquals).map(function (x) { return x.key; });
 }
 exports.unique = unique;
+/**Devuelve todos los elementos de todos los arreglos que no esten repetidos */
+function union() {
+    var arr = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        arr[_i] = arguments[_i];
+    }
+    return unique(concat.apply(void 0, __spread(arr)));
+}
+exports.union = union;
+/**Pega todos los elementos de los arreglos */
+function concat() {
+    var arr = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        arr[_i] = arguments[_i];
+    }
+    return arr.reduce(function (acum, curr) { return __spread(acum, curr); }, []);
+}
+exports.concat = concat;
 /**Filtra el arreglo sólo si condition == true, si es false devuelve el arreglo tal cual */
 function filterIf(arr, predicate, condition) {
     return condition ? arr.filter(predicate) : arr;

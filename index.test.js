@@ -365,7 +365,7 @@ test("awaitObj", function () { return __awaiter(_this, void 0, void 0, function 
         }
     });
 }); });
-test("shallowDiff", function () {
+test("shallowDiff 1", function () {
     var a = {
         name: "rafa",
         age: 23,
@@ -380,4 +380,15 @@ test("shallowDiff", function () {
     };
     var props = index_1.shallowDiff(a, b);
     expect(props).toEqual({ age: true, other: true });
+});
+test("shallowDiff 2", function () {
+    var a = {
+        name: "rafa",
+    };
+    var b = {
+        name: "rafa",
+        age: 22,
+    };
+    var props = index_1.shallowDiff(a, b);
+    expect(props).toEqual({ age: true });
 });

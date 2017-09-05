@@ -283,13 +283,13 @@ export function arrayToMap<T, TValue>(array: T[], keySelector?: (item: T) => str
  * @param obj Objeto a mapear
  * @param map Función que toma el valor y el "key" y devuelve el nuevo valor
  */
-export function mapObject<TIn, TOut>(obj: ObjMap<TIn>, map: (value: TIn, key: string) => TOut): ObjMap<TOut> {
+export function mapObject<T, TOut>(obj: T, map: <K extends keyof T>(value: T[K], key: K) => TOut): {[K in keyof T]: TOut} {
     const ret = {};
     for (const key in obj) {
         const value = obj[key];
         ret[key as string] = map(value, key);
     }
-    return ret as { [key: string]: TOut };
+    return ret as { [K in keyof T]: TOut };
 }
 
 /**
