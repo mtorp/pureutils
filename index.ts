@@ -89,6 +89,28 @@ export function shallowEquals<T>(a: T, b: T, comparer?: (a: T[keyof T], b: T[key
     return sequenceEquals(aKeys.map(x => a[x]), aKeys.map(x => b[x]), comparer);
 }
 
+/**Resultado de un shallow diff */
+export type ShallowDiffResult<T> = {
+    [K in keyof T]?: true
+}
+
+/**
+ * Compara 2 objetos propiedad por propiedad, devuelve un arreglo con las propiedades que son diferentes
+ * @param a Objeto a
+ * @param b Objecto b
+ * @param comparer Comparador de las propiedades. Se usa por default shallowEquals
+ */
+export function shallowDiff<T>(a: T, b: T, comparer?: (a: T[keyof T], b: T[keyof T]) => boolean): (keyof T)[] {
+    const eComp = comparer || shallowEquals;
+    const props =
+        enumObject(a)
+            .map(x => ({ ...x, otherValue: b[x.key] }))
+            .filter(x => !eComp(x.value, x.otherValue))
+            .map(x => x.key);
+
+    return props;
+}
+
 /**Convierte un ArrayLike o Iterable en un arreglo. Si el valor ya es un arreglo devuelve el valor */
 export function toArray<T>(arr: ArrayLike<T> | Iterable<T>): T[] {
     if (arr instanceof Array) {
@@ -353,10 +375,10 @@ export function promiseAllObj(obj: any) {
  * @param include Nombres de las propiedades que se desean incluir en el objeto resultante
  */
 export function awaitObj<T>(obj: PromiseLike<T>, include: {[K in keyof T]?: true }): Promisify<T> {
-    const ret = pipe (
+    const ret = pipe(
         include,
         inc => filterObject(inc, x => !!x),
-        inc => mapObject<true | undefined, Promise<T[keyof T]>>(inc as any, (value, key: keyof T) => obj.then(x => x[key]) as any )
+        inc => mapObject<true | undefined, Promise<T[keyof T]>>(inc as any, (value, key: keyof T) => obj.then(x => x[key]) as any)
     );
 
     return ret as any;
