@@ -100,7 +100,9 @@ export declare function arrayToMap<T, TValue>(array: T[], keySelector: (item: T)
  * @param obj Objeto a mapear
  * @param map Función que toma el valor y el "key" y devuelve el nuevo valor
  */
-export declare function mapObject<TIn, TOut>(obj: ObjMap<TIn>, map: (value: TIn, key: string) => TOut): ObjMap<TOut>;
+export declare function mapObject<T, TOut>(obj: T, map: <K extends keyof T>(value: T[K], key: K) => TOut): {
+    [K in keyof T]: TOut;
+};
 /**
  * Filtra las propiedades de un objeto
  * @param obj Objeto que se va a filtrar

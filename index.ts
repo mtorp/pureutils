@@ -289,7 +289,7 @@ export function mapObject<T, TOut>(obj: T, map: <K extends keyof T>(value: T[K],
         const value = obj[key];
         ret[key as string] = map(value, key);
     }
-    return ret as { [K in keyof T]: TOut };
+    return ret as {[K in keyof T]: TOut };
 }
 
 /**
@@ -438,4 +438,16 @@ export function intersect<T>(a: T[], b: T[], comparer?: (a: T, b: T) => boolean)
  */
 export function intersectKeys<T, TKey>(items: T[], keys: TKey[], keySelector: (item: T) => TKey, comparer?: (a: TKey, b: TKey) => boolean) {
     return items.filter(item => contains(keys, keySelector(item), comparer || shallowEquals));
+}
+
+/**Devuelve un rango de numeros */
+export function range(start: number, count: number, step?: number) {
+    let ret: number[] = [];
+    step = step || 1;
+    const end = start + count * step;
+
+    for (let i = start; i < end; i += step) {
+        ret.push(i);
+    }
+    return ret;
 }

@@ -1,4 +1,8 @@
-import { sequenceEquals, shallowEquals, flatten, groupBy, Grouping, deepEquals, pipe, enumObject, setEquals, all, any, arrayToMap, contains, filterObject, first, mapObject, omit, ObjMap, toMap, moveItem, swapItems, upDownItem, promiseAllObj, unique, filterIf, mapKeys, intersect, omitUndefined, single, awaitObj, shallowDiff } from "./index";
+import {
+    sequenceEquals, shallowEquals, flatten, groupBy, Grouping,
+    deepEquals, pipe, enumObject, setEquals, all, any, arrayToMap, contains, filterObject, first, mapObject, omit, ObjMap, toMap, moveItem, swapItems, upDownItem, promiseAllObj,
+    unique, filterIf, mapKeys, intersect, omitUndefined, single, awaitObj, shallowDiff, range
+} from "./index";
 test("sequence equals", () => {
     expect(sequenceEquals<any>(null as any, [])).toBe(false);
     expect(sequenceEquals<any>(null as any, null as any)).toBe(true);
@@ -209,7 +213,7 @@ test("arrayToObject", () => {
 test("mapObject", () => {
     const input = { a: 1, b: 2, c: 3 };
     const expected = { a: 10, b: 20, c: 30 };
-    const result = mapObject(input, x => x * 10);
+    const result = mapObject(input, x => (x as number) * 10);
     expect(shallowEquals(expected, result)).toBe(true);
 });
 
@@ -391,7 +395,7 @@ test("shallowDiff 1", () => {
     };
 
     const props = shallowDiff(a, b);
-    expect(props).toEqual( { age: true, other: true });
+    expect(props).toEqual({ age: true, other: true });
 });
 
 test("shallowDiff 2", () => {
@@ -405,5 +409,11 @@ test("shallowDiff 2", () => {
     };
 
     const props = shallowDiff(a, b);
-    expect(props).toEqual( { age: true });
+    expect(props).toEqual({ age: true });
+});
+
+
+test("range", () => {
+
+    expect(range(4, 3, 2)).toEqual([4, 6, 8]);
 });
