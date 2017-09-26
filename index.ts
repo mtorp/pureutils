@@ -471,3 +471,52 @@ export function remove<T>(arr: T[], item: T) {
     return arr.filter(x => x != item);
 }
 
+/**
+ * Combina varias funciones comparadores que pueden ser usadas para alimentar a la función sort. Se le da prioridad a los primeros comparadores,
+ * si un comparador devuelve 0, entonces se evalue el segundo
+ * @param comparers 
+ */
+export function combineComparers<T>(...comparers: ((a: T, b: T) => number)[]): (a: T, b: T) => number {
+    return (a: T, b: T) => {
+        for (const comp of comparers) {
+            const result = comp(a, b);
+            if (result != 0) return result;
+        }
+        return 0;
+    };
+}
+
+/**Comparador de ordenamiento por default */
+export function defaultComparer<T>(a: T, b: T): number {
+    if (a === b) {
+        return 0;
+    } else if (a === null && b === undefined) {
+        return 1;
+    } else if (a === undefined && b === null) {
+        return -1;
+    } else
+        return a > b ? 1 : b < a ? -1 : 0;
+}
+
+export type ComparerFunction<T> = (a: T, b: T) => number;
+
+/**Ordena un arreglo de forma estable, a diferencia de con array.sort el arreglo original no es modificado
+ * @param comparers Comparadores de ordenamiento, se le da precedencia al primero. Si no se especifica ninguno se usará el comparador por default
+ */
+export function sort<T>(arr: T[], ...comparers: (ComparerFunction<T>)[]) {
+    comparers = comparers.length == 0 ? [defaultComparer] : comparers;
+    type T2 = { value: T, index: number };
+    const toEffComparer = (func: ComparerFunction<T>) => (a: T2, b: T2) => func(a.value, b.value);
+    //Comparamos tambien por indice
+    const effComparers: ComparerFunction<T2>[] = [
+        ...comparers.map(toEffComparer),
+        (a, b) => a.index - b.index
+    ];
+    const effectiveComparer = combineComparers(...effComparers);
+
+    const copy = arr.map((x, i) => ({ value: x, index: i }));
+    copy.sort(effectiveComparer);
+
+    const ret = copy.map(x => x.value);
+    return ret;
+}

@@ -1,7 +1,7 @@
 import {
     sequenceEquals, shallowEquals, flatten, groupBy, Grouping,
     deepEquals, pipe, enumObject, setEquals, all, any, arrayToMap, contains, filterObject, first, mapObject, omit, ObjMap, toMap, moveItem, swapItems, upDownItem, promiseAllObj,
-    unique, filterIf, mapKeys, intersect, omitUndefined, single, awaitObj, shallowDiff, range
+    unique, filterIf, mapKeys, intersect, omitUndefined, single, awaitObj, shallowDiff, range, sort, defaultComparer
 } from "./index";
 test("sequence equals", () => {
     expect(sequenceEquals<any>(null as any, [])).toBe(false);
@@ -431,7 +431,30 @@ test("awaitObj subtype", async () => {
     });
 
     const result = awaitObj(objProm, { a: true, c: true });
-    
+
     expect(await result.a).toBe(10);
     expect(await result.c).toBe("que rollo");
+});
+
+test("sort", () => {
+    const a = [3, 4, 2, 1, 5];
+    const result = sort(a);
+    expect(result).toEqual([1, 2, 3, 4, 5]);
+    //Verificamos que no se modifico el arreglo original:
+    expect(a).toEqual([3, 4, 2, 1, 5]);
+
+    const resultStable = sort(a, (a, b) => 0);
+    expect(resultStable).toEqual([3, 4, 2, 1, 5]);
+
+    const resultInverse = sort(a, (a, b) => b - a);
+    expect(resultInverse).toEqual([5, 4, 3, 2, 1]);
+
+    const obj = a.map(x => ({ value: x }));
+    const objStable = sort(obj);
+    expect(objStable).toEqual([{ value: 3 }, { value: 4 }, { value: 2 }, { value: 1 }, { value: 5 }]);
+
+    const objSort = sort(obj, (a, b) => defaultComparer(a.value, b.value));
+    expect(objSort).toEqual([{ value: 1 }, { value: 2 }, { value: 3 }, { value: 4 }, { value: 5 }]);
+
+
 });

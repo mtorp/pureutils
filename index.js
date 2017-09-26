@@ -564,3 +564,22 @@ function range(start, count, step) {
     return ret;
 }
 exports.range = range;
+/**
+ * Devuelve un nuevo arreglo con todo el arreglo original mas el elemento al final
+ */
+function push(arr, item) {
+    return __spread(arr, [item]);
+}
+exports.push = push;
+/**
+ * Remplaza todos los valores del arreglo que cumplan con cierta condicion
+ */
+function replace(arr, condition, newValue) {
+    return arr.map(function (x, i) { return condition(x, i) ? newValue : x; });
+}
+exports.replace = replace;
+/**Elimina un elemento del arreglo */
+function remove(arr, item) {
+    return arr.filter(function (x) { return x != item; });
+}
+exports.remove = remove;

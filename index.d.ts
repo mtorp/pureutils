@@ -167,3 +167,13 @@ export declare function intersect<T>(a: T[], b: T[], comparer?: (a: T, b: T) => 
 export declare function intersectKeys<T, TKey>(items: T[], keys: TKey[], keySelector: (item: T) => TKey, comparer?: (a: TKey, b: TKey) => boolean): T[];
 /**Devuelve un rango de numeros */
 export declare function range(start: number, count: number, step?: number): number[];
+/**
+ * Devuelve un nuevo arreglo con todo el arreglo original mas el elemento al final
+ */
+export declare function push<T>(arr: T[], item: T): T[];
+/**
+ * Remplaza todos los valores del arreglo que cumplan con cierta condicion
+ */
+export declare function replace<T>(arr: T[], condition: (item: T, index: number) => boolean, newValue: T): T[];
+/**Elimina un elemento del arreglo */
+export declare function remove<T>(arr: T[], item: T): T[];
