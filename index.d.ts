@@ -135,9 +135,9 @@ export declare function promiseAllObj<T>(obj: Promisify<T>): Promise<T>;
 /**Convierte una promesa de un objeto a un objeto de promesas
  * @param include Nombres de las propiedades que se desean incluir en el objeto resultante
  */
-export declare function awaitObj<T>(obj: PromiseLike<T>, include: {
-    [K in keyof T]?: true;
-}): Promisify<T>;
+export declare function awaitObj<T, TKeys extends keyof T>(obj: PromiseLike<T>, include: {
+    [K in TKeys]: true;
+}): Promisify<Pick<T, TKeys>>;
 /**Devuelve todos los elementos de un arreglo que no estan repetidos, respetando el orden original en el que aparecen primero.
  * @param comparer Comparador que determina si 2 elementos son iguales. Se usa el operador ===
 */

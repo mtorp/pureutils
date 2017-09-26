@@ -395,3 +395,29 @@ test("shallowDiff 2", function () {
 test("range", function () {
     expect(index_1.range(4, 3, 2)).toEqual([4, 6, 8]);
 });
+test("awaitObj subtype", function () { return __awaiter(_this, void 0, void 0, function () {
+    function prom(value) {
+        return new Promise(function (resolve) { return resolve(value); });
+    }
+    var objProm, result, _a, _b;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
+            case 0:
+                objProm = prom({
+                    a: 10,
+                    b: 20,
+                    c: "que rollo"
+                });
+                result = index_1.awaitObj(objProm, { a: true, c: true });
+                _a = expect;
+                return [4 /*yield*/, result.a];
+            case 1:
+                _a.apply(void 0, [_c.sent()]).toBe(10);
+                _b = expect;
+                return [4 /*yield*/, result.c];
+            case 2:
+                _b.apply(void 0, [_c.sent()]).toBe("que rollo");
+                return [2 /*return*/];
+        }
+    });
+}); });

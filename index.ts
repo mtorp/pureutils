@@ -451,3 +451,23 @@ export function range(start: number, count: number, step?: number) {
     }
     return ret;
 }
+
+/**
+ * Devuelve un nuevo arreglo con todo el arreglo original mas el elemento al final
+ */
+export function push<T>(arr: T[], item: T) {
+    return [...arr, item];
+}
+
+/**
+ * Remplaza todos los valores del arreglo que cumplan con cierta condicion
+ */
+export function replace<T>(arr: T[], condition: (item: T, index: number) => boolean, newValue: T) {
+    return arr.map((x, i) => condition(x, i) ? newValue : x);
+}
+
+/**Elimina un elemento del arreglo */
+export function remove<T>(arr: T[], item: T) {
+    return arr.filter(x => x != item);
+}
+
