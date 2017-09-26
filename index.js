@@ -553,3 +553,14 @@ function intersectKeys(items, keys, keySelector, comparer) {
     return items.filter(function (item) { return contains(keys, keySelector(item), comparer || shallowEquals); });
 }
 exports.intersectKeys = intersectKeys;
+/**Devuelve un rango de numeros */
+function range(start, count, step) {
+    var ret = [];
+    step = step || 1;
+    var end = start + count * step;
+    for (var i = start; i < end; i += step) {
+        ret.push(i);
+    }
+    return ret;
+}
+exports.range = range;

@@ -417,3 +417,21 @@ test("range", () => {
 
     expect(range(4, 3, 2)).toEqual([4, 6, 8]);
 });
+
+test("awaitObj subtype", async () => {
+
+    function prom<T>(value: T) {
+        return new Promise<T>(resolve => resolve(value));
+    }
+
+    const objProm = prom({
+        a: 10,
+        b: 20,
+        c: "que rollo"
+    });
+
+    const result = awaitObj(objProm, { a: true, c: true });
+    
+    expect(await result.a).toBe(10);
+    expect(await result.c).toBe("que rollo");
+});

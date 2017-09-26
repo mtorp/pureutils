@@ -381,7 +381,7 @@ export function promiseAllObj(obj: any) {
 /**Convierte una promesa de un objeto a un objeto de promesas
  * @param include Nombres de las propiedades que se desean incluir en el objeto resultante
  */
-export function awaitObj<T>(obj: PromiseLike<T>, include: {[K in keyof T]?: true }): Promisify<T> {
+export function awaitObj<T, TKeys extends keyof T>(obj: PromiseLike<T>, include: {[K in TKeys]: true }): Promisify<Pick<T, TKeys>> {
     const ret = pipe(
         include,
         inc => filterObject(inc, x => !!x),

@@ -165,3 +165,5 @@ export declare function intersect<T>(a: T[], b: T[], comparer?: (a: T, b: T) => 
  * @param comparer Comparedor de igualdad. Por default se usa el shallowEquals
  */
 export declare function intersectKeys<T, TKey>(items: T[], keys: TKey[], keySelector: (item: T) => TKey, comparer?: (a: TKey, b: TKey) => boolean): T[];
+/**Devuelve un rango de numeros */
+export declare function range(start: number, count: number, step?: number): number[];

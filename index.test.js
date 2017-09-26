@@ -392,3 +392,6 @@ test("shallowDiff 2", function () {
     var props = index_1.shallowDiff(a, b);
     expect(props).toEqual({ age: true });
 });
+test("range", function () {
+    expect(index_1.range(4, 3, 2)).toEqual([4, 6, 8]);
+});
