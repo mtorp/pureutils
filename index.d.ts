@@ -177,3 +177,16 @@ export declare function push<T>(arr: T[], item: T): T[];
 export declare function replace<T>(arr: T[], condition: (item: T, index: number) => boolean, newValue: T): T[];
 /**Elimina un elemento del arreglo */
 export declare function remove<T>(arr: T[], item: T): T[];
+/**
+ * Combina varias funciones comparadores que pueden ser usadas para alimentar a la función sort. Se le da prioridad a los primeros comparadores,
+ * si un comparador devuelve 0, entonces se evalue el segundo
+ * @param comparers
+ */
+export declare function combineComparers<T>(...comparers: ((a: T, b: T) => number)[]): (a: T, b: T) => number;
+/**Comparador de ordenamiento por default */
+export declare function defaultComparer<T>(a: T, b: T): number;
+export declare type ComparerFunction<T> = (a: T, b: T) => number;
+/**Ordena un arreglo de forma estable, a diferencia de con array.sort el arreglo original no es modificado
+ * @param comparers Comparadores de ordenamiento, se le da precedencia al primero. Si no se especifica ninguno se usará el comparador por default
+ */
+export declare function sort<T>(arr: T[], ...comparers: (ComparerFunction<T>)[]): T[];

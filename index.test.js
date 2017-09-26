@@ -421,3 +421,19 @@ test("awaitObj subtype", function () { return __awaiter(_this, void 0, void 0, f
         }
     });
 }); });
+test("sort", function () {
+    var a = [3, 4, 2, 1, 5];
+    var result = index_1.sort(a);
+    expect(result).toEqual([1, 2, 3, 4, 5]);
+    //Verificamos que no se modifico el arreglo original:
+    expect(a).toEqual([3, 4, 2, 1, 5]);
+    var resultStable = index_1.sort(a, function (a, b) { return 0; });
+    expect(resultStable).toEqual([3, 4, 2, 1, 5]);
+    var resultInverse = index_1.sort(a, function (a, b) { return b - a; });
+    expect(resultInverse).toEqual([5, 4, 3, 2, 1]);
+    var obj = a.map(function (x) { return ({ value: x }); });
+    var objStable = index_1.sort(obj);
+    expect(objStable).toEqual([{ value: 3 }, { value: 4 }, { value: 2 }, { value: 1 }, { value: 5 }]);
+    var objSort = index_1.sort(obj, function (a, b) { return index_1.defaultComparer(a.value, b.value); });
+    expect(objSort).toEqual([{ value: 1 }, { value: 2 }, { value: 3 }, { value: 4 }, { value: 5 }]);
+});

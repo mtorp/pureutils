@@ -583,3 +583,70 @@ function remove(arr, item) {
     return arr.filter(function (x) { return x != item; });
 }
 exports.remove = remove;
+/**
+ * Combina varias funciones comparadores que pueden ser usadas para alimentar a la función sort. Se le da prioridad a los primeros comparadores,
+ * si un comparador devuelve 0, entonces se evalue el segundo
+ * @param comparers
+ */
+function combineComparers() {
+    var comparers = [];
+    for (var _i = 0; _i < arguments.length; _i++) {
+        comparers[_i] = arguments[_i];
+    }
+    return function (a, b) {
+        try {
+            for (var comparers_1 = __values(comparers), comparers_1_1 = comparers_1.next(); !comparers_1_1.done; comparers_1_1 = comparers_1.next()) {
+                var comp = comparers_1_1.value;
+                var result = comp(a, b);
+                if (result != 0)
+                    return result;
+            }
+        }
+        catch (e_12_1) { e_12 = { error: e_12_1 }; }
+        finally {
+            try {
+                if (comparers_1_1 && !comparers_1_1.done && (_a = comparers_1.return)) _a.call(comparers_1);
+            }
+            finally { if (e_12) throw e_12.error; }
+        }
+        return 0;
+        var e_12, _a;
+    };
+}
+exports.combineComparers = combineComparers;
+/**Comparador de ordenamiento por default */
+function defaultComparer(a, b) {
+    if (a === b) {
+        return 0;
+    }
+    else if (a === null && b === undefined) {
+        return 1;
+    }
+    else if (a === undefined && b === null) {
+        return -1;
+    }
+    else
+        return a > b ? 1 : b < a ? -1 : 0;
+}
+exports.defaultComparer = defaultComparer;
+/**Ordena un arreglo de forma estable, a diferencia de con array.sort el arreglo original no es modificado
+ * @param comparers Comparadores de ordenamiento, se le da precedencia al primero. Si no se especifica ninguno se usará el comparador por default
+ */
+function sort(arr) {
+    var comparers = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        comparers[_i - 1] = arguments[_i];
+    }
+    comparers = comparers.length == 0 ? [defaultComparer] : comparers;
+    var toEffComparer = function (func) { return function (a, b) { return func(a.value, b.value); }; };
+    //Comparamos tambien por indice
+    var effComparers = __spread(comparers.map(toEffComparer), [
+        function (a, b) { return a.index - b.index; }
+    ]);
+    var effectiveComparer = combineComparers.apply(void 0, __spread(effComparers));
+    var copy = arr.map(function (x, i) { return ({ value: x, index: i }); });
+    copy.sort(effectiveComparer);
+    var ret = copy.map(function (x) { return x.value; });
+    return ret;
+}
+exports.sort = sort;
