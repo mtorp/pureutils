@@ -1,7 +1,7 @@
 import {
     sequenceEquals, shallowEquals, flatten, groupBy, Grouping,
     deepEquals, pipe, enumObject, setEquals, all, any, arrayToMap, contains, filterObject, first, mapObject, omit, ObjMap, toMap, moveItem, swapItems, upDownItem, promiseAllObj,
-    unique, filterIf, mapKeys, intersect, omitUndefined, single, awaitObj, shallowDiff, range, sort, defaultComparer
+    unique, filterIf, mapKeys, intersect, omitUndefined, single, awaitObj, shallowDiff, range, sort, defaultComparer, orderBy, orderByDesc
 } from "./index";
 test("sequence equals", () => {
     expect(sequenceEquals<any>(null as any, [])).toBe(false);
@@ -455,6 +455,32 @@ test("sort", () => {
 
     const objSort = sort(obj, (a, b) => defaultComparer(a.value, b.value));
     expect(objSort).toEqual([{ value: 1 }, { value: 2 }, { value: 3 }, { value: 4 }, { value: 5 }]);
+});
+
+test("order by", () => {
+    const {
+        x, y, z, w, a, b
+    } = {
+            x: { value: 4, name: "a" },
+            y: { value: 3, name: "b" },
+            z: { value: 1, name: "d" },
+            w: { value: 5, name: "c" },
+            a: { value: 6, name: "f" },
+            b: { value: 2, name: "f" },
+        };
+
+    const data = [x, y, z, w, a, b];
+
+    const nameThenValueResult = orderBy(data, x => x.name, x => x.value);
+    const nameThenValueExpected = [x, y, w, z, b, a];
+    expect(nameThenValueResult).toEqual(nameThenValueExpected);
+
+    const valueResult = orderBy(data, x => x.value);
+    const valueExpected = [z, b, y, x, w, a];
+    expect(valueResult).toEqual(valueExpected);
 
 
+    const nameResult = orderBy(data, x => x.name);
+    const nameExpected = [x, y, w, z, a, b];
+    expect(nameResult).toEqual(nameExpected);
 });

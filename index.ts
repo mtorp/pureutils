@@ -495,7 +495,7 @@ export function defaultComparer<T>(a: T, b: T): number {
     } else if (a === undefined && b === null) {
         return -1;
     } else
-        return a > b ? 1 : b < a ? -1 : 0;
+        return a > b ? 1 : a < b ? -1 : 0;
 }
 
 export type ComparerFunction<T> = (a: T, b: T) => number;
@@ -519,4 +519,18 @@ export function sort<T>(arr: T[], ...comparers: (ComparerFunction<T>)[]) {
 
     const ret = copy.map(x => x.value);
     return ret;
+}
+
+/**
+ * Ordena un arreglo de forma estable segun ciertas claves seleccionadas usando el comparador por default
+ */
+export function orderBy<T>(arr: T[], ...keySelectors: ((x: T) => any)[]) {
+    const comparers = keySelectors.map(selector => (a: T, b: T) => +defaultComparer(selector(a), selector(b)));
+    return sort(arr, ...comparers);
+}
+
+/**Ordena un arreglo de forma estable y descendiente segun ciertas claves seleccionadas usando el comparador por default */
+export function orderByDesc<T>(arr: T[], ... keySelectors: ((x: T)=> any)[] ) {
+    const comparers = keySelectors.map(selector => (a: T, b: T) => -defaultComparer(selector(a), selector(b)));
+    return sort(arr, ...comparers);
 }
