@@ -437,3 +437,23 @@ test("sort", function () {
     var objSort = index_1.sort(obj, function (a, b) { return index_1.defaultComparer(a.value, b.value); });
     expect(objSort).toEqual([{ value: 1 }, { value: 2 }, { value: 3 }, { value: 4 }, { value: 5 }]);
 });
+test("order by", function () {
+    var _a = {
+        x: { value: 4, name: "a" },
+        y: { value: 3, name: "b" },
+        z: { value: 1, name: "d" },
+        w: { value: 5, name: "c" },
+        a: { value: 6, name: "f" },
+        b: { value: 2, name: "f" },
+    }, x = _a.x, y = _a.y, z = _a.z, w = _a.w, a = _a.a, b = _a.b;
+    var data = [x, y, z, w, a, b];
+    var nameThenValueResult = index_1.orderBy(data, function (x) { return x.name; }, function (x) { return x.value; });
+    var nameThenValueExpected = [x, y, w, z, b, a];
+    expect(nameThenValueResult).toEqual(nameThenValueExpected);
+    var valueResult = index_1.orderBy(data, function (x) { return x.value; });
+    var valueExpected = [z, b, y, x, w, a];
+    expect(valueResult).toEqual(valueExpected);
+    var nameResult = index_1.orderBy(data, function (x) { return x.name; });
+    var nameExpected = [x, y, w, z, a, b];
+    expect(nameResult).toEqual(nameExpected);
+});

@@ -190,3 +190,9 @@ export declare type ComparerFunction<T> = (a: T, b: T) => number;
  * @param comparers Comparadores de ordenamiento, se le da precedencia al primero. Si no se especifica ninguno se usará el comparador por default
  */
 export declare function sort<T>(arr: T[], ...comparers: (ComparerFunction<T>)[]): T[];
+/**
+ * Ordena un arreglo de forma estable segun ciertas claves seleccionadas usando el comparador por default
+ */
+export declare function orderBy<T>(arr: T[], ...keySelectors: ((x: T) => any)[]): T[];
+/**Ordena un arreglo de forma estable y descendiente segun ciertas claves seleccionadas usando el comparador por default */
+export declare function orderByDesc<T>(arr: T[], ...keySelectors: ((x: T) => any)[]): T[];

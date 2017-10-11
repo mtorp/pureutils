@@ -1,4 +1,5 @@
 export { pipe } from "./pipe";
+export { addDate, DateUnits, truncateDate } from "./dates";
 import { pipe } from "./pipe";
 
 /**Devuelve true si todos los elementos de un arreglo encajan con el predicado */

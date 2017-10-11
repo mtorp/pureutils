@@ -1,7 +1,8 @@
 import {
     sequenceEquals, shallowEquals, flatten, groupBy, Grouping,
     deepEquals, pipe, enumObject, setEquals, all, any, arrayToMap, contains, filterObject, first, mapObject, omit, ObjMap, toMap, moveItem, swapItems, upDownItem, promiseAllObj,
-    unique, filterIf, mapKeys, intersect, omitUndefined, single, awaitObj, shallowDiff, range, sort, defaultComparer, orderBy, orderByDesc
+    unique, filterIf, mapKeys, intersect, omitUndefined, single, awaitObj, shallowDiff, range, sort, defaultComparer, orderBy, orderByDesc,
+    truncateDate, addDate
 } from "./index";
 test("sequence equals", () => {
     expect(sequenceEquals<any>(null as any, [])).toBe(false);
@@ -484,3 +485,40 @@ test("order by", () => {
     const nameExpected = [x, y, w, z, a, b];
     expect(nameResult).toEqual(nameExpected);
 });
+
+test("truncate date", () => {
+    const test = new Date(2017, 9, 10, 8, 52, 32, 542);
+    const seconds = new Date(2017, 9, 10, 8, 52, 32);
+    const minutes = new Date(2017, 9, 10, 8, 52);
+    const hours = new Date(2017, 9, 10, 8);
+    const days = new Date(2017, 9, 10);
+    const months = new Date(2017, 9);
+    const years = new Date(2017, 0);
+
+    expect(truncateDate(test, "milliseconds")).toEqual(test);
+    expect(truncateDate(test, "seconds")).toEqual(seconds);
+    expect(truncateDate(test, "minutes")).toEqual(minutes);
+    expect(truncateDate(test, "hours")).toEqual(hours);
+    expect(truncateDate(test, "days")).toEqual(days);
+    expect(truncateDate(test, "months")).toEqual(months);
+    expect(truncateDate(test, "years")).toEqual(years);
+
+});
+
+test("add to date", () => {
+    const test = new Date(2017, 9, 10, 8, 52, 32, 542);
+    //A todos se le suman 100 unidades
+    const plusMilliseconds = new Date(2017, 9, 10, 8, 52, 32, 642);
+    const plusSeconds = new Date(2017, 9, 10, 8, 54, 12, 542);
+    const plusMinutes = new Date(2017, 9, 10, 10, 32, 32, 542);
+    const plusDays = new Date(2018, 0, 18, 8, 52, 32, 542);
+    const plusMonths = new Date(2026, 1, 10, 8, 52, 32, 542);
+    const plusYear = new Date(2117, 9, 10, 8, 52, 32, 542);
+
+    expect(addDate(test, 100, "milliseconds")).toEqual(plusMilliseconds);
+    expect(addDate(test, 100, "seconds")).toEqual(plusSeconds);
+    expect(addDate(test, 100, "minutes")).toEqual(plusMinutes);
+    expect(addDate(test, 100, "days")).toEqual(plusDays);
+    expect(addDate(test, 100, "months")).toEqual(plusMonths);
+    expect(addDate(test, 100, "years")).toEqual(plusYear);
+})

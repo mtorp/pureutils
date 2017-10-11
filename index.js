@@ -626,7 +626,7 @@ function defaultComparer(a, b) {
         return -1;
     }
     else
-        return a > b ? 1 : b < a ? -1 : 0;
+        return a > b ? 1 : a < b ? -1 : 0;
 }
 exports.defaultComparer = defaultComparer;
 /**Ordena un arreglo de forma estable, a diferencia de con array.sort el arreglo original no es modificado
@@ -650,3 +650,25 @@ function sort(arr) {
     return ret;
 }
 exports.sort = sort;
+/**
+ * Ordena un arreglo de forma estable segun ciertas claves seleccionadas usando el comparador por default
+ */
+function orderBy(arr) {
+    var keySelectors = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        keySelectors[_i - 1] = arguments[_i];
+    }
+    var comparers = keySelectors.map(function (selector) { return function (a, b) { return +defaultComparer(selector(a), selector(b)); }; });
+    return sort.apply(void 0, __spread([arr], comparers));
+}
+exports.orderBy = orderBy;
+/**Ordena un arreglo de forma estable y descendiente segun ciertas claves seleccionadas usando el comparador por default */
+function orderByDesc(arr) {
+    var keySelectors = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        keySelectors[_i - 1] = arguments[_i];
+    }
+    var comparers = keySelectors.map(function (selector) { return function (a, b) { return -defaultComparer(selector(a), selector(b)); }; });
+    return sort.apply(void 0, __spread([arr], comparers));
+}
+exports.orderByDesc = orderByDesc;
