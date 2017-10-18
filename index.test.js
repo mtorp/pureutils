@@ -509,3 +509,13 @@ test("rx flatten", function () { return __awaiter(_this, void 0, void 0, functio
         }
     });
 }); });
+test("take firstMap", function () { return __awaiter(_this, void 0, void 0, function () {
+    var arr;
+    return __generator(this, function (_a) {
+        arr = [1, 2, 3, 4];
+        expect(index_1.take(arr, 2)).toEqual([1, 2]);
+        expect(index_1.firstMap(arr, function (x) { return x == 3; }, function (x) { return "R" + x; })).toBe("R3");
+        expect(index_1.firstMap(arr, function (x) { return x == 5; }, function (x) { return "R" + x; })).toBe(undefined);
+        return [2 /*return*/];
+    });
+}); });

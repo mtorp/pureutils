@@ -688,3 +688,18 @@ function rxFlatten(observable) {
     return obsOfObs.concatAll();
 }
 exports.rxFlatten = rxFlatten;
+/**Toma los primeros N elementos del arreglo */
+function take(arr, count) {
+    var ret = [];
+    for (var i = 0; i < Math.min(arr.length, count); i++) {
+        ret.push(arr[i]);
+    }
+    return ret;
+}
+exports.take = take;
+/**Obtiene le primer elemento mapeado de un arreglo o undefined */
+function firstMap(arr, predicate, map) {
+    var f = first(arr, predicate);
+    return f && map(f);
+}
+exports.firstMap = firstMap;

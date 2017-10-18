@@ -199,3 +199,7 @@ export declare function orderBy<T>(arr: T[], ...keySelectors: ((x: T) => any)[])
 /**Ordena un arreglo de forma estable y descendiente segun ciertas claves seleccionadas usando el comparador por default */
 export declare function orderByDesc<T>(arr: T[], ...keySelectors: ((x: T) => any)[]): T[];
 export declare function rxFlatten<T>(observable: rx.Observable<T | PromiseLike<T> | rx.Observable<T>>): rx.Observable<T>;
+/**Toma los primeros N elementos del arreglo */
+export declare function take<T>(arr: T[], count: number): T[];
+/**Obtiene le primer elemento mapeado de un arreglo o undefined */
+export declare function firstMap<T, R>(arr: T[], predicate: (x: T) => boolean, map: (x: T) => R): R | undefined;
