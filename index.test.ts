@@ -2,7 +2,7 @@ import {
     sequenceEquals, shallowEquals, flatten, groupBy, Grouping,
     deepEquals, pipe, enumObject, setEquals, all, any, arrayToMap, contains, filterObject, first, mapObject, omit, ObjMap, toMap, moveItem, swapItems, upDownItem, promiseAllObj,
     unique, filterIf, mapKeys, intersect, omitUndefined, single, awaitObj, shallowDiff, range, sort, defaultComparer, orderBy, orderByDesc,
-    truncateDate, addDate, rxFlatten
+    truncateDate, addDate, rxFlatten, take, firstMap
 } from "./index";
 
 import * as rx from "rxjs";
@@ -536,4 +536,11 @@ test("rx flatten", async () => {
 
     const flat = await rxFlatten(arr).toArray().toPromise();
     expect(flat).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+});
+
+test("take firstMap", async () => {
+    const arr = [1, 2, 3, 4];
+    expect(take(arr, 2)).toEqual([1, 2]);
+    expect(firstMap(arr, x => x == 3, x => "R" + x)).toBe("R3");
+    expect(firstMap(arr, x => x == 5, x => "R" + x)).toBe(undefined);
 });

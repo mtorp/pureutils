@@ -36,6 +36,7 @@ var dates_1 = require("./dates");
 exports.addDate = dates_1.addDate;
 exports.truncateDate = dates_1.truncateDate;
 var pipe_2 = require("./pipe");
+var rx = require("rxjs");
 /**Devuelve true si todos los elementos de un arreglo encajan con el predicado */
 function all(arr, pred) {
     try {
@@ -675,17 +676,15 @@ function orderByDesc(arr) {
     return sort.apply(void 0, __spread([arr], comparers));
 }
 exports.orderByDesc = orderByDesc;
-/*
-export function rxFlatten<T>(observable: rx.Observable<T | PromiseLike<T> | rx.Observable<T>>): rx.Observable<T> {
-    const obsOfObs = observable.map(x => {
+function rxFlatten(observable) {
+    var obsOfObs = observable.map(function (x) {
         if (x instanceof rx.Observable) {
             return x;
-        } else {
+        }
+        else {
             return rx.Observable.fromPromise(Promise.resolve(x));
         }
     });
-
     return obsOfObs.concatAll();
 }
-
-*/ 
+exports.rxFlatten = rxFlatten;

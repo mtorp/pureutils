@@ -547,3 +547,18 @@ export function rxFlatten<T>(observable: rx.Observable<T | PromiseLike<T> | rx.O
 
     return obsOfObs.concatAll();
 }
+
+/**Toma los primeros N elementos del arreglo */
+export function take<T>(arr: T[], count: number): T[] {
+    let ret: T[] = [];
+    for (var i = 0; i < Math.min(arr.length, count); i++) {
+        ret.push(arr[i]);
+    }
+    return ret;
+}
+
+/**Obtiene le primer elemento mapeado de un arreglo o undefined */
+export function firstMap<T,R>(arr: T[], predicate: (x: T)=> boolean, map: (x: T) => R) : R | undefined {
+    const f = first(arr, predicate);
+    return f && map(f);
+}

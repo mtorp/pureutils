@@ -45,6 +45,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var index_1 = require("./index");
+var rx = require("rxjs");
 test("sequence equals", function () {
     expect(index_1.sequenceEquals(null, [])).toBe(false);
     expect(index_1.sequenceEquals(null, null)).toBe(true);
@@ -489,3 +490,22 @@ test("add to date", function () {
     expect(index_1.addDate(test, 100, "months")).toEqual(plusMonths);
     expect(index_1.addDate(test, 100, "years")).toEqual(plusYear);
 });
+test("rx flatten", function () { return __awaiter(_this, void 0, void 0, function () {
+    var arr, flat;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                arr = rx.Observable.from([1, 2,
+                    Promise.resolve(3),
+                    Promise.resolve(4),
+                    rx.Observable.from([5, 6, 7]),
+                    rx.Observable.from([8, 9]),
+                ]);
+                return [4 /*yield*/, index_1.rxFlatten(arr).toArray().toPromise()];
+            case 1:
+                flat = _a.sent();
+                expect(flat).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+                return [2 /*return*/];
+        }
+    });
+}); });
