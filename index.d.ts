@@ -1,4 +1,5 @@
 export { pipe } from "./pipe";
+export { addDate, DateUnits, truncateDate } from "./dates";
 /**Devuelve true si todos los elementos de un arreglo encajan con el predicado */
 export declare function all<T>(arr: T[], pred: (x: T) => boolean): boolean;
 /**Devuelve true si por lo menos un elemento del arreglo encaja con el predicado, o si existe por lo menos un elemento en caso

@@ -457,3 +457,35 @@ test("order by", function () {
     var nameExpected = [x, y, w, z, a, b];
     expect(nameResult).toEqual(nameExpected);
 });
+test("truncate date", function () {
+    var test = new Date(2017, 9, 10, 8, 52, 32, 542);
+    var seconds = new Date(2017, 9, 10, 8, 52, 32);
+    var minutes = new Date(2017, 9, 10, 8, 52);
+    var hours = new Date(2017, 9, 10, 8);
+    var days = new Date(2017, 9, 10);
+    var months = new Date(2017, 9);
+    var years = new Date(2017, 0);
+    expect(index_1.truncateDate(test, "milliseconds")).toEqual(test);
+    expect(index_1.truncateDate(test, "seconds")).toEqual(seconds);
+    expect(index_1.truncateDate(test, "minutes")).toEqual(minutes);
+    expect(index_1.truncateDate(test, "hours")).toEqual(hours);
+    expect(index_1.truncateDate(test, "days")).toEqual(days);
+    expect(index_1.truncateDate(test, "months")).toEqual(months);
+    expect(index_1.truncateDate(test, "years")).toEqual(years);
+});
+test("add to date", function () {
+    var test = new Date(2017, 9, 10, 8, 52, 32, 542);
+    //A todos se le suman 100 unidades
+    var plusMilliseconds = new Date(2017, 9, 10, 8, 52, 32, 642);
+    var plusSeconds = new Date(2017, 9, 10, 8, 54, 12, 542);
+    var plusMinutes = new Date(2017, 9, 10, 10, 32, 32, 542);
+    var plusDays = new Date(2018, 0, 18, 8, 52, 32, 542);
+    var plusMonths = new Date(2026, 1, 10, 8, 52, 32, 542);
+    var plusYear = new Date(2117, 9, 10, 8, 52, 32, 542);
+    expect(index_1.addDate(test, 100, "milliseconds")).toEqual(plusMilliseconds);
+    expect(index_1.addDate(test, 100, "seconds")).toEqual(plusSeconds);
+    expect(index_1.addDate(test, 100, "minutes")).toEqual(plusMinutes);
+    expect(index_1.addDate(test, 100, "days")).toEqual(plusDays);
+    expect(index_1.addDate(test, 100, "months")).toEqual(plusMonths);
+    expect(index_1.addDate(test, 100, "years")).toEqual(plusYear);
+});

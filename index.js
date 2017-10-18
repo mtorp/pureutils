@@ -32,6 +32,9 @@ var __spread = (this && this.__spread) || function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var pipe_1 = require("./pipe");
 exports.pipe = pipe_1.pipe;
+var dates_1 = require("./dates");
+exports.addDate = dates_1.addDate;
+exports.truncateDate = dates_1.truncateDate;
 var pipe_2 = require("./pipe");
 /**Devuelve true si todos los elementos de un arreglo encajan con el predicado */
 function all(arr, pred) {
@@ -672,3 +675,17 @@ function orderByDesc(arr) {
     return sort.apply(void 0, __spread([arr], comparers));
 }
 exports.orderByDesc = orderByDesc;
+/*
+export function rxFlatten<T>(observable: rx.Observable<T | PromiseLike<T> | rx.Observable<T>>): rx.Observable<T> {
+    const obsOfObs = observable.map(x => {
+        if (x instanceof rx.Observable) {
+            return x;
+        } else {
+            return rx.Observable.fromPromise(Promise.resolve(x));
+        }
+    });
+
+    return obsOfObs.concatAll();
+}
+
+*/ 

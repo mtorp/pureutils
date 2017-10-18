@@ -2,8 +2,11 @@ import {
     sequenceEquals, shallowEquals, flatten, groupBy, Grouping,
     deepEquals, pipe, enumObject, setEquals, all, any, arrayToMap, contains, filterObject, first, mapObject, omit, ObjMap, toMap, moveItem, swapItems, upDownItem, promiseAllObj,
     unique, filterIf, mapKeys, intersect, omitUndefined, single, awaitObj, shallowDiff, range, sort, defaultComparer, orderBy, orderByDesc,
-    truncateDate, addDate
+    truncateDate, addDate, rxFlatten
 } from "./index";
+
+import * as rx from "rxjs";
+
 test("sequence equals", () => {
     expect(sequenceEquals<any>(null as any, [])).toBe(false);
     expect(sequenceEquals<any>(null as any, null as any)).toBe(true);
@@ -521,4 +524,16 @@ test("add to date", () => {
     expect(addDate(test, 100, "days")).toEqual(plusDays);
     expect(addDate(test, 100, "months")).toEqual(plusMonths);
     expect(addDate(test, 100, "years")).toEqual(plusYear);
-})
+});
+
+test("rx flatten", async () => {
+    const arr = rx.Observable.from([1, 2,
+        Promise.resolve(3),
+        Promise.resolve(4),
+        rx.Observable.from([5, 6, 7]),
+        rx.Observable.from([8, 9]),
+    ]);
+
+    const flat = await rxFlatten(arr).toArray().toPromise();
+    expect(flat).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+});

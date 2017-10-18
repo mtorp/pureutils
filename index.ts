@@ -1,6 +1,7 @@
 export { pipe } from "./pipe";
 export { addDate, DateUnits, truncateDate } from "./dates";
 import { pipe } from "./pipe";
+import * as rx from "rxjs";
 
 /**Devuelve true si todos los elementos de un arreglo encajan con el predicado */
 export function all<T>(arr: T[], pred: (x: T) => boolean): boolean {
@@ -531,7 +532,18 @@ export function orderBy<T>(arr: T[], ...keySelectors: ((x: T) => any)[]) {
 }
 
 /**Ordena un arreglo de forma estable y descendiente segun ciertas claves seleccionadas usando el comparador por default */
-export function orderByDesc<T>(arr: T[], ... keySelectors: ((x: T)=> any)[] ) {
+export function orderByDesc<T>(arr: T[], ...keySelectors: ((x: T) => any)[]) {
     const comparers = keySelectors.map(selector => (a: T, b: T) => -defaultComparer(selector(a), selector(b)));
     return sort(arr, ...comparers);
+}
+export function rxFlatten<T>(observable: rx.Observable<T | PromiseLike<T> | rx.Observable<T>>): rx.Observable<T> {
+    const obsOfObs = observable.map(x => {
+        if (x instanceof rx.Observable) {
+            return x;
+        } else {
+            return rx.Observable.fromPromise(Promise.resolve(x));
+        }
+    });
+
+    return obsOfObs.concatAll();
 }
