@@ -703,3 +703,47 @@ function firstMap(arr, predicate, map) {
     return f && map(f);
 }
 exports.firstMap = firstMap;
+/**Devuelve true si existiran duplicados en caso de editar un elemento de un arreglo
+ * @param arr Arreglo
+ * @param oldValueRef Valor anterior del arreglo
+ * @param newValue Nuevo valor del arreglo
+ */
+function duplicatesOnEdit(arr, oldValue, newValue, keySelector) {
+    var comparer = function (a, b) { return shallowEquals(keySelector(a), keySelector(b)); };
+    var foundOldValue = false;
+    try {
+        for (var arr_9 = __values(arr), arr_9_1 = arr_9.next(); !arr_9_1.done; arr_9_1 = arr_9.next()) {
+            var item = arr_9_1.value;
+            if (comparer(item, newValue)) {
+                if ((comparer(item, oldValue) && !foundOldValue)) {
+                    foundOldValue = true;
+                }
+                else {
+                    return true;
+                }
+            }
+        }
+    }
+    catch (e_13_1) { e_13 = { error: e_13_1 }; }
+    finally {
+        try {
+            if (arr_9_1 && !arr_9_1.done && (_a = arr_9.return)) _a.call(arr_9);
+        }
+        finally { if (e_13) throw e_13.error; }
+    }
+    return false;
+    var e_13, _a;
+}
+exports.duplicatesOnEdit = duplicatesOnEdit;
+/**
+ * Devuelve true si existirán duplicados en caso de agregar un elemento a un arreglo que es equivalente a saber
+ * si ese elemento esta contenido en el arreglo
+ * @param arr
+ * @param newValue
+ * @param comparer  Se usa el shallow equals por default
+ */
+function duplicatesOnAdd(arr, newValue, keySelector) {
+    var comparer = function (a, b) { return shallowEquals(keySelector(a), keySelector(b)); };
+    return contains(arr, newValue, comparer);
+}
+exports.duplicatesOnAdd = duplicatesOnAdd;

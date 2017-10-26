@@ -203,3 +203,17 @@ export declare function rxFlatten<T>(observable: rx.Observable<T | PromiseLike<T
 export declare function take<T>(arr: T[], count: number): T[];
 /**Obtiene le primer elemento mapeado de un arreglo o undefined */
 export declare function firstMap<T, R>(arr: T[], predicate: (x: T) => boolean, map: (x: T) => R): R | undefined;
+/**Devuelve true si existiran duplicados en caso de editar un elemento de un arreglo
+ * @param arr Arreglo
+ * @param oldValueRef Valor anterior del arreglo
+ * @param newValue Nuevo valor del arreglo
+ */
+export declare function duplicatesOnEdit<T, TKey>(arr: T[], oldValue: T, newValue: T, keySelector: (x: T) => TKey): boolean;
+/**
+ * Devuelve true si existirán duplicados en caso de agregar un elemento a un arreglo que es equivalente a saber
+ * si ese elemento esta contenido en el arreglo
+ * @param arr
+ * @param newValue
+ * @param comparer  Se usa el shallow equals por default
+ */
+export declare function duplicatesOnAdd<T, TKey>(arr: T[], newValue: T, keySelector: (x: T) => TKey): boolean;

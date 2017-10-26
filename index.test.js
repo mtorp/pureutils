@@ -519,3 +519,33 @@ test("take firstMap", function () { return __awaiter(_this, void 0, void 0, func
         return [2 /*return*/];
     });
 }); });
+test("duplicates on edit", function () { return __awaiter(_this, void 0, void 0, function () {
+    var arr;
+    return __generator(this, function (_a) {
+        arr = [
+            { a: 10, b: 20 },
+            { a: 20, b: 30 },
+            { a: 30, b: 40 },
+            { a: 40, b: 50 },
+        ];
+        expect(index_1.duplicatesOnEdit(arr, { a: 20, b: 30 }, { a: 20, b: 30 }, function (x) { return x; })).toBe(false);
+        expect(index_1.duplicatesOnEdit(arr, { a: 20, b: 30 }, { a: 10, b: 20 }, function (x) { return x; })).toBe(true);
+        expect(index_1.duplicatesOnEdit(arr, { a: 20, b: 30 }, { a: 40, b: 50 }, function (x) { return x; })).toBe(true);
+        expect(index_1.duplicatesOnEdit(arr, { a: 20, b: 30 }, { a: 40, b: 20 }, function (x) { return x; })).toBe(false);
+        return [2 /*return*/];
+    });
+}); });
+test("duplicates on add", function () { return __awaiter(_this, void 0, void 0, function () {
+    var arr;
+    return __generator(this, function (_a) {
+        arr = [
+            { a: 10, b: 20 },
+            { a: 20, b: 30 },
+            { a: 30, b: 40 },
+            { a: 40, b: 50 },
+        ];
+        expect(index_1.duplicatesOnAdd(arr, { a: 20, b: 30 }, function (x) { return x; })).toBe(true);
+        expect(index_1.duplicatesOnAdd(arr, { a: 50, b: 50 }, function (x) { return x; })).toBe(false);
+        return [2 /*return*/];
+    });
+}); });

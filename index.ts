@@ -536,16 +536,20 @@ export function orderByDesc<T>(arr: T[], ...keySelectors: ((x: T) => any)[]) {
     const comparers = keySelectors.map(selector => (a: T, b: T) => -defaultComparer(selector(a), selector(b)));
     return sort(arr, ...comparers);
 }
-export function rxFlatten<T>(observable: rx.Observable<T | PromiseLike<T> | rx.Observable<T>>): rx.Observable<T> {
-    const obsOfObs = observable.map(x => {
-        if (x instanceof rx.Observable) {
-            return x;
-        } else {
-            return rx.Observable.fromPromise(Promise.resolve(x));
-        }
-    });
 
+/**Convierte un observable de T, de Promise<T> o de Observable<T> a un observable de <T>, efectivamente aplanando un observable anidado en uno desanidado */
+export function rxFlatten<T>(observable: rx.Observable<T | PromiseLike<T> | rx.Observable<T>>): rx.Observable<T> {
+    const obsOfObs = observable.map(x => toObservable(x));
     return obsOfObs.concatAll();
+}
+
+/**Convierte un valor o una promesa a un observable, si el valor ya es un observable lo devuelve tal cual */
+export function toObservable<T>(value: T | PromiseLike<T> | rx.Observable<T>): rx.Observable<T> {
+    if (value instanceof rx.Observable) {
+        return value;
+    } else {
+        return rx.Observable.fromPromise(Promise.resolve(value));
+    }
 }
 
 /**Toma los primeros N elementos del arreglo */
@@ -568,8 +572,8 @@ export function firstMap<T, R>(arr: T[], predicate: (x: T) => boolean, map: (x: 
  * @param oldValueRef Valor anterior del arreglo
  * @param newValue Nuevo valor del arreglo
  */
-export function duplicatesOnEdit<T, TKey>(arr: T[], oldValue: T, newValue: T, keySelector : (x :T) => TKey) {
-    const comparer = (a: T, b: T) => shallowEquals( keySelector(a), keySelector(b));
+export function duplicatesOnEdit<T, TKey>(arr: T[], oldValue: T, newValue: T, keySelector: (x: T) => TKey) {
+    const comparer = (a: T, b: T) => shallowEquals(keySelector(a), keySelector(b));
     let foundOldValue = false;
     for (const item of arr) {
         if (comparer(item, newValue)) {
@@ -590,7 +594,7 @@ export function duplicatesOnEdit<T, TKey>(arr: T[], oldValue: T, newValue: T, ke
  * @param newValue 
  * @param comparer  Se usa el shallow equals por default
  */
-export function duplicatesOnAdd<T, TKey>(arr: T[], newValue: T, keySelector : (x :T) => TKey) {
-    const comparer = (a: T, b: T) => shallowEquals( keySelector(a), keySelector(b));
+export function duplicatesOnAdd<T, TKey>(arr: T[], newValue: T, keySelector: (x: T) => TKey) {
+    const comparer = (a: T, b: T) => shallowEquals(keySelector(a), keySelector(b));
     return contains(arr, newValue, comparer);
 }

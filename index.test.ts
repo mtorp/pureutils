@@ -2,7 +2,7 @@ import {
     sequenceEquals, shallowEquals, flatten, groupBy, Grouping,
     deepEquals, pipe, enumObject, setEquals, all, any, arrayToMap, contains, filterObject, first, mapObject, omit, ObjMap, toMap, moveItem, swapItems, upDownItem, promiseAllObj,
     unique, filterIf, mapKeys, intersect, omitUndefined, single, awaitObj, shallowDiff, range, sort, defaultComparer, orderBy, orderByDesc,
-    truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd
+    truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd, toObservable
 } from "./index";
 
 import * as rx from "rxjs";
@@ -538,6 +538,16 @@ test("rx flatten", async () => {
     expect(flat).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]);
 });
 
+test("to observable", async () => {
+    const value = 10;
+    const prom = Promise.resolve(30);
+    const obs = rx.Observable.from([1, 2, 3]);
+
+    expect(await toObservable(value).toArray().toPromise()).toEqual([10]);
+    expect(await toObservable(prom).toArray().toPromise()).toEqual([30]);
+    expect(await toObservable(obs).toArray().toPromise()).toEqual([1, 2, 3]);
+});
+
 test("take firstMap", async () => {
     const arr = [1, 2, 3, 4];
     expect(take(arr, 2)).toEqual([1, 2]);
@@ -567,6 +577,7 @@ test("duplicates on add", async () => {
         { a: 40, b: 50 },
     ];
 
-    expect(duplicatesOnAdd(arr, { a: 20, b: 30 } , x => x)).toBe(true);
-    expect(duplicatesOnAdd(arr, { a: 50, b: 50 } , x => x)).toBe(false);
+    expect(duplicatesOnAdd(arr, { a: 20, b: 30 }, x => x)).toBe(true);
+    expect(duplicatesOnAdd(arr, { a: 50, b: 50 }, x => x)).toBe(false);
 });
+
