@@ -367,18 +367,20 @@ test("awaitObj", function () { return __awaiter(_this, void 0, void 0, function 
     });
 }); });
 test("shallowDiff 1", function () {
+    var hello = { x: 10, y: 20 };
     var a = {
         name: "rafa",
         age: 23,
-        hello: { x: 10, y: 20 },
+        hello2: hello,
         other: { x: 10, y: 30 },
     };
     var b = {
         name: "rafa",
         age: 22,
-        hello: { x: 10, y: 20 },
+        hello2: hello,
         other: { x: 10, y: 40 }
     };
+    expect(a.hello2).toBe(b.hello2);
     var props = index_1.shallowDiff(a, b);
     expect(props).toEqual({ age: true, other: true });
 });
@@ -392,6 +394,19 @@ test("shallowDiff 2", function () {
     };
     var props = index_1.shallowDiff(a, b);
     expect(props).toEqual({ age: true });
+});
+test("shallowDiff 3", function () {
+    var obj = {};
+    var a = {
+        x: {},
+        y: obj
+    };
+    var b = {
+        x: {},
+        y: obj
+    };
+    var props = index_1.shallowDiff(a, b);
+    expect(props).toEqual({ x: true });
 });
 test("range", function () {
     expect(index_1.range(4, 3, 2)).toEqual([4, 6, 8]);
@@ -505,6 +520,30 @@ test("rx flatten", function () { return __awaiter(_this, void 0, void 0, functio
             case 1:
                 flat = _a.sent();
                 expect(flat).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]);
+                return [2 /*return*/];
+        }
+    });
+}); });
+test("to observable", function () { return __awaiter(_this, void 0, void 0, function () {
+    var value, prom, obs, _a, _b, _c;
+    return __generator(this, function (_d) {
+        switch (_d.label) {
+            case 0:
+                value = 10;
+                prom = Promise.resolve(30);
+                obs = rx.Observable.from([1, 2, 3]);
+                _a = expect;
+                return [4 /*yield*/, index_1.toObservable(value).toArray().toPromise()];
+            case 1:
+                _a.apply(void 0, [_d.sent()]).toEqual([10]);
+                _b = expect;
+                return [4 /*yield*/, index_1.toObservable(prom).toArray().toPromise()];
+            case 2:
+                _b.apply(void 0, [_d.sent()]).toEqual([30]);
+                _c = expect;
+                return [4 /*yield*/, index_1.toObservable(obs).toArray().toPromise()];
+            case 3:
+                _c.apply(void 0, [_d.sent()]).toEqual([1, 2, 3]);
                 return [2 /*return*/];
         }
     });

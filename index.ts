@@ -104,19 +104,22 @@ export type ObjSet<T> = {
  * Compara 2 objetos propiedad por propiedad, devuelve un objeto con las propiedades que son diferentes asignadas a true
  * @param a Objeto a
  * @param b Objecto b
- * @param comparer Comparador de las propiedades. Se usa por default shallowEquals
+ * @param comparer Comparador de las propiedades. Se usa por default referenceEquals
  */
 export function shallowDiff<T>(a: T, b: T, comparer?: (a: T[keyof T], b: T[keyof T]) => boolean): ObjSet<T> {
-    const eComp = comparer || shallowEquals;
+    const eComp = comparer || referenceEquals;
     const props =
         pipe(
             union(Object.keys(a), Object.keys(b)),
-            curr => curr.map(x => ({ key: x, value: a[x], otherValue: b[x] })),
+            curr => curr.map(x => ({ key: x, value: a[x], otherValue: b[x], refEquals: a[x] === b[x] })),
             curr => curr.filter(x => !eComp(x.value, x.otherValue)),
+        
             curr => curr.map(x => x.key),
-            curr => arrayToMap(curr, item => item, item => true)
+           
+            curr => arrayToMap(curr, item => item, item => true),
         );
 
+        
     return props as any;
 }
 

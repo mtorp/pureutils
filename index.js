@@ -176,11 +176,11 @@ exports.shallowEquals = shallowEquals;
  * Compara 2 objetos propiedad por propiedad, devuelve un objeto con las propiedades que son diferentes asignadas a true
  * @param a Objeto a
  * @param b Objecto b
- * @param comparer Comparador de las propiedades. Se usa por default shallowEquals
+ * @param comparer Comparador de las propiedades. Se usa por default referenceEquals
  */
 function shallowDiff(a, b, comparer) {
-    var eComp = comparer || shallowEquals;
-    var props = pipe_2.pipe(union(Object.keys(a), Object.keys(b)), function (curr) { return curr.map(function (x) { return ({ key: x, value: a[x], otherValue: b[x] }); }); }, function (curr) { return curr.filter(function (x) { return !eComp(x.value, x.otherValue); }); }, function (curr) { return curr.map(function (x) { return x.key; }); }, function (curr) { return arrayToMap(curr, function (item) { return item; }, function (item) { return true; }); });
+    var eComp = comparer || referenceEquals;
+    var props = pipe_2.pipe(union(Object.keys(a), Object.keys(b)), function (curr) { return curr.map(function (x) { return ({ key: x, value: a[x], otherValue: b[x], refEquals: a[x] === b[x] }); }); }, function (curr) { return curr.filter(function (x) { return !eComp(x.value, x.otherValue); }); }, function (curr) { return curr.map(function (x) { return x.key; }); }, function (curr) { return arrayToMap(curr, function (item) { return item; }, function (item) { return true; }); });
     return props;
 }
 exports.shallowDiff = shallowDiff;
@@ -676,18 +676,22 @@ function orderByDesc(arr) {
     return sort.apply(void 0, __spread([arr], comparers));
 }
 exports.orderByDesc = orderByDesc;
+/**Convierte un observable de T, de Promise<T> o de Observable<T> a un observable de <T>, efectivamente aplanando un observable anidado en uno desanidado */
 function rxFlatten(observable) {
-    var obsOfObs = observable.map(function (x) {
-        if (x instanceof rx.Observable) {
-            return x;
-        }
-        else {
-            return rx.Observable.fromPromise(Promise.resolve(x));
-        }
-    });
+    var obsOfObs = observable.map(function (x) { return toObservable(x); });
     return obsOfObs.concatAll();
 }
 exports.rxFlatten = rxFlatten;
+/**Convierte un valor o una promesa a un observable, si el valor ya es un observable lo devuelve tal cual */
+function toObservable(value) {
+    if (value instanceof rx.Observable) {
+        return value;
+    }
+    else {
+        return rx.Observable.fromPromise(Promise.resolve(value));
+    }
+}
+exports.toObservable = toObservable;
 /**Toma los primeros N elementos del arreglo */
 function take(arr, count) {
     var ret = [];

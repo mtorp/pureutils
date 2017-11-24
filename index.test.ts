@@ -384,19 +384,21 @@ test("awaitObj", async () => {
 });
 
 test("shallowDiff 1", () => {
+    const hello = { x: 10, y: 20 };
     const a = {
         name: "rafa",
         age: 23,
-        hello: { x: 10, y: 20 },
+        hello2: hello,
         other: { x: 10, y: 30 },
     };
 
     const b = {
         name: "rafa",
         age: 22,
-        hello: { x: 10, y: 20 },
+        hello2: hello,
         other: { x: 10, y: 40 }
     };
+    expect(a.hello2).toBe(b.hello2);
 
     const props = shallowDiff(a, b);
     expect(props).toEqual({ age: true, other: true });
@@ -414,6 +416,22 @@ test("shallowDiff 2", () => {
 
     const props = shallowDiff(a, b);
     expect(props).toEqual({ age: true });
+});
+
+test("shallowDiff 3", () => {
+    const obj = {};
+    const a = {
+        x: {},
+        y: obj
+    };
+
+    const b = {
+        x: {},
+        y: obj
+    };
+
+    const props = shallowDiff(a, b);
+    expect(props).toEqual({ x: true });
 });
 
 

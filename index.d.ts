@@ -34,7 +34,7 @@ export declare type ObjSet<T> = {
  * Compara 2 objetos propiedad por propiedad, devuelve un objeto con las propiedades que son diferentes asignadas a true
  * @param a Objeto a
  * @param b Objecto b
- * @param comparer Comparador de las propiedades. Se usa por default shallowEquals
+ * @param comparer Comparador de las propiedades. Se usa por default referenceEquals
  */
 export declare function shallowDiff<T>(a: T, b: T, comparer?: (a: T[keyof T], b: T[keyof T]) => boolean): ObjSet<T>;
 /**Convierte un ArrayLike o Iterable en un arreglo. Si el valor ya es un arreglo devuelve el valor */
@@ -198,7 +198,10 @@ export declare function sort<T>(arr: T[], ...comparers: (ComparerFunction<T>)[])
 export declare function orderBy<T>(arr: T[], ...keySelectors: ((x: T) => any)[]): T[];
 /**Ordena un arreglo de forma estable y descendiente segun ciertas claves seleccionadas usando el comparador por default */
 export declare function orderByDesc<T>(arr: T[], ...keySelectors: ((x: T) => any)[]): T[];
+/**Convierte un observable de T, de Promise<T> o de Observable<T> a un observable de <T>, efectivamente aplanando un observable anidado en uno desanidado */
 export declare function rxFlatten<T>(observable: rx.Observable<T | PromiseLike<T> | rx.Observable<T>>): rx.Observable<T>;
+/**Convierte un valor o una promesa a un observable, si el valor ya es un observable lo devuelve tal cual */
+export declare function toObservable<T>(value: T | PromiseLike<T> | rx.Observable<T>): rx.Observable<T>;
 /**Toma los primeros N elementos del arreglo */
 export declare function take<T>(arr: T[], count: number): T[];
 /**Obtiene le primer elemento mapeado de un arreglo o undefined */
