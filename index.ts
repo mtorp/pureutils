@@ -617,6 +617,6 @@ export function isObservable(x : any) : x is rx.Observable<any> {
 }
 
 /**Devuelve true si x es un array */
-export function isArray(x : any) {
+export function isArray(x : any) : x is any[] {
     return x instanceof Array;
 }
