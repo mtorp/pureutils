@@ -220,7 +220,11 @@ function canBeArray(arr) {
     return isArrayLike(arr) || hasIterationProtocol(arr);
 }
 exports.canBeArray = canBeArray;
-var isArrayLike = function (x) { return x.lenght !== undefined; };
+/**Devuelve true si x es un array o un array like */
+function isArrayLike(x) {
+    return x != null && x.length !== undefined;
+}
+exports.isArrayLike = isArrayLike;
 var hasIterationProtocol = function (variable) { return variable !== null && Symbol.iterator in Object(variable); };
 function deepEquals(a, b) {
     var deep = function (a, b) { return shallowEquals(a, b, deep); };
@@ -751,3 +755,18 @@ function duplicatesOnAdd(arr, newValue, keySelector) {
     return contains(arr, newValue, comparer);
 }
 exports.duplicatesOnAdd = duplicatesOnAdd;
+/**Devuelve true si x tiene el metodo then, lo que indica que es una promesa */
+function isPromise(x) {
+    return x != null && (typeof x.then) == "function";
+}
+exports.isPromise = isPromise;
+/**Devuelve true si x es un observable */
+function isObservable(x) {
+    return x instanceof rx.Observable;
+}
+exports.isObservable = isObservable;
+/**Devuelve true si x es un array */
+function isArray(x) {
+    return x instanceof Array;
+}
+exports.isArray = isArray;

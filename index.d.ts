@@ -41,6 +41,8 @@ export declare function shallowDiff<T>(a: T, b: T, comparer?: (a: T[keyof T], b:
 export declare function toArray<T>(arr: ArrayLike<T> | Iterable<T>): T[];
 /**Devuelve true si un objeeto se puede convertir a un arreglo utilizando la función toArray */
 export declare function canBeArray(arr: any): arr is ArrayLike<any> | Iterable<any>;
+/**Devuelve true si x es un array o un array like */
+export declare function isArrayLike(x: any): x is ArrayLike<any>;
 export declare function deepEquals<T>(a: T, b: T): any;
 /**Convierte un arreglo a un objeto */
 export declare function toMap<T, TValue>(arr: T[], key: (value: T) => string, value: (value: T) => TValue): {
@@ -220,3 +222,9 @@ export declare function duplicatesOnEdit<T, TKey>(arr: T[], oldValue: T, newValu
  * @param comparer  Se usa el shallow equals por default
  */
 export declare function duplicatesOnAdd<T, TKey>(arr: T[], newValue: T, keySelector: (x: T) => TKey): boolean;
+/**Devuelve true si x tiene el metodo then, lo que indica que es una promesa */
+export declare function isPromise(x: any): x is PromiseLike<any>;
+/**Devuelve true si x es un observable */
+export declare function isObservable(x: any): x is rx.Observable<any>;
+/**Devuelve true si x es un array */
+export declare function isArray(x: any): boolean;

@@ -148,7 +148,11 @@ export function canBeArray(arr: any): arr is ArrayLike<any> | Iterable<any> {
     return isArrayLike(arr) || hasIterationProtocol(arr);
 }
 
-const isArrayLike = (x: any): x is ArrayLike<any> => x.lenght !== undefined;
+/**Devuelve true si x es un array o un array like */
+export function isArrayLike (x: any): x is ArrayLike<any> {
+    return x!= null && x.length !== undefined;    
+}
+
 const hasIterationProtocol = (variable: any): variable is Iterable<any> => variable !== null && Symbol.iterator in Object(variable);
 
 export function deepEquals<T>(a: T, b: T) {
@@ -600,4 +604,19 @@ export function duplicatesOnEdit<T, TKey>(arr: T[], oldValue: T, newValue: T, ke
 export function duplicatesOnAdd<T, TKey>(arr: T[], newValue: T, keySelector: (x: T) => TKey) {
     const comparer = (a: T, b: T) => shallowEquals(keySelector(a), keySelector(b));
     return contains(arr, newValue, comparer);
+}
+
+/**Devuelve true si x tiene el metodo then, lo que indica que es una promesa */
+export function isPromise(x: any)  : x is PromiseLike<any> {
+    return x != null &&  (typeof (x as PromiseLike<any>).then) == "function";
+}
+
+/**Devuelve true si x es un observable */
+export function isObservable(x : any) : x is rx.Observable<any> {
+    return x instanceof rx.Observable;
+}
+
+/**Devuelve true si x es un array */
+export function isArray(x : any) {
+    return x instanceof Array;
 }

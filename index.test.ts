@@ -2,7 +2,7 @@ import {
     sequenceEquals, shallowEquals, flatten, groupBy, Grouping,
     deepEquals, pipe, enumObject, setEquals, all, any, arrayToMap, contains, filterObject, first, mapObject, omit, ObjMap, toMap, moveItem, swapItems, upDownItem, promiseAllObj,
     unique, filterIf, mapKeys, intersect, omitUndefined, single, awaitObj, shallowDiff, range, sort, defaultComparer, orderBy, orderByDesc,
-    truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd, toObservable
+    truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd, toObservable, isArray, isArrayLike, isPromise, isObservable
 } from "./index";
 
 import * as rx from "rxjs";
@@ -599,3 +599,34 @@ test("duplicates on add", async () => {
     expect(duplicatesOnAdd(arr, { a: 50, b: 50 }, x => x)).toBe(false);
 });
 
+test("is x type", () => {
+    const a= 10;
+    const b = new Promise(resolve => {} );
+    const c = toObservable(b);
+    const d = [1,2,3];
+    const e = null;
+
+    expect(isArray(a)).toBe(false);
+    expect(isArray(b)).toBe(false);
+    expect(isArray(c)).toBe(false);
+    expect(isArray(d)).toBe(true);
+    expect(isArray(e)).toBe(false);
+
+    expect(isArrayLike(a)).toBe(false);
+    expect(isArrayLike(b)).toBe(false);
+    expect(isArrayLike(c)).toBe(false);
+    expect(isArrayLike(d)).toBe(true);
+    expect(isArrayLike(e)).toBe(false);
+
+    expect(isPromise(a)).toBe(false);
+    expect(isPromise(b)).toBe(true);
+    expect(isPromise(c)).toBe(false);
+    expect(isPromise(d)).toBe(false);
+    expect(isPromise(e)).toBe(false);
+
+    expect(isObservable(a)).toBe(false);
+    expect(isObservable(b)).toBe(false);
+    expect(isObservable(c)).toBe(true);
+    expect(isObservable(d)).toBe(false);
+    expect(isObservable(e)).toBe(false);
+});
