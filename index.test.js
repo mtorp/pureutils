@@ -615,3 +615,9 @@ test("is x type", function () {
     expect(index_1.isObservable(d)).toBe(false);
     expect(index_1.isObservable(e)).toBe(false);
 });
+test("search", function () {
+    expect(index_1.search("jardi espanol", "Jardín Español")).toBe(true);
+    expect(index_1.search("jarbi espanol", "Jardín Español")).toBe(false);
+    expect(index_1.search("ho ra sal", "Hola Rafa Salguero")).toBe(true);
+    expect(index_1.search("ho ra zal", "Hola Rafa Salguero")).toBe(false);
+});

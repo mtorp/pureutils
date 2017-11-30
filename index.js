@@ -37,6 +37,10 @@ exports.addDate = dates_1.addDate;
 exports.truncateDate = dates_1.truncateDate;
 var pipe_2 = require("./pipe");
 var rx = require("rxjs");
+var search_1 = require("./search");
+exports.search = search_1.search;
+var diacritics_1 = require("./diacritics");
+exports.removeDiacritics = diacritics_1.removeDiacritics;
 /**Devuelve true si todos los elementos de un arreglo encajan con el predicado */
 function all(arr, pred) {
     try {

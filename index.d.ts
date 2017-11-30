@@ -1,6 +1,8 @@
 export { pipe } from "./pipe";
 export { addDate, DateUnits, truncateDate } from "./dates";
 import * as rx from "rxjs";
+export { search } from "./search";
+export { removeDiacritics } from "./diacritics";
 /**Devuelve true si todos los elementos de un arreglo encajan con el predicado */
 export declare function all<T>(arr: T[], pred: (x: T) => boolean): boolean;
 /**Devuelve true si por lo menos un elemento del arreglo encaja con el predicado, o si existe por lo menos un elemento en caso
@@ -227,4 +229,4 @@ export declare function isPromise(x: any): x is PromiseLike<any>;
 /**Devuelve true si x es un observable */
 export declare function isObservable(x: any): x is rx.Observable<any>;
 /**Devuelve true si x es un array */
-export declare function isArray(x: any): boolean;
+export declare function isArray(x: any): x is any[];

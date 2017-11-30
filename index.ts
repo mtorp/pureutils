@@ -2,7 +2,8 @@ export { pipe } from "./pipe";
 export { addDate, DateUnits, truncateDate } from "./dates";
 import { pipe } from "./pipe";
 import * as rx from "rxjs";
-
+export { search } from "./search";
+export { removeDiacritics } from "./diacritics";
 /**Devuelve true si todos los elementos de un arreglo encajan con el predicado */
 export function all<T>(arr: T[], pred: (x: T) => boolean): boolean {
     for (const x of arr) {

@@ -2,7 +2,8 @@ import {
     sequenceEquals, shallowEquals, flatten, groupBy, Grouping,
     deepEquals, pipe, enumObject, setEquals, all, any, arrayToMap, contains, filterObject, first, mapObject, omit, ObjMap, toMap, moveItem, swapItems, upDownItem, promiseAllObj,
     unique, filterIf, mapKeys, intersect, omitUndefined, single, awaitObj, shallowDiff, range, sort, defaultComparer, orderBy, orderByDesc,
-    truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd, toObservable, isArray, isArrayLike, isPromise, isObservable
+    truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd, toObservable, isArray, isArrayLike, isPromise, isObservable,
+    search, removeDiacritics
 } from "./index";
 
 import * as rx from "rxjs";
@@ -629,4 +630,12 @@ test("is x type", () => {
     expect(isObservable(c)).toBe(true);
     expect(isObservable(d)).toBe(false);
     expect(isObservable(e)).toBe(false);
+});
+
+test("search", () => {
+    expect(search("jardi espanol", "Jardín Español")).toBe(true);
+    expect(search("jarbi espanol", "Jardín Español")).toBe(false);
+    expect(search("ho ra sal", "Hola Rafa Salguero")).toBe(true);
+    expect(search("ho ra zal", "Hola Rafa Salguero")).toBe(false);
+
 });
