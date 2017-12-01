@@ -32,6 +32,8 @@ var __spread = (this && this.__spread) || function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 var pipe_1 = require("./pipe");
 exports.pipe = pipe_1.pipe;
+var nullsafe_1 = require("./nullsafe");
+exports.nullsafe = nullsafe_1.nullsafe;
 var dates_1 = require("./dates");
 exports.addDate = dates_1.addDate;
 exports.truncateDate = dates_1.truncateDate;

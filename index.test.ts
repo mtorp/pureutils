@@ -3,7 +3,7 @@ import {
     deepEquals, pipe, enumObject, setEquals, all, any, arrayToMap, contains, filterObject, first, mapObject, omit, ObjMap, toMap, moveItem, swapItems, upDownItem, promiseAllObj,
     unique, filterIf, mapKeys, intersect, omitUndefined, single, awaitObj, shallowDiff, range, sort, defaultComparer, orderBy, orderByDesc,
     truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd, toObservable, isArray, isArrayLike, isPromise, isObservable,
-    search, removeDiacritics, containsAll, containsAny
+    search, removeDiacritics, containsAll, containsAny, nullsafe
 } from "./index";
 
 import * as rx from "rxjs";
@@ -601,10 +601,10 @@ test("duplicates on add", async () => {
 });
 
 test("is x type", () => {
-    const a= 10;
-    const b = new Promise(resolve => {} );
+    const a = 10;
+    const b = new Promise(resolve => { });
     const c = toObservable(b);
-    const d = [1,2,3];
+    const d = [1, 2, 3];
     const e = null;
 
     expect(isArray(a)).toBe(false);
@@ -643,28 +643,62 @@ test("search", () => {
 test("contains all", () => {
     expect(containsAll([], [])).toBe(true);
     expect(containsAll([], [1])).toBe(false);
-    expect(containsAll([1,2,3,4], [])).toBe(true);
+    expect(containsAll([1, 2, 3, 4], [])).toBe(true);
 
-    expect(containsAll([1,2,3,4], [1])).toBe(true);
-    expect(containsAll([1,2,3,4], [1, 2, 3, 4])).toBe(true);
-    expect(containsAll([1,2,3,4], [3, 4])).toBe(true);
-    expect(containsAll([1,2,3,4], [4,3,2,1])).toBe(true);
-    expect(containsAll([1,2,3,4], [4,1])).toBe(true);
-    expect(containsAll([1,2,3,4], [3, 4, 5])).toBe(false);
-    expect(containsAll([1,2,3,4], [1,4,5])).toBe(false);
-    expect(containsAll([1,2,3,4], [1,1, 1,1,1,4,4,2,3,2,1])).toBe(true);
-    
-    expect(containsAll([1,2,3,4], [1,1, 1,1,1,4,4,2,3,2,1,0 ])).toBe(false);
+    expect(containsAll([1, 2, 3, 4], [1])).toBe(true);
+    expect(containsAll([1, 2, 3, 4], [1, 2, 3, 4])).toBe(true);
+    expect(containsAll([1, 2, 3, 4], [3, 4])).toBe(true);
+    expect(containsAll([1, 2, 3, 4], [4, 3, 2, 1])).toBe(true);
+    expect(containsAll([1, 2, 3, 4], [4, 1])).toBe(true);
+    expect(containsAll([1, 2, 3, 4], [3, 4, 5])).toBe(false);
+    expect(containsAll([1, 2, 3, 4], [1, 4, 5])).toBe(false);
+    expect(containsAll([1, 2, 3, 4], [1, 1, 1, 1, 1, 4, 4, 2, 3, 2, 1])).toBe(true);
+
+    expect(containsAll([1, 2, 3, 4], [1, 1, 1, 1, 1, 4, 4, 2, 3, 2, 1, 0])).toBe(false);
 });
 
 test("contains any", () => {
     expect(containsAny([], [])).toBe(false);
-    expect(containsAny([1,2,3], [])).toBe(false);
-    expect(containsAny([1,2,3], [4,5,6])).toBe(false);
+    expect(containsAny([1, 2, 3], [])).toBe(false);
+    expect(containsAny([1, 2, 3], [4, 5, 6])).toBe(false);
 
-    expect(containsAny([1,2,3], [4,5,6, 1])).toBe(true);
-    expect(containsAny([1,2,3], [1,2,3])).toBe(true);
-    expect(containsAny([1,2,3], [3])).toBe(true);
-    expect(containsAny([1,2,3], [3,1 ])).toBe(true);
-    
+    expect(containsAny([1, 2, 3], [4, 5, 6, 1])).toBe(true);
+    expect(containsAny([1, 2, 3], [1, 2, 3])).toBe(true);
+    expect(containsAny([1, 2, 3], [3])).toBe(true);
+    expect(containsAny([1, 2, 3], [3, 1])).toBe(true);
+});
+
+test("null safe", () => {
+    type RecPartial<T> = {[K in keyof T]?: RecPartial<T[K]>};
+
+    interface TestType {
+        A: {
+            B: {
+                C: {
+                    D: {
+                        E: number
+                    }
+                }
+            }
+        }
+    };
+    type TestType2 = RecPartial<TestType>;
+    const a: TestType2 | null = {};
+    const b: TestType2 | null = null as any;
+    const c: TestType2 | null = { A: { B: { C: {} } } };
+    const d: TestType2 | null = { A: { B: { C: { D: { E: 10 } } } } };
+
+
+    nullsafe(b);
+
+    expect(nullsafe(a, x => x.A, x => x.B)).toBe(undefined);
+    expect(nullsafe(b, x => x.A, x => x.B)).toBe(null);
+    expect(nullsafe(c, x => x.A)).not.toBe(undefined);
+    expect(nullsafe(c, x => x.A, x => x.B)).not.toBe(undefined);
+    expect(nullsafe(c, x => x.A, x => x.B, x => x.C)).not.toBe(undefined);
+    expect(nullsafe(c, x => x.A, x => x.B, x => x.C, x => x.D)).toBe(undefined);
+
+    expect(nullsafe(d, x => x.A, x => x.B, x => x.C, x => x.D, x => x.E)).toBe(10);
+
+
 });

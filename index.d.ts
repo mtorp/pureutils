@@ -1,4 +1,5 @@
 export { pipe } from "./pipe";
+export { nullsafe } from "./nullsafe";
 export { addDate, DateUnits, truncateDate } from "./dates";
 import * as rx from "rxjs";
 export { search } from "./search";
