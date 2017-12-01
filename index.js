@@ -94,6 +94,16 @@ function contains(arr, value, comparer) {
     return any(arr, function (x) { return effectiveComparer(x, value); });
 }
 exports.contains = contains;
+/**Devuelve true si todos los valores en @see values existen en el arreglo @see arr . Si @see values esta vacío devuelve true */
+function containsAll(arr, values, comparer) {
+    return all(values, function (x) { return contains(arr, x, comparer); });
+}
+exports.containsAll = containsAll;
+/**Devuelve true si existe algun valor en @see values que exista en @see arr . Si @see values esta vacío devuelve false */
+function containsAny(arr, values, comparer) {
+    return any(values, function (x) { return contains(arr, x, comparer); });
+}
+exports.containsAny = containsAny;
 /**
  * Alias para el operador ===
  * @param a

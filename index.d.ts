@@ -11,6 +11,10 @@ export declare function all<T>(arr: T[], pred: (x: T) => boolean): boolean;
 export declare function any<T>(arr: T[], pred?: (x: T) => boolean): boolean;
 /**Devuelve true si el valor existe en el arreglo */
 export declare function contains<T>(arr: T[], value: T, comparer?: (a: T, b: T) => boolean): boolean;
+/**Devuelve true si todos los valores en @see values existen en el arreglo @see arr . Si @see values esta vacío devuelve true */
+export declare function containsAll<T>(arr: T[], values: T[], comparer?: (a: T, b: T) => boolean): boolean;
+/**Devuelve true si existe algun valor en @see values que exista en @see arr . Si @see values esta vacío devuelve false */
+export declare function containsAny<T>(arr: T[], values: T[], comparer?: (a: T, b: T) => boolean): boolean;
 /**
  * Alias para el operador ===
  * @param a

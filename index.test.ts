@@ -3,7 +3,7 @@ import {
     deepEquals, pipe, enumObject, setEquals, all, any, arrayToMap, contains, filterObject, first, mapObject, omit, ObjMap, toMap, moveItem, swapItems, upDownItem, promiseAllObj,
     unique, filterIf, mapKeys, intersect, omitUndefined, single, awaitObj, shallowDiff, range, sort, defaultComparer, orderBy, orderByDesc,
     truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd, toObservable, isArray, isArrayLike, isPromise, isObservable,
-    search, removeDiacritics
+    search, removeDiacritics, containsAll, containsAny
 } from "./index";
 
 import * as rx from "rxjs";
@@ -638,4 +638,33 @@ test("search", () => {
     expect(search("ho ra sal", "Hola Rafa Salguero")).toBe(true);
     expect(search("ho ra zal", "Hola Rafa Salguero")).toBe(false);
 
+});
+
+test("contains all", () => {
+    expect(containsAll([], [])).toBe(true);
+    expect(containsAll([], [1])).toBe(false);
+    expect(containsAll([1,2,3,4], [])).toBe(true);
+
+    expect(containsAll([1,2,3,4], [1])).toBe(true);
+    expect(containsAll([1,2,3,4], [1, 2, 3, 4])).toBe(true);
+    expect(containsAll([1,2,3,4], [3, 4])).toBe(true);
+    expect(containsAll([1,2,3,4], [4,3,2,1])).toBe(true);
+    expect(containsAll([1,2,3,4], [4,1])).toBe(true);
+    expect(containsAll([1,2,3,4], [3, 4, 5])).toBe(false);
+    expect(containsAll([1,2,3,4], [1,4,5])).toBe(false);
+    expect(containsAll([1,2,3,4], [1,1, 1,1,1,4,4,2,3,2,1])).toBe(true);
+    
+    expect(containsAll([1,2,3,4], [1,1, 1,1,1,4,4,2,3,2,1,0 ])).toBe(false);
+});
+
+test("contains any", () => {
+    expect(containsAny([], [])).toBe(false);
+    expect(containsAny([1,2,3], [])).toBe(false);
+    expect(containsAny([1,2,3], [4,5,6])).toBe(false);
+
+    expect(containsAny([1,2,3], [4,5,6, 1])).toBe(true);
+    expect(containsAny([1,2,3], [1,2,3])).toBe(true);
+    expect(containsAny([1,2,3], [3])).toBe(true);
+    expect(containsAny([1,2,3], [3,1 ])).toBe(true);
+    
 });

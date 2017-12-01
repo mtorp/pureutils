@@ -621,3 +621,26 @@ test("search", function () {
     expect(index_1.search("ho ra sal", "Hola Rafa Salguero")).toBe(true);
     expect(index_1.search("ho ra zal", "Hola Rafa Salguero")).toBe(false);
 });
+test("contains all", function () {
+    expect(index_1.containsAll([], [])).toBe(true);
+    expect(index_1.containsAll([], [1])).toBe(false);
+    expect(index_1.containsAll([1, 2, 3, 4], [])).toBe(true);
+    expect(index_1.containsAll([1, 2, 3, 4], [1])).toBe(true);
+    expect(index_1.containsAll([1, 2, 3, 4], [1, 2, 3, 4])).toBe(true);
+    expect(index_1.containsAll([1, 2, 3, 4], [3, 4])).toBe(true);
+    expect(index_1.containsAll([1, 2, 3, 4], [4, 3, 2, 1])).toBe(true);
+    expect(index_1.containsAll([1, 2, 3, 4], [4, 1])).toBe(true);
+    expect(index_1.containsAll([1, 2, 3, 4], [3, 4, 5])).toBe(false);
+    expect(index_1.containsAll([1, 2, 3, 4], [1, 4, 5])).toBe(false);
+    expect(index_1.containsAll([1, 2, 3, 4], [1, 1, 1, 1, 1, 4, 4, 2, 3, 2, 1])).toBe(true);
+    expect(index_1.containsAll([1, 2, 3, 4], [1, 1, 1, 1, 1, 4, 4, 2, 3, 2, 1, 0])).toBe(false);
+});
+test("contains any", function () {
+    expect(index_1.containsAny([], [])).toBe(false);
+    expect(index_1.containsAny([1, 2, 3], [])).toBe(false);
+    expect(index_1.containsAny([1, 2, 3], [4, 5, 6])).toBe(false);
+    expect(index_1.containsAny([1, 2, 3], [4, 5, 6, 1])).toBe(true);
+    expect(index_1.containsAny([1, 2, 3], [1, 2, 3])).toBe(true);
+    expect(index_1.containsAny([1, 2, 3], [3])).toBe(true);
+    expect(index_1.containsAny([1, 2, 3], [3, 1])).toBe(true);
+});

@@ -30,8 +30,17 @@ export function any<T>(arr: T[], pred?: (x: T) => boolean): boolean {
 /**Devuelve true si el valor existe en el arreglo */
 export function contains<T>(arr: T[], value: T, comparer?: (a: T, b: T) => boolean): boolean {
     const effectiveComparer = comparer || referenceEquals;
-
     return any(arr, x => effectiveComparer(x, value));
+}
+
+/**Devuelve true si todos los valores en @see values existen en el arreglo @see arr . Si @see values esta vacío devuelve true */
+export function containsAll<T>(arr: T[], values: T[], comparer?: (a: T, b: T) => boolean) {
+    return all(values, x => contains(arr, x, comparer));
+}
+
+/**Devuelve true si existe algun valor en @see values que exista en @see arr . Si @see values esta vacío devuelve false */
+export function containsAny<T>(arr: T[], values: T[], comparer?: (a: T, b: T) => boolean) {
+    return any(values, x => contains(arr, x, comparer));
 }
 
 /**
@@ -114,13 +123,13 @@ export function shallowDiff<T>(a: T, b: T, comparer?: (a: T[keyof T], b: T[keyof
             union(Object.keys(a), Object.keys(b)),
             curr => curr.map(x => ({ key: x, value: a[x], otherValue: b[x], refEquals: a[x] === b[x] })),
             curr => curr.filter(x => !eComp(x.value, x.otherValue)),
-        
+
             curr => curr.map(x => x.key),
-           
+
             curr => arrayToMap(curr, item => item, item => true),
         );
 
-        
+
     return props as any;
 }
 
@@ -150,8 +159,8 @@ export function canBeArray(arr: any): arr is ArrayLike<any> | Iterable<any> {
 }
 
 /**Devuelve true si x es un array o un array like */
-export function isArrayLike (x: any): x is ArrayLike<any> {
-    return x!= null && x.length !== undefined;    
+export function isArrayLike(x: any): x is ArrayLike<any> {
+    return x != null && x.length !== undefined;
 }
 
 const hasIterationProtocol = (variable: any): variable is Iterable<any> => variable !== null && Symbol.iterator in Object(variable);
@@ -608,16 +617,16 @@ export function duplicatesOnAdd<T, TKey>(arr: T[], newValue: T, keySelector: (x:
 }
 
 /**Devuelve true si x tiene el metodo then, lo que indica que es una promesa */
-export function isPromise(x: any)  : x is PromiseLike<any> {
-    return x != null &&  (typeof (x as PromiseLike<any>).then) == "function";
+export function isPromise(x: any): x is PromiseLike<any> {
+    return x != null && (typeof (x as PromiseLike<any>).then) == "function";
 }
 
 /**Devuelve true si x es un observable */
-export function isObservable(x : any) : x is rx.Observable<any> {
+export function isObservable(x: any): x is rx.Observable<any> {
     return x instanceof rx.Observable;
 }
 
 /**Devuelve true si x es un array */
-export function isArray(x : any) : x is any[] {
+export function isArray(x: any): x is any[] {
     return x instanceof Array;
 }
