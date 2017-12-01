@@ -26,7 +26,7 @@ function nullsafe(value) {
     for (var _i = 1; _i < arguments.length; _i++) {
         maps[_i - 1] = arguments[_i];
     }
-    var nullMaps = maps.map(function (func) { return function (value) { return value && func(value); }; });
+    var nullMaps = maps.map(function (func) { return function (value) { return value == null ? value : func(value); }; });
     return pipe_1.pipe.apply(void 0, __spread([value], nullMaps));
 }
 exports.nullsafe = nullsafe;

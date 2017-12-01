@@ -13,6 +13,6 @@ export function nullsafe<T1, T2, T3>(value: Nullify<T1>, m1: (x: T1) => Nullify<
 export function nullsafe<T1, T2>(value: Nullify<T1>, m1: (x: T1) => Nullify<T2>): Nullify<T2>
 export function nullsafe<T1>(value: Nullify<T1>): Nullify<T1>
 export function nullsafe(value: any, ...maps: ((x: any) => any)[]) {
-    const nullMaps = maps.map(func => value => value && func(value));
+    const nullMaps = maps.map(func => value => value == null ? value : func(value));
     return pipe(value, ...nullMaps);
 }
