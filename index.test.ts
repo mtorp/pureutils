@@ -699,6 +699,8 @@ test("null safe", () => {
     expect(nullsafe(c, x => x.A, x => x.B, x => x.C, x => x.D)).toBe(undefined);
 
     expect(nullsafe(d, x => x.A, x => x.B, x => x.C, x => x.D, x => x.E)).toBe(10);
-
+    
+    expect(nullsafe(-1, x => x  + 1, x => x + 1)).toBe(1);
+    expect(nullsafe(0, x => x  + 1, x => x + 1)).toBe(2);
 
 });

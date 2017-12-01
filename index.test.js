@@ -658,4 +658,6 @@ test("null safe", function () {
     expect(index_1.nullsafe(c, function (x) { return x.A; }, function (x) { return x.B; }, function (x) { return x.C; })).not.toBe(undefined);
     expect(index_1.nullsafe(c, function (x) { return x.A; }, function (x) { return x.B; }, function (x) { return x.C; }, function (x) { return x.D; })).toBe(undefined);
     expect(index_1.nullsafe(d, function (x) { return x.A; }, function (x) { return x.B; }, function (x) { return x.C; }, function (x) { return x.D; }, function (x) { return x.E; })).toBe(10);
+    expect(index_1.nullsafe(-1, function (x) { return x + 1; }, function (x) { return x + 1; })).toBe(1);
+    expect(index_1.nullsafe(0, function (x) { return x + 1; }, function (x) { return x + 1; })).toBe(2);
 });
