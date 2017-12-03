@@ -3,7 +3,7 @@ import {
     deepEquals, pipe, enumObject, setEquals, all, any, arrayToMap, contains, filterObject, first, mapObject, omit, ObjMap, toMap, moveItem, swapItems, upDownItem, promiseAllObj,
     unique, filterIf, mapKeys, intersect, omitUndefined, single, awaitObj, shallowDiff, range, sort, defaultComparer, orderBy, orderByDesc,
     truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd, toObservable, isArray, isArrayLike, isPromise, isObservable,
-    search, removeDiacritics, containsAll, containsAny, nullsafe
+    search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx
 } from "./index";
 
 import * as rx from "rxjs";
@@ -699,8 +699,24 @@ test("null safe", () => {
     expect(nullsafe(c, x => x.A, x => x.B, x => x.C, x => x.D)).toBe(undefined);
 
     expect(nullsafe(d, x => x.A, x => x.B, x => x.C, x => x.D, x => x.E)).toBe(10);
-    
-    expect(nullsafe(-1, x => x  + 1, x => x + 1)).toBe(1);
-    expect(nullsafe(0, x => x  + 1, x => x + 1)).toBe(2);
 
+    //Probamos que el nullsafe no se confunda con el 0
+    expect(nullsafe(-1, x => x + 1, x => x + 1)).toBe(1);
+    expect(nullsafe(0, x => x + 1, x => x + 1)).toBe(2);
+
+});
+
+
+test("map prev rx", async () => {
+    const arr = [1, 4, 7, 10 , 20 ];
+    const obs = rx.Observable.from(arr);
+    const ret = await mapPreviousRx(obs, 0).toArray().toPromise();
+
+    expect(ret).toEqual([
+        {prev: 0, curr: 1},
+        { prev: 1, curr: 4},
+        { prev: 4, curr: 7},
+        { prev: 7, curr: 10},
+        { prev: 10, curr: 20},
+    ])
 });

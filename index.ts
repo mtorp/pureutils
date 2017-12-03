@@ -631,3 +631,12 @@ export function isObservable(x: any): x is rx.Observable<any> {
 export function isArray(x: any): x is any[] {
     return x instanceof Array;
 }
+
+/**Mapea el valor actual y el anterior de un observable */
+export function mapPreviousRx<T>(obs: rx.Observable<T>, startWith: T): rx.Observable<{ prev: T, curr: T }> {
+    const ret =
+        obs
+            .map(x => ({ prev: startWith, curr: x }))
+            .scan((acc, val) => ({ prev: acc.curr, curr: val.curr }));
+    return ret;
+}

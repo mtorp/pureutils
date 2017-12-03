@@ -235,3 +235,8 @@ export declare function isPromise(x: any): x is PromiseLike<any>;
 export declare function isObservable(x: any): x is rx.Observable<any>;
 /**Devuelve true si x es un array */
 export declare function isArray(x: any): x is any[];
+/**Mapea el valor actual y el anterior de un observable */
+export declare function mapPreviousRx<T>(obs: rx.Observable<T>, startWith: T): rx.Observable<{
+    prev: T;
+    curr: T;
+}>;

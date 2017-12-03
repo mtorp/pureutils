@@ -786,3 +786,11 @@ function isArray(x) {
     return x instanceof Array;
 }
 exports.isArray = isArray;
+/**Mapea el valor actual y el anterior de un observable */
+function mapPreviousRx(obs, startWith) {
+    var ret = obs
+        .map(function (x) { return ({ prev: startWith, curr: x }); })
+        .scan(function (acc, val) { return ({ prev: acc.curr, curr: val.curr }); });
+    return ret;
+}
+exports.mapPreviousRx = mapPreviousRx;

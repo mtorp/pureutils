@@ -658,6 +658,28 @@ test("null safe", function () {
     expect(index_1.nullsafe(c, function (x) { return x.A; }, function (x) { return x.B; }, function (x) { return x.C; })).not.toBe(undefined);
     expect(index_1.nullsafe(c, function (x) { return x.A; }, function (x) { return x.B; }, function (x) { return x.C; }, function (x) { return x.D; })).toBe(undefined);
     expect(index_1.nullsafe(d, function (x) { return x.A; }, function (x) { return x.B; }, function (x) { return x.C; }, function (x) { return x.D; }, function (x) { return x.E; })).toBe(10);
+    //Probamos que el nullsafe no se confunda con el 0
     expect(index_1.nullsafe(-1, function (x) { return x + 1; }, function (x) { return x + 1; })).toBe(1);
     expect(index_1.nullsafe(0, function (x) { return x + 1; }, function (x) { return x + 1; })).toBe(2);
 });
+test("map prev", function () { return __awaiter(_this, void 0, void 0, function () {
+    var arr, obs, ret;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                arr = [1, 4, 7, 10, 20];
+                obs = rx.Observable.from(arr);
+                return [4 /*yield*/, index_1.mapPreviousRx(obs, 0).toArray().toPromise()];
+            case 1:
+                ret = _a.sent();
+                expect(ret).toEqual([
+                    { prev: 0, curr: 1 },
+                    { prev: 1, curr: 4 },
+                    { prev: 4, curr: 7 },
+                    { prev: 7, curr: 10 },
+                    { prev: 10, curr: 20 },
+                ]);
+                return [2 /*return*/];
+        }
+    });
+}); });
