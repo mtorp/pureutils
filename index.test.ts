@@ -3,7 +3,7 @@ import {
     deepEquals, pipe, enumObject, setEquals, all, any, arrayToMap, contains, filterObject, first, mapObject, omit, ObjMap, toMap, moveItem, swapItems, upDownItem, promiseAllObj,
     unique, filterIf, mapKeys, intersect, omitUndefined, single, awaitObj, shallowDiff, range, sort, defaultComparer, orderBy, orderByDesc,
     truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd, toObservable, isArray, isArrayLike, isPromise, isObservable,
-    search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx
+    search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx, mapMany
 } from "./index";
 
 import * as rx from "rxjs";
@@ -708,15 +708,33 @@ test("null safe", () => {
 
 
 test("map prev rx", async () => {
-    const arr = [1, 4, 7, 10 , 20 ];
+    const arr = [1, 4, 7, 10, 20];
     const obs = rx.Observable.from(arr);
     const ret = await mapPreviousRx(obs, 0).toArray().toPromise();
 
     expect(ret).toEqual([
-        {prev: 0, curr: 1},
-        { prev: 1, curr: 4},
-        { prev: 4, curr: 7},
-        { prev: 7, curr: 10},
-        { prev: 10, curr: 20},
+        { prev: 0, curr: 1 },
+        { prev: 1, curr: 4 },
+        { prev: 4, curr: 7 },
+        { prev: 7, curr: 10 },
+        { prev: 10, curr: 20 },
     ])
+});
+
+test("map many", () => {
+    const arr = [1, 2, 3];
+    const map = (x: number) => range(x, x + 3).map(y => x * 10 + y);
+
+    const expected =  
+        [
+            11, 12, 13, 14,
+            22, 23, 24, 25, 26,
+            33, 34, 35, 36, 37, 38
+        ];
+
+    const actual = mapMany(arr, map);
+    expect(actual).toEqual(expected);
+
+    const actual2 = flatten(arr.map(map));
+    expect(actual2).toEqual(expected);
 });

@@ -240,3 +240,5 @@ export declare function mapPreviousRx<T>(obs: rx.Observable<T>, startWith: T): r
     prev: T;
     curr: T;
 }>;
+/**Mapea y aplana una colección. Es equivalente a  flatten(items.map(map)) */
+export declare function mapMany<T, TR>(items: T[], map: (x: T) => TR[]): TR[];

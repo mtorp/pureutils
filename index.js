@@ -794,3 +794,24 @@ function mapPreviousRx(obs, startWith) {
     return ret;
 }
 exports.mapPreviousRx = mapPreviousRx;
+/**Mapea y aplana una colección. Es equivalente a  flatten(items.map(map)) */
+function mapMany(items, map) {
+    var result = [];
+    try {
+        for (var items_1 = __values(items), items_1_1 = items_1.next(); !items_1_1.done; items_1_1 = items_1.next()) {
+            var x = items_1_1.value;
+            var mapResult = map(x);
+            result.push.apply(result, __spread(mapResult));
+        }
+    }
+    catch (e_14_1) { e_14 = { error: e_14_1 }; }
+    finally {
+        try {
+            if (items_1_1 && !items_1_1.done && (_a = items_1.return)) _a.call(items_1);
+        }
+        finally { if (e_14) throw e_14.error; }
+    }
+    return result;
+    var e_14, _a;
+}
+exports.mapMany = mapMany;

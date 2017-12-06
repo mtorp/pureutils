@@ -662,7 +662,7 @@ test("null safe", function () {
     expect(index_1.nullsafe(-1, function (x) { return x + 1; }, function (x) { return x + 1; })).toBe(1);
     expect(index_1.nullsafe(0, function (x) { return x + 1; }, function (x) { return x + 1; })).toBe(2);
 });
-test("map prev", function () { return __awaiter(_this, void 0, void 0, function () {
+test("map prev rx", function () { return __awaiter(_this, void 0, void 0, function () {
     var arr, obs, ret;
     return __generator(this, function (_a) {
         switch (_a.label) {
@@ -683,3 +683,16 @@ test("map prev", function () { return __awaiter(_this, void 0, void 0, function 
         }
     });
 }); });
+test("map many", function () {
+    var arr = [1, 2, 3];
+    var map = function (x) { return index_1.range(x, x + 3).map(function (y) { return x * 10 + y; }); };
+    var expected = [
+        11, 12, 13, 14,
+        22, 23, 24, 25, 26,
+        33, 34, 35, 36, 37, 38
+    ];
+    var actual = index_1.mapMany(arr, map);
+    expect(actual).toEqual(expected);
+    var actual2 = index_1.flatten(arr.map(map));
+    expect(actual2).toEqual(expected);
+});

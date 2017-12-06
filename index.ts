@@ -337,6 +337,7 @@ export function omit<T>(obj: T, keys: (keyof T)[]): T {
     return filterObject(obj, (value, key) => !contains(keys, key));
 }
 
+
 /**Quita las propiedades que esten indefinidas en un objeto */
 export function omitUndefined<T>(obj: T): Partial<T> {
     return filterObject(obj, value => value !== undefined);
@@ -639,4 +640,14 @@ export function mapPreviousRx<T>(obs: rx.Observable<T>, startWith: T): rx.Observ
             .map(x => ({ prev: startWith, curr: x }))
             .scan((acc, val) => ({ prev: acc.curr, curr: val.curr }));
     return ret;
+}
+
+/**Mapea y aplana una colección. Es equivalente a  flatten(items.map(map)) */
+export function mapMany<T, TR>(items: T[], map: (x: T) => TR[]): TR[] {
+    let result : TR[] = [];
+    for(const x of items) {
+        const mapResult = map(x);
+        result.push(... mapResult);
+    }
+    return result;
 }
