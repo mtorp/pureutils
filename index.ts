@@ -731,7 +731,9 @@ const monthNames = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep
 /**Formatea una fecha
  * @param fullDateTime true o false para indicar si mostrar las horas o no. Por default es undefined e implicar que se mostraran las horas si el valor tiene componente de horas, si no, se mostrará sólo la fecha
  */
-export function formatDate(x: Date, fullDateTime?: boolean) {
+export function formatDate(x: Date | null | undefined | string, fullDateTime?: boolean) {
+    if(x == null) return "";
+    x = new Date(x as any);
 
     const year = "" + x.getFullYear();
     const month = monthNames[x.getMonth()];
