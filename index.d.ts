@@ -251,6 +251,11 @@ export declare function mapMany<T, TR>(items: T[], map: (x: T) => TR[]): TR[];
  * @param number El numero
  * @param integer Cantidad de zeros a la izquierda en la parte entera
  * @param decimals Cantidad de zeros a la derecha en la parte desimal
- * @param thousep Usar separador de miles
+ * @param thousep Usar separador de miles. Por default es false
+ * @param prefix Prefijo del numero, ejemplo $ o %. Por default es ""
  */
 export declare function formatNumber(number: number | null | undefined | string, integer?: number, decimals?: number, thousep?: boolean, prefix?: string): string;
+/**Formatea una fecha
+ * @param fullDateTime true o false para indicar si mostrar las horas o no. Por default es undefined e implicar que se mostraran las horas si el valor tiene componente de horas, si no, se mostrará sólo la fecha
+ */
+export declare function formatDate(x: Date, fullDateTime?: boolean): string;

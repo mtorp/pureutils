@@ -687,7 +687,7 @@ function aplicarSepMiles(intpart: string, sep: string = ","): string {
     let ret = intpart.substr(0, start);
     for (var i = start; i < intpart.length; i += 3) {
         const subpart = intpart.substr(i, 3);
-        ret += i == 0 ? subpart : (sep+ subpart);
+        ret += i == 0 ? subpart : (sep + subpart);
     }
     return ret;
 }
@@ -725,4 +725,29 @@ export function formatNumber(number: number | null | undefined | string, integer
     const fracPart = fracZeroStr.substring(0, decimals);
 
     return sign + prefix + intPart + "." + fracText;
+}
+
+const monthNames = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+/**Formatea una fecha
+ * @param fullDateTime true o false para indicar si mostrar las horas o no. Por default es undefined e implicar que se mostraran las horas si el valor tiene componente de horas, si no, se mostrará sólo la fecha
+ */
+export function formatDate(x: Date, fullDateTime?: boolean) {
+
+    const year = "" + x.getFullYear();
+    const month = monthNames[x.getMonth()];
+    const day = "0" + x.getDate();
+
+    const hours = "0" + x.getHours();
+    const minutes = "0" + x.getMinutes();
+
+    //True si se debe de mostrar hora y fecha, si no, solo la fecha
+    const effFull = fullDateTime == null ? (hours != "00" || minutes != "00") : fullDateTime;
+
+    const dateStr = day.slice(-2) + "/" + month + "/" + year;
+    if (effFull) {
+        const hourStr = hours.slice(-2) + ":" + minutes.slice(-2);
+        return dateStr + " " + hourStr;
+    } else {
+        return dateStr;
+    }
 }

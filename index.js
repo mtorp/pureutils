@@ -861,14 +861,16 @@ function mapMany(items, map) {
     var e_16, _a;
 }
 exports.mapMany = mapMany;
-function aplicarSepMiles(intpart) {
+/**A una cadena que representa un numero entero, aplica el separador de miles */
+function aplicarSepMiles(intpart, sep) {
+    if (sep === void 0) { sep = ","; }
     if (intpart.length < 4)
         return intpart;
     var start = intpart.length % 3;
     var ret = intpart.substr(0, start);
     for (var i = start; i < intpart.length; i += 3) {
         var subpart = intpart.substr(i, 3);
-        ret += i == 0 ? subpart : ("," + subpart);
+        ret += i == 0 ? subpart : (sep + subpart);
     }
     return ret;
 }
@@ -877,7 +879,8 @@ function aplicarSepMiles(intpart) {
  * @param number El numero
  * @param integer Cantidad de zeros a la izquierda en la parte entera
  * @param decimals Cantidad de zeros a la derecha en la parte desimal
- * @param thousep Usar separador de miles
+ * @param thousep Usar separador de miles. Por default es false
+ * @param prefix Prefijo del numero, ejemplo $ o %. Por default es ""
  */
 function formatNumber(number, integer, decimals, thousep, prefix) {
     if (integer === void 0) { integer = 0; }
@@ -904,3 +907,25 @@ function formatNumber(number, integer, decimals, thousep, prefix) {
     return sign + prefix + intPart + "." + fracText;
 }
 exports.formatNumber = formatNumber;
+var monthNames = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+/**Formatea una fecha
+ * @param fullDateTime true o false para indicar si mostrar las horas o no. Por default es undefined e implicar que se mostraran las horas si el valor tiene componente de horas, si no, se mostrará sólo la fecha
+ */
+function formatDate(x, fullDateTime) {
+    var year = "" + x.getFullYear();
+    var month = monthNames[x.getMonth()];
+    var day = "0" + x.getDate();
+    var hours = "0" + x.getHours();
+    var minutes = "0" + x.getMinutes();
+    //True si se debe de mostrar hora y fecha, si no, solo la fecha
+    var effFull = fullDateTime == null ? (hours != "00" || minutes != "00") : fullDateTime;
+    var dateStr = day.slice(-2) + "/" + month + "/" + year;
+    if (effFull) {
+        var hourStr = hours.slice(-2) + ":" + minutes.slice(-2);
+        return dateStr + " " + hourStr;
+    }
+    else {
+        return dateStr;
+    }
+}
+exports.formatDate = formatDate;

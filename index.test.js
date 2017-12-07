@@ -768,3 +768,11 @@ test("format number", function () {
     expect(index_1.formatNumber(-123450.546, 12, 5, true, "$")).toEqual("-$000,000,123,450.54600");
     expect(index_1.formatNumber(-123450.546, 12, 5, true, "$")).toEqual("-$000,000,123,450.54600");
 });
+test("format datetime", function () {
+    expect(index_1.formatDate(new Date(2017, 11, 7))).toBe("07/dic/2017");
+    expect(index_1.formatDate(new Date(2017, 0, 7))).toBe("07/ene/2017");
+    expect(index_1.formatDate(new Date(2017, 0, 7, 16, 54, 23))).toBe("07/ene/2017 16:54");
+    expect(index_1.formatDate(new Date(2017, 0, 7), true)).toBe("07/ene/2017 00:00");
+    expect(index_1.formatDate(new Date(2017, 0, 7, 16, 54, 23), false)).toBe("07/ene/2017");
+    expect(index_1.formatDate(new Date(2017, 5, 7, 16, 54, 23), false)).toBe("07/jun/2017");
+});
