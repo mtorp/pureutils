@@ -3,7 +3,7 @@ import {
     deepEquals, pipe, enumObject, setEquals, all, any, arrayToMap, contains, filterObject, first, mapObject, omit, ObjMap, toMap, moveItem, swapItems, upDownItem, promiseAllObj,
     unique, filterIf, mapKeys, intersect, omitUndefined, single, awaitObj, shallowDiff, range, sort, defaultComparer, orderBy, orderByDesc,
     truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd, toObservable, isArray, isArrayLike, isPromise, isObservable,
-    search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx, mapMany
+    search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx, mapMany, runningTotal, mapPrevious
 } from "./index";
 
 import * as rx from "rxjs";
@@ -725,7 +725,7 @@ test("map many", () => {
     const arr = [1, 2, 3];
     const map = (x: number) => range(x, x + 3).map(y => x * 10 + y);
 
-    const expected =  
+    const expected =
         [
             11, 12, 13, 14,
             22, 23, 24, 25, 26,
@@ -738,3 +738,26 @@ test("map many", () => {
     const actual2 = flatten(arr.map(map));
     expect(actual2).toEqual(expected);
 });
+
+test("running total", () => {
+    const arr = [1, 2, 3, 4, 5, 6].map(x => ({ value: x, other: "hello" }));
+    const expected = [1, 3, 6, 10, 15, 21].map(x => ({ value: x, other: "hello" }));
+
+    const actual = runningTotal(arr, 0, (state, it) => state + it.value, (state, item) => ({ ...item, value: state }));
+    expect(actual).toEqual(expected);
+});
+
+test("running total s", () => {
+    const arr = [1, 2, 3, 4, 5, 6];
+    const expected = [1, 3, 6, 10, 15, 21];
+
+    const actual = runningTotal(arr, 0, (state, it) => state + it, x => x);
+    expect(actual).toEqual(expected);
+});
+
+test("map previous", () => {
+    const arr = [1, 2, 3, 5, 8, 13];
+    const expected = [0 / 1, 1 / 2, 2 / 3, 3 / 5, 5 / 8, 8 / 13];
+    const actual = mapPrevious(arr, (prev, curr) => prev / curr, 0);
+    expect(actual).toEqual(expected);
+})

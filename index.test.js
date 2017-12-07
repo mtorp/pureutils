@@ -696,3 +696,21 @@ test("map many", function () {
     var actual2 = index_1.flatten(arr.map(map));
     expect(actual2).toEqual(expected);
 });
+test("running total", function () {
+    var arr = [1, 2, 3, 4, 5, 6].map(function (x) { return ({ value: x, other: "hello" }); });
+    var expected = [1, 3, 6, 10, 15, 21].map(function (x) { return ({ value: x, other: "hello" }); });
+    var actual = index_1.runningTotal(arr, 0, function (state, it) { return state + it.value; }, function (state, item) { return (__assign({}, item, { value: state })); });
+    expect(actual).toEqual(expected);
+});
+test("running total s", function () {
+    var arr = [1, 2, 3, 4, 5, 6];
+    var expected = [1, 3, 6, 10, 15, 21];
+    var actual = index_1.runningTotal(arr, 0, function (state, it) { return state + it; }, function (x) { return x; });
+    expect(actual).toEqual(expected);
+});
+test("map previous", function () {
+    var arr = [1, 2, 3, 5, 8, 13];
+    var expected = [0 / 1, 1 / 2, 2 / 3, 3 / 5, 5 / 8, 8 / 13];
+    var actual = index_1.mapPrevious(arr, function (prev, curr) { return prev / curr; }, 0);
+    expect(actual).toEqual(expected);
+});

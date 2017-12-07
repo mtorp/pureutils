@@ -642,12 +642,38 @@ export function mapPreviousRx<T>(obs: rx.Observable<T>, startWith: T): rx.Observ
     return ret;
 }
 
+/**Mapea cada elemento de un arreglo tomando en cuenta el elemento anterior */
+export function mapPrevious<T, TR>(items: T[], map: (prev: T, curr: T) => TR, initial: T) {
+    let prev = initial;
+    let ret: TR[] = [];
+    for (const it of items) {
+        ret.push(map(prev, it));
+        prev = it;
+    }
+    return ret;
+}
+
+/**Calcula un agregado corrido para cada elemento de un arreglo */
+export function runningTotal<TIn, TState, TOut>(items: TIn[], seed: TState, reduceState: (state: TState, item: TIn) => TState, map: (state: TState, item: TIn) => TOut) {
+    let ret: TOut[] = [];
+
+    let state = seed;
+    for (const it of items) {
+        const proj = reduceState(state, it);
+        state = proj;
+        const output = map(state, it);
+
+        ret.push(output);
+    }
+    return ret;
+}
+
 /**Mapea y aplana una colección. Es equivalente a  flatten(items.map(map)) */
 export function mapMany<T, TR>(items: T[], map: (x: T) => TR[]): TR[] {
-    let result : TR[] = [];
-    for(const x of items) {
+    let result: TR[] = [];
+    for (const x of items) {
         const mapResult = map(x);
-        result.push(... mapResult);
+        result.push(...mapResult);
     }
     return result;
 }

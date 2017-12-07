@@ -240,5 +240,9 @@ export declare function mapPreviousRx<T>(obs: rx.Observable<T>, startWith: T): r
     prev: T;
     curr: T;
 }>;
+/**Mapea cada elemento de un arreglo tomando en cuenta el elemento anterior */
+export declare function mapPrevious<T, TR>(items: T[], map: (prev: T, curr: T) => TR, initial: T): TR[];
+/**Calcula un agregado corrido para cada elemento de un arreglo */
+export declare function runningTotal<TIn, TState, TOut>(items: TIn[], seed: TState, reduceState: (state: TState, item: TIn) => TState, map: (state: TState, item: TIn) => TOut): TOut[];
 /**Mapea y aplana una colección. Es equivalente a  flatten(items.map(map)) */
 export declare function mapMany<T, TR>(items: T[], map: (x: T) => TR[]): TR[];

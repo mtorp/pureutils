@@ -794,14 +794,15 @@ function mapPreviousRx(obs, startWith) {
     return ret;
 }
 exports.mapPreviousRx = mapPreviousRx;
-/**Mapea y aplana una colección. Es equivalente a  flatten(items.map(map)) */
-function mapMany(items, map) {
-    var result = [];
+/**Mapea cada elemento de un arreglo tomando en cuenta el elemento anterior */
+function mapPrevious(items, map, initial) {
+    var prev = initial;
+    var ret = [];
     try {
         for (var items_1 = __values(items), items_1_1 = items_1.next(); !items_1_1.done; items_1_1 = items_1.next()) {
-            var x = items_1_1.value;
-            var mapResult = map(x);
-            result.push.apply(result, __spread(mapResult));
+            var it_1 = items_1_1.value;
+            ret.push(map(prev, it_1));
+            prev = it_1;
         }
     }
     catch (e_14_1) { e_14 = { error: e_14_1 }; }
@@ -811,7 +812,52 @@ function mapMany(items, map) {
         }
         finally { if (e_14) throw e_14.error; }
     }
-    return result;
+    return ret;
     var e_14, _a;
+}
+exports.mapPrevious = mapPrevious;
+/**Calcula un agregado corrido para cada elemento de un arreglo */
+function runningTotal(items, seed, reduceState, map) {
+    var ret = [];
+    var state = seed;
+    try {
+        for (var items_2 = __values(items), items_2_1 = items_2.next(); !items_2_1.done; items_2_1 = items_2.next()) {
+            var it_2 = items_2_1.value;
+            var proj = reduceState(state, it_2);
+            state = proj;
+            var output = map(state, it_2);
+            ret.push(output);
+        }
+    }
+    catch (e_15_1) { e_15 = { error: e_15_1 }; }
+    finally {
+        try {
+            if (items_2_1 && !items_2_1.done && (_a = items_2.return)) _a.call(items_2);
+        }
+        finally { if (e_15) throw e_15.error; }
+    }
+    return ret;
+    var e_15, _a;
+}
+exports.runningTotal = runningTotal;
+/**Mapea y aplana una colección. Es equivalente a  flatten(items.map(map)) */
+function mapMany(items, map) {
+    var result = [];
+    try {
+        for (var items_3 = __values(items), items_3_1 = items_3.next(); !items_3_1.done; items_3_1 = items_3.next()) {
+            var x = items_3_1.value;
+            var mapResult = map(x);
+            result.push.apply(result, __spread(mapResult));
+        }
+    }
+    catch (e_16_1) { e_16 = { error: e_16_1 }; }
+    finally {
+        try {
+            if (items_3_1 && !items_3_1.done && (_a = items_3.return)) _a.call(items_3);
+        }
+        finally { if (e_16) throw e_16.error; }
+    }
+    return result;
+    var e_16, _a;
 }
 exports.mapMany = mapMany;
