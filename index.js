@@ -861,3 +861,46 @@ function mapMany(items, map) {
     var e_16, _a;
 }
 exports.mapMany = mapMany;
+function aplicarSepMiles(intpart) {
+    if (intpart.length < 4)
+        return intpart;
+    var start = intpart.length % 3;
+    var ret = intpart.substr(0, start);
+    for (var i = start; i < intpart.length; i += 3) {
+        var subpart = intpart.substr(i, 3);
+        ret += i == 0 ? subpart : ("," + subpart);
+    }
+    return ret;
+}
+/**
+ * Formatea un número
+ * @param number El numero
+ * @param integer Cantidad de zeros a la izquierda en la parte entera
+ * @param decimals Cantidad de zeros a la derecha en la parte desimal
+ * @param thousep Usar separador de miles
+ */
+function formatNumber(number, integer, decimals, thousep, prefix) {
+    if (integer === void 0) { integer = 0; }
+    if (decimals === void 0) { decimals = 0; }
+    if (thousep === void 0) { thousep = false; }
+    if (prefix === void 0) { prefix = ""; }
+    if (number == null)
+        return "";
+    number = Number(number);
+    var zeroes = "00000000000000000000";
+    var sign = number < 0 ? "-" : "";
+    var x = Math.abs(number);
+    var int = Math.trunc(x);
+    var frac = x - int;
+    var intText = "" + int;
+    var intZeroStr = zeroes + intText;
+    var intPartSinSep = intZeroStr.substr(intZeroStr.length - Math.max(integer, intText.length));
+    var intPart = thousep ? aplicarSepMiles(intPartSinSep) : intPartSinSep;
+    if (decimals == 0)
+        return sign + prefix + intPart;
+    var fracText = "" + Math.trunc(Math.round(frac * 1000 * Math.pow(10, decimals)) / 1000);
+    var fracZeroStr = fracText + zeroes;
+    var fracPart = fracZeroStr.substring(0, decimals);
+    return sign + prefix + intPart + "." + fracText;
+}
+exports.formatNumber = formatNumber;

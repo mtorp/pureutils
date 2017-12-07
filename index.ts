@@ -677,3 +677,52 @@ export function mapMany<T, TR>(items: T[], map: (x: T) => TR[]): TR[] {
     }
     return result;
 }
+
+/**A una cadena que representa un numero entero, aplica el separador de miles */
+function aplicarSepMiles(intpart: string, sep: string = ","): string {
+    if (intpart.length < 4)
+        return intpart;
+
+    const start = intpart.length % 3;
+    let ret = intpart.substr(0, start);
+    for (var i = start; i < intpart.length; i += 3) {
+        const subpart = intpart.substr(i, 3);
+        ret += i == 0 ? subpart : (sep+ subpart);
+    }
+    return ret;
+}
+
+/**
+ * Formatea un número
+ * @param number El numero
+ * @param integer Cantidad de zeros a la izquierda en la parte entera
+ * @param decimals Cantidad de zeros a la derecha en la parte desimal
+ * @param thousep Usar separador de miles. Por default es false
+ * @param prefix Prefijo del numero, ejemplo $ o %. Por default es ""
+ */
+export function formatNumber(number: number | null | undefined | string, integer: number = 0, decimals: number = 0, thousep: boolean = false, prefix: string = "") {
+    if (number == null) return "";
+    number = Number(number);
+
+    const zeroes = "00000000000000000000";
+    const sign = number < 0 ? "-" : "";
+    const x = Math.abs(number);
+    const int = Math.trunc(x);
+    const frac = x - int;
+
+    const intText = "" + int;
+    const intZeroStr = zeroes + intText;
+
+    const intPartSinSep = intZeroStr.substr(intZeroStr.length - Math.max(integer, intText.length));
+    const intPart = thousep ? aplicarSepMiles(intPartSinSep) : intPartSinSep;
+
+    if (decimals == 0)
+        return sign + prefix + intPart;
+
+    const fracText = "" + Math.trunc(Math.round(frac * 1000 * Math.pow(10, decimals)) / 1000);
+    const fracZeroStr = fracText + zeroes;
+
+    const fracPart = fracZeroStr.substring(0, decimals);
+
+    return sign + prefix + intPart + "." + fracText;
+}

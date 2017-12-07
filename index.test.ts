@@ -3,7 +3,7 @@ import {
     deepEquals, pipe, enumObject, setEquals, all, any, arrayToMap, contains, filterObject, first, mapObject, omit, ObjMap, toMap, moveItem, swapItems, upDownItem, promiseAllObj,
     unique, filterIf, mapKeys, intersect, omitUndefined, single, awaitObj, shallowDiff, range, sort, defaultComparer, orderBy, orderByDesc,
     truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd, toObservable, isArray, isArrayLike, isPromise, isObservable,
-    search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx, mapMany, runningTotal, mapPrevious
+    search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx, mapMany, runningTotal, mapPrevious, formatNumber
 } from "./index";
 
 import * as rx from "rxjs";
@@ -760,4 +760,71 @@ test("map previous", () => {
     const expected = [0 / 1, 1 / 2, 2 / 3, 3 / 5, 5 / 8, 8 / 13];
     const actual = mapPrevious(arr, (prev, curr) => prev / curr, 0);
     expect(actual).toEqual(expected);
+})
+
+test("format number", () => {
+    expect(formatNumber(10,0,0)).toEqual("10");
+
+    //Negativos:
+    expect(formatNumber(-10,0,0)).toEqual("-10");
+
+    expect(formatNumber(-10, 2,0)).toEqual("-10");
+    expect(formatNumber(-10, 3,0)).toEqual("-010");
+    expect(formatNumber(-10, 5,0)).toEqual("-00010");
+
+    expect(formatNumber(-10.5, 5,0)).toEqual("-00010");
+    expect(formatNumber(-10.5, 5,1)).toEqual("-00010.5");
+
+    expect(formatNumber(-0.5, 5,1)).toEqual("-00000.5");
+    expect(formatNumber(-0.58745164, 5,1)).toEqual("-00000.5");
+    
+    expect(formatNumber(-0.5999, 5,1)).toEqual("-00000.5");
+
+    expect(formatNumber(-1.2, 0,1)).toEqual("-1.2");
+    expect(formatNumber(-1.2, 1,1)).toEqual("-1.2");
+    
+    expect(formatNumber(-0.2, 0,1)).toEqual("-0.2");
+    expect(formatNumber(-0.2, 1,1)).toEqual("-0.2");
+    expect(formatNumber(-0.2, 2,1)).toEqual("-00.2");
+    
+    expect(formatNumber(-0.5999, 5,4)).toEqual("-00000.5999");
+    expect(formatNumber(-0.5999, 5,8)).toEqual("-00000.59990000");
+
+    //Positivos:
+    expect(formatNumber(10, 2,0)).toEqual("10");
+    expect(formatNumber(10, 3,0)).toEqual("010");
+    expect(formatNumber(10, 5,0)).toEqual("00010");
+    expect(formatNumber(10.5, 5,0)).toEqual("00010");
+    expect(formatNumber(10.5, 5,1)).toEqual("00010.5");
+    expect(formatNumber(0.5, 5,1)).toEqual("00000.5");
+    expect(formatNumber(0.58745164, 5,1)).toEqual("00000.5");
+    expect(formatNumber(0.5999, 5,1)).toEqual("00000.5");
+    expect(formatNumber(1.2, 0,1)).toEqual("1.2");
+    expect(formatNumber(1.2, 1,1)).toEqual("1.2");
+    expect(formatNumber(0.2, 0,1)).toEqual("0.2");
+    expect(formatNumber(0.2, 1,1)).toEqual("0.2");
+    expect(formatNumber(0.2, 2,1)).toEqual("00.2");
+    expect(formatNumber(0.5999, 5,4)).toEqual("00000.5999");
+    expect(formatNumber(0.5999, 5,8)).toEqual("00000.59990000");
+
+    expect(formatNumber(1, 0,0, true)).toEqual("1");
+    expect(formatNumber(10, 0,0, true)).toEqual("10");
+    expect(formatNumber(100, 0,0, true)).toEqual("100");
+    expect(formatNumber(1000, 0,0, true)).toEqual("1,000");
+    expect(formatNumber(10000, 0,0, true)).toEqual("10,000");
+    expect(formatNumber(12345, 0,0, true)).toEqual("12,345");
+    expect(formatNumber(123450000, 0,0, true)).toEqual("123,450,000");
+    expect(formatNumber(123450000.546, 0,0, true)).toEqual("123,450,000");
+    expect(formatNumber(123450000.546, 0,2, true)).toEqual("123,450,000.54");
+    expect(formatNumber(-123450000.546, 0,2, true)).toEqual("-123,450,000.54");
+    expect(formatNumber(-123450000.546, 4,2, true)).toEqual("-123,450,000.54");
+    expect(formatNumber(-123450000.546, 9,2, true)).toEqual("-123,450,000.54");
+    expect(formatNumber(-123450000.546, 12,2, true)).toEqual("-000,123,450,000.54");
+    expect(formatNumber(-123450.546, 12,2, true)).toEqual("-000,000,123,450.54");
+    expect(formatNumber(-123450.546, 12,2, true, "$")).toEqual("-$000,000,123,450.54");
+    expect(formatNumber(-123450.546, 12,3, true, "$")).toEqual("-$000,000,123,450.546");
+    expect(formatNumber(-123450.546, 12,5, true, "$")).toEqual("-$000,000,123,450.54600");
+    expect(formatNumber(-123450.546, 12,5, true, "$")).toEqual("-$000,000,123,450.54600");
+    
+    
 })
