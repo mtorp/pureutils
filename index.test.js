@@ -42,6 +42,26 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __read = (this && this.__read) || function (o, n) {
+    var m = typeof Symbol === "function" && o[Symbol.iterator];
+    if (!m) return o;
+    var i = m.call(o), r, ar = [], e;
+    try {
+        while ((n === void 0 || n-- > 0) && !(r = i.next()).done) ar.push(r.value);
+    }
+    catch (error) { e = { error: error }; }
+    finally {
+        try {
+            if (r && !r.done && (m = i["return"])) m.call(i);
+        }
+        finally { if (e) throw e.error; }
+    }
+    return ar;
+};
+var __spread = (this && this.__spread) || function () {
+    for (var ar = [], i = 0; i < arguments.length; i++) ar = ar.concat(__read(arguments[i]));
+    return ar;
+};
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var index_1 = require("./index");
@@ -786,4 +806,32 @@ test("format datetime excel", function () {
     expect(index_1.formatDateExcel(new Date(2017, 0, 7))).toBe("2017-01-07 00:00:00");
     expect(index_1.formatDateExcel(new Date(2017, 0, 7, 16, 54, 23))).toBe("2017-01-07 16:54:23");
     expect(index_1.formatDateExcel(new Date(2017, 5, 7, 16, 54, 23))).toBe("2017-06-07 16:54:23");
+});
+test("clone function", function () {
+    var funcA = function () { return 10; };
+    var funcB = function (a, b) { return a + b; };
+    var funcC = function (a) {
+        var b = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            b[_i - 1] = arguments[_i];
+        }
+        return a * b.reduce(function (a, b) { return a + b; }, 0);
+    };
+    var funcD = function (a, b, c) { return a + b + c; };
+    var cloneA = index_1.cloneFunction(funcA);
+    var cloneB = index_1.cloneFunction(funcB);
+    var cloneC = index_1.cloneFunction(funcC);
+    var cloneD = index_1.cloneFunction(funcD);
+    expect(funcA).not.toBe(cloneA);
+    expect(funcB).not.toBe(cloneB);
+    expect(funcC).not.toBe(cloneC);
+    expect(funcD).not.toBe(cloneD);
+    cloneA.myProp = "hello";
+    expect(cloneA.myProp).toBe("hello");
+    expect(funcA.myProp).toBeUndefined();
+    expect(cloneA()).toBe(10);
+    expect(cloneB(1, 4)).toBe(5);
+    expect(cloneC.apply(void 0, __spread([2], [1, 2, 3]))).toBe(12);
+    expect(cloneC(2, 3, 4, 5, 6)).toBe(36);
+    expect(cloneD("hola", 3, 4)).toBe("hola34");
 });

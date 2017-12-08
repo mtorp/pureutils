@@ -939,3 +939,15 @@ function formatDateExcel(x) {
     return f4(x.getFullYear()) + "-" + f(x.getMonth() + 1) + "-" + f(x.getDate()) + " " + f(x.getHours()) + ":" + f(x.getMinutes()) + ":" + f(x.getSeconds());
 }
 exports.formatDateExcel = formatDateExcel;
+/**Devuelve una copia de una función */
+function cloneFunction(func) {
+    var ret = function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
+        return func.apply(void 0, __spread(args));
+    };
+    return ret;
+}
+exports.cloneFunction = cloneFunction;

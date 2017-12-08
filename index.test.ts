@@ -3,7 +3,8 @@ import {
     deepEquals, pipe, enumObject, setEquals, all, any, arrayToMap, contains, filterObject, first, mapObject, omit, ObjMap, toMap, moveItem, swapItems, upDownItem, promiseAllObj,
     unique, filterIf, mapKeys, intersect, omitUndefined, single, awaitObj, shallowDiff, range, sort, defaultComparer, orderBy, orderByDesc,
     truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd, toObservable, isArray, isArrayLike, isPromise, isObservable,
-    search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx, mapMany, runningTotal, mapPrevious, formatNumber, formatDate, formatDateExcel
+    search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx, mapMany, runningTotal, mapPrevious, formatNumber, formatDate, formatDateExcel,
+    cloneFunction
 } from "./index";
 
 import * as rx from "rxjs";
@@ -769,7 +770,7 @@ test("format number", () => {
     expect(formatNumber(123.254, 1, 2)).toEqual("123.25");
     expect(formatNumber(123.254, 1, 5)).toEqual("123.25400");
 
-    
+
     expect(formatNumber(10, 0, 0)).toEqual("10");
 
     //Negativos:
@@ -837,19 +838,48 @@ test("format number", () => {
 test("format datetime", () => {
     expect(formatDate(new Date(2017, 11, 7))).toBe("07/dic/2017");
     expect(formatDate(new Date(2017, 0, 7))).toBe("07/ene/2017");
-    expect(formatDate(new Date(2017, 0, 7, 16,54,23))).toBe("07/ene/2017 16:54");
+    expect(formatDate(new Date(2017, 0, 7, 16, 54, 23))).toBe("07/ene/2017 16:54");
     expect(formatDate(new Date(2017, 0, 7), true)).toBe("07/ene/2017 00:00");
 
-    expect(formatDate(new Date(2017, 0, 7, 16,54,23), false)).toBe("07/ene/2017");
-    expect(formatDate(new Date(2017, 5, 7, 16,54,23), false)).toBe("07/jun/2017");
-    
+    expect(formatDate(new Date(2017, 0, 7, 16, 54, 23), false)).toBe("07/ene/2017");
+    expect(formatDate(new Date(2017, 5, 7, 16, 54, 23), false)).toBe("07/jun/2017");
+
 })
 
 
 test("format datetime excel", () => {
     expect(formatDateExcel(new Date(2017, 11, 7))).toBe("2017-12-07 00:00:00");
     expect(formatDateExcel(new Date(2017, 0, 7))).toBe("2017-01-07 00:00:00");
-    expect(formatDateExcel(new Date(2017, 0, 7, 16,54,23))).toBe("2017-01-07 16:54:23");
-    expect(formatDateExcel(new Date(2017, 5, 7, 16,54,23))).toBe("2017-06-07 16:54:23");
-    
+    expect(formatDateExcel(new Date(2017, 0, 7, 16, 54, 23))).toBe("2017-01-07 16:54:23");
+    expect(formatDateExcel(new Date(2017, 5, 7, 16, 54, 23))).toBe("2017-06-07 16:54:23");
+
 })
+
+test("clone function", () => {
+
+    const funcA = () => 10;
+    const funcB = (a: number, b: number) => a + b;
+    const funcC = (a: number, ...b: number[]) => a * b.reduce((a, b) => a + b, 0);
+    const funcD = (a: string, b: number, c: number) => a + b + c;
+
+    const cloneA = cloneFunction(funcA);
+    const cloneB = cloneFunction(funcB);
+    const cloneC = cloneFunction(funcC);
+    const cloneD = cloneFunction(funcD);
+
+    expect(funcA).not.toBe(cloneA);
+    expect(funcB).not.toBe(cloneB);
+    expect(funcC).not.toBe(cloneC);
+    expect(funcD).not.toBe(cloneD);
+
+    (cloneA as any).myProp = "hello";
+
+    expect((cloneA as any).myProp).toBe("hello");
+    expect((funcA as any).myProp).toBeUndefined();
+
+    expect(cloneA()).toBe(10);
+    expect(cloneB(1, 4)).toBe(5);
+    expect(cloneC(2, ...[1, 2, 3])).toBe(12);
+    expect(cloneC(2, 3, 4, 5, 6)).toBe(36);
+    expect(cloneD("hola", 3, 4)).toBe("hola34");
+}); 

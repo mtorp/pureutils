@@ -166,7 +166,7 @@ export function isArrayLike(x: any): x is ArrayLike<any> {
 
 const hasIterationProtocol = (variable: any): variable is Iterable<any> => variable !== null && Symbol.iterator in Object(variable);
 
-export function deepEquals<T>(a: T, b: T) {
+export function deepEquals<T>(a: T, b: T): boolean {
     const deep = (a, b) => shallowEquals(a, b, deep);
     return deep(a, b);
 }
@@ -759,4 +759,10 @@ export function formatDateExcel(x: Date): string {
     const f4 = x => formatNumber(x, 4);
 
     return `${f4(x.getFullYear())}-${f(x.getMonth() + 1)}-${f(x.getDate())} ${f(x.getHours())}:${f(x.getMinutes())}:${f(x.getSeconds())}`;
+}
+
+/**Devuelve una copia de una función */
+export function cloneFunction<T extends (...args: any[]) => any>(func: T): T {
+    const ret = (...args: any[]): any => func(...args);
+    return ret as T;
 }

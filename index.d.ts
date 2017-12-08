@@ -50,7 +50,7 @@ export declare function toArray<T>(arr: ArrayLike<T> | Iterable<T>): T[];
 export declare function canBeArray(arr: any): arr is ArrayLike<any> | Iterable<any>;
 /**Devuelve true si x es un array o un array like */
 export declare function isArrayLike(x: any): x is ArrayLike<any>;
-export declare function deepEquals<T>(a: T, b: T): any;
+export declare function deepEquals<T>(a: T, b: T): boolean;
 /**Convierte un arreglo a un objeto */
 export declare function toMap<T, TValue>(arr: T[], key: (value: T) => string, value: (value: T) => TValue): {
     [index: string]: TValue;
@@ -261,3 +261,5 @@ export declare function formatNumber(number: number | null | undefined | string,
 export declare function formatDate(x: Date | null | undefined | string, fullDateTime?: boolean): string;
 /**Formatea una fecha de tal manera que sea compatible con el excel */
 export declare function formatDateExcel(x: Date): string;
+/**Devuelve una copia de una función */
+export declare function cloneFunction<T extends (...args: any[]) => any>(func: T): T;
