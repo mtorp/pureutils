@@ -258,4 +258,4 @@ export declare function formatNumber(number: number | null | undefined | string,
 /**Formatea una fecha
  * @param fullDateTime true o false para indicar si mostrar las horas o no. Por default es undefined e implicar que se mostraran las horas si el valor tiene componente de horas, si no, se mostrará sólo la fecha
  */
-export declare function formatDate(x: Date, fullDateTime?: boolean): string;
+export declare function formatDate(x: Date | null | undefined | string, fullDateTime?: boolean): string;

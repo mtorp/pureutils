@@ -715,6 +715,11 @@ test("map previous", function () {
     expect(actual).toEqual(expected);
 });
 test("format number", function () {
+    expect(index_1.formatNumber(0, 1, 2)).toEqual("0.00");
+    expect(index_1.formatNumber(1, 1, 2)).toEqual("1.00");
+    expect(index_1.formatNumber(1.2, 1, 2)).toEqual("1.20");
+    expect(index_1.formatNumber(123.254, 1, 2)).toEqual("123.25");
+    expect(index_1.formatNumber(123.254, 1, 5)).toEqual("123.25400");
     expect(index_1.formatNumber(10, 0, 0)).toEqual("10");
     //Negativos:
     expect(index_1.formatNumber(-10, 0, 0)).toEqual("-10");

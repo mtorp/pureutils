@@ -904,7 +904,7 @@ function formatNumber(number, integer, decimals, thousep, prefix) {
     var fracText = "" + Math.trunc(Math.round(frac * 1000 * Math.pow(10, decimals)) / 1000);
     var fracZeroStr = fracText + zeroes;
     var fracPart = fracZeroStr.substring(0, decimals);
-    return sign + prefix + intPart + "." + fracText;
+    return sign + prefix + intPart + "." + fracPart;
 }
 exports.formatNumber = formatNumber;
 var monthNames = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
@@ -912,6 +912,9 @@ var monthNames = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep",
  * @param fullDateTime true o false para indicar si mostrar las horas o no. Por default es undefined e implicar que se mostraran las horas si el valor tiene componente de horas, si no, se mostrará sólo la fecha
  */
 function formatDate(x, fullDateTime) {
+    if (x == null)
+        return "";
+    x = new Date(x);
     var year = "" + x.getFullYear();
     var month = monthNames[x.getMonth()];
     var day = "0" + x.getDate();
