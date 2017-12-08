@@ -772,13 +772,27 @@ export function cloneFunction<T extends (...args: any[]) => any>(func: T): T {
     return ret as T;
 }
 
-/**Aplica un Function.bind respetando las propiedades agregadas a la función */
+const bindOrigFuncKey = "_keautils_bindFunction_origFunctions";
+
+/**Aplica un Function.bind respetando las propiedades agregadas a la función. Tambien se almacena la funcion original de tal manera que se puede devolver al estado original */
 export function bindFunction<T extends (...args: any[]) => any>(func: T, thisArg?: any, ...argArray: any[]): T {
     const keys = Object.keys(func);
     const ret = func.bind(thisArg, ...argArray);
     for (const key of keys) {
         ret[key] = func[key];
-    }
+    };
+
+    ret[bindOrigFuncKey] = ret[bindOrigFuncKey] || [];
+    ret[bindOrigFuncKey] = [...ret[bindOrigFuncKey], func];
 
     return ret;
+}
+
+/**Deshace un bind aplicado con bindFunction. Un bind aplicado con Function.bind directamente no se puede deshacer. Si al argumento no se le fue aplicado un bind devuelve undefined */
+export function unbindFunction<T extends (...args: any[]) => any>(func: T): T | undefined {
+    if (!func[bindOrigFuncKey]) {
+        return undefined;
+    }
+    const arr: any[] = func[bindOrigFuncKey];
+    return arr[arr.length - 1];
 }

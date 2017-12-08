@@ -4,7 +4,7 @@ import {
     unique, filterIf, mapKeys, intersect, omitUndefined, single, awaitObj, shallowDiff, range, sort, defaultComparer, orderBy, orderByDesc,
     truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd, toObservable, isArray, isArrayLike, isPromise, isObservable,
     search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx, mapMany, runningTotal, mapPrevious, formatNumber, formatDate, formatDateExcel,
-    cloneFunction, bindFunction
+    cloneFunction, bindFunction, unbindFunction
 } from "./index";
 
 import * as rx from "rxjs";
@@ -863,7 +863,7 @@ test("clone function", () => {
     const funcD = (a: string, b: number, c: number) => a + b + c;
     const funcE: any = () => 20;
     funcE.hello = "rafa";
-    
+
     const cloneA = cloneFunction(funcA);
     const cloneB = cloneFunction(funcB);
     const cloneC = cloneFunction(funcC);
@@ -888,21 +888,45 @@ test("clone function", () => {
 
     expect(cloneE()).toBe(20);
     expect(cloneE.hello).toBe("rafa");
-}); 
+});
 
 test("bind function", () => {
-    const func =  function(a) {
+    const func = function (a) {
         return this + a;
     };
 
     (func as any).hello = "rafa";
 
     const func2 = bindFunction(func, 10);
-    
+
     expect(func(1)).toBeNaN();
     expect(func2(1)).toBe(11);
     expect(func2(2)).toBe(12);
 
     expect((func2 as any).hello).toBe("rafa");
     expect(func2).not.toBe(func);
-}) ;
+});
+
+test("unbind function", () => {
+    const func = function (a) { return this + a };
+    const bind10 = bindFunction(func, 10);
+    const bind10_10 = bindFunction(bind10, 10);
+
+
+    const bind20Over10 = bindFunction(bind10, 20);
+    const bind20Over10unbind = bindFunction(unbindFunction(bind10)!, 20);
+    const bind20Over10_10unbind = bindFunction(unbindFunction(bind10_10)!, 20);
+    const bind20Over10_10unbind_unbind = bindFunction(unbindFunction(unbindFunction(bind10_10)!)!, 20);
+
+    const unbindFunc = unbindFunction(func);
+
+    expect(func(1)).toBeNaN();
+    expect(bind10(1)).toBe(11);
+    expect(bind10_10(1)).toBe(11);
+
+    expect(bind20Over10(1)).toBe(11);
+    expect(bind20Over10unbind(1)).toBe(21);
+    expect(bind20Over10_10unbind(1)).toBe(11);
+    expect(bind20Over10_10unbind_unbind(1)).toBe(21);
+    expect(unbindFunc).toBeUndefined();
+});

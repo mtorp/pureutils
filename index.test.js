@@ -852,3 +852,21 @@ test("bind function", function () {
     expect(func2.hello).toBe("rafa");
     expect(func2).not.toBe(func);
 });
+test("unbind function", function () {
+    var func = function (a) { return this + a; };
+    var bind10 = index_1.bindFunction(func, 10);
+    var bind10_10 = index_1.bindFunction(bind10, 10);
+    var bind20Over10 = index_1.bindFunction(bind10, 20);
+    var bind20Over10unbind = index_1.bindFunction(index_1.unbindFunction(bind10), 20);
+    var bind20Over10_10unbind = index_1.bindFunction(index_1.unbindFunction(bind10_10), 20);
+    var bind20Over10_10unbind_unbind = index_1.bindFunction(index_1.unbindFunction(index_1.unbindFunction(bind10_10)), 20);
+    var unbindFunc = index_1.unbindFunction(func);
+    expect(func(1)).toBeNaN();
+    expect(bind10(1)).toBe(11);
+    expect(bind10_10(1)).toBe(11);
+    expect(bind20Over10(1)).toBe(11);
+    expect(bind20Over10unbind(1)).toBe(21);
+    expect(bind20Over10_10unbind(1)).toBe(11);
+    expect(bind20Over10_10unbind_unbind(1)).toBe(21);
+    expect(unbindFunc).toBeUndefined();
+});

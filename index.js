@@ -966,7 +966,8 @@ function cloneFunction(func) {
     var e_17, _a;
 }
 exports.cloneFunction = cloneFunction;
-/**Aplica un Function.bind respetando las propiedades agregadas a la función */
+var bindOrigFuncKey = "_keautils_bindFunction_origFunctions";
+/**Aplica un Function.bind respetando las propiedades agregadas a la función. Tambien se almacena la funcion original de tal manera que se puede devolver al estado original */
 function bindFunction(func, thisArg) {
     var argArray = [];
     for (var _i = 2; _i < arguments.length; _i++) {
@@ -987,7 +988,19 @@ function bindFunction(func, thisArg) {
         }
         finally { if (e_18) throw e_18.error; }
     }
+    ;
+    ret[bindOrigFuncKey] = ret[bindOrigFuncKey] || [];
+    ret[bindOrigFuncKey] = __spread(ret[bindOrigFuncKey], [func]);
     return ret;
     var e_18, _a;
 }
 exports.bindFunction = bindFunction;
+/**Deshace un bind aplicado con bindFunction. Un bind aplicado con Function.bind directamente no se puede deshacer. Si al argumento no se le fue aplicado un bind devuelve undefined */
+function unbindFunction(func) {
+    if (!func[bindOrigFuncKey]) {
+        return undefined;
+    }
+    var arr = func[bindOrigFuncKey];
+    return arr[arr.length - 1];
+}
+exports.unbindFunction = unbindFunction;

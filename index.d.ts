@@ -263,5 +263,7 @@ export declare function formatDate(x: Date | null | undefined | string, fullDate
 export declare function formatDateExcel(x: Date): string;
 /**Devuelve una copia de una función. Respeta las propiedades agregadas a la función */
 export declare function cloneFunction<T extends (...args: any[]) => any>(func: T): T;
-/**Aplica un Function.bind respetando las propiedades agregadas a la función */
+/**Aplica un Function.bind respetando las propiedades agregadas a la función. Tambien se almacena la funcion original de tal manera que se puede devolver al estado original */
 export declare function bindFunction<T extends (...args: any[]) => any>(func: T, thisArg?: any, ...argArray: any[]): T;
+/**Deshace un bind aplicado con bindFunction. Un bind aplicado con Function.bind directamente no se puede deshacer. Si al argumento no se le fue aplicado un bind devuelve undefined */
+export declare function unbindFunction<T extends (...args: any[]) => any>(func: T): T | undefined;
