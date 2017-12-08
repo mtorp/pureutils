@@ -775,7 +775,7 @@ export function cloneFunction<T extends (...args: any[]) => any>(func: T): T {
 /**Aplica un Function.bind respetando las propiedades agregadas a la función */
 export function bindFunction<T extends (...args: any[]) => any>(func: T, thisArg?: any, ...argArray: any[]): T {
     const keys = Object.keys(func);
-    const ret = func.bind(thisArg, argArray);
+    const ret = func.bind(thisArg, ...argArray);
     for (const key of keys) {
         ret[key] = func[key];
     }

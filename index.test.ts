@@ -891,16 +891,17 @@ test("clone function", () => {
 }); 
 
 test("bind function", () => {
-    const func =  function() {
-        return this + 1;
+    const func =  function(a) {
+        return this + a;
     };
 
     (func as any).hello = "rafa";
 
     const func2 = bindFunction(func, 10);
     
-    expect(func()).toBeNaN();
-    expect(func2()).toBe(11);
+    expect(func(1)).toBeNaN();
+    expect(func2(1)).toBe(11);
+    expect(func2(2)).toBe(12);
 
     expect((func2 as any).hello).toBe("rafa");
     expect(func2).not.toBe(func);

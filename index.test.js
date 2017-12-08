@@ -841,13 +841,14 @@ test("clone function", function () {
     expect(cloneE.hello).toBe("rafa");
 });
 test("bind function", function () {
-    var func = function () {
-        return this + 1;
+    var func = function (a) {
+        return this + a;
     };
     func.hello = "rafa";
     var func2 = index_1.bindFunction(func, 10);
-    expect(func()).toBeNaN();
-    expect(func2()).toBe(11);
+    expect(func(1)).toBeNaN();
+    expect(func2(1)).toBe(11);
+    expect(func2(2)).toBe(12);
     expect(func2.hello).toBe("rafa");
     expect(func2).not.toBe(func);
 });

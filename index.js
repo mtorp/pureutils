@@ -973,7 +973,7 @@ function bindFunction(func, thisArg) {
         argArray[_i - 2] = arguments[_i];
     }
     var keys = Object.keys(func);
-    var ret = func.bind(thisArg, argArray);
+    var ret = func.bind.apply(func, __spread([thisArg], argArray));
     try {
         for (var keys_2 = __values(keys), keys_2_1 = keys_2.next(); !keys_2_1.done; keys_2_1 = keys_2.next()) {
             var key = keys_2_1.value;
