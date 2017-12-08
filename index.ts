@@ -761,8 +761,24 @@ export function formatDateExcel(x: Date): string {
     return `${f4(x.getFullYear())}-${f(x.getMonth() + 1)}-${f(x.getDate())} ${f(x.getHours())}:${f(x.getMinutes())}:${f(x.getSeconds())}`;
 }
 
-/**Devuelve una copia de una función */
+/**Devuelve una copia de una función. Respeta las propiedades agregadas a la función */
 export function cloneFunction<T extends (...args: any[]) => any>(func: T): T {
     const ret = (...args: any[]): any => func(...args);
+    const keys = Object.keys(func);
+    for (const key of keys) {
+        ret[key] = func[key];
+    }
+
     return ret as T;
+}
+
+/**Aplica un Function.bind respetando las propiedades agregadas a la función */
+export function bindFunction<T extends (...args: any[]) => any>(func: T, thisArg?: any, ...argArray: any[]): T {
+    const keys = Object.keys(func);
+    const ret = func.bind(thisArg, argArray);
+    for (const key of keys) {
+        ret[key] = func[key];
+    }
+
+    return ret;
 }

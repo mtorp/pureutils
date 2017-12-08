@@ -939,7 +939,7 @@ function formatDateExcel(x) {
     return f4(x.getFullYear()) + "-" + f(x.getMonth() + 1) + "-" + f(x.getDate()) + " " + f(x.getHours()) + ":" + f(x.getMinutes()) + ":" + f(x.getSeconds());
 }
 exports.formatDateExcel = formatDateExcel;
-/**Devuelve una copia de una función */
+/**Devuelve una copia de una función. Respeta las propiedades agregadas a la función */
 function cloneFunction(func) {
     var ret = function () {
         var args = [];
@@ -948,6 +948,46 @@ function cloneFunction(func) {
         }
         return func.apply(void 0, __spread(args));
     };
+    var keys = Object.keys(func);
+    try {
+        for (var keys_1 = __values(keys), keys_1_1 = keys_1.next(); !keys_1_1.done; keys_1_1 = keys_1.next()) {
+            var key = keys_1_1.value;
+            ret[key] = func[key];
+        }
+    }
+    catch (e_17_1) { e_17 = { error: e_17_1 }; }
+    finally {
+        try {
+            if (keys_1_1 && !keys_1_1.done && (_a = keys_1.return)) _a.call(keys_1);
+        }
+        finally { if (e_17) throw e_17.error; }
+    }
     return ret;
+    var e_17, _a;
 }
 exports.cloneFunction = cloneFunction;
+/**Aplica un Function.bind respetando las propiedades agregadas a la función */
+function bindFunction(func, thisArg) {
+    var argArray = [];
+    for (var _i = 2; _i < arguments.length; _i++) {
+        argArray[_i - 2] = arguments[_i];
+    }
+    var keys = Object.keys(func);
+    var ret = func.bind(thisArg, argArray);
+    try {
+        for (var keys_2 = __values(keys), keys_2_1 = keys_2.next(); !keys_2_1.done; keys_2_1 = keys_2.next()) {
+            var key = keys_2_1.value;
+            ret[key] = func[key];
+        }
+    }
+    catch (e_18_1) { e_18 = { error: e_18_1 }; }
+    finally {
+        try {
+            if (keys_2_1 && !keys_2_1.done && (_a = keys_2.return)) _a.call(keys_2);
+        }
+        finally { if (e_18) throw e_18.error; }
+    }
+    return ret;
+    var e_18, _a;
+}
+exports.bindFunction = bindFunction;

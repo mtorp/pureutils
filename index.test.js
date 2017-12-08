@@ -818,10 +818,13 @@ test("clone function", function () {
         return a * b.reduce(function (a, b) { return a + b; }, 0);
     };
     var funcD = function (a, b, c) { return a + b + c; };
+    var funcE = function () { return 20; };
+    funcE.hello = "rafa";
     var cloneA = index_1.cloneFunction(funcA);
     var cloneB = index_1.cloneFunction(funcB);
     var cloneC = index_1.cloneFunction(funcC);
     var cloneD = index_1.cloneFunction(funcD);
+    var cloneE = index_1.cloneFunction(funcE);
     expect(funcA).not.toBe(cloneA);
     expect(funcB).not.toBe(cloneB);
     expect(funcC).not.toBe(cloneC);
@@ -834,4 +837,17 @@ test("clone function", function () {
     expect(cloneC.apply(void 0, __spread([2], [1, 2, 3]))).toBe(12);
     expect(cloneC(2, 3, 4, 5, 6)).toBe(36);
     expect(cloneD("hola", 3, 4)).toBe("hola34");
+    expect(cloneE()).toBe(20);
+    expect(cloneE.hello).toBe("rafa");
+});
+test("bind function", function () {
+    var func = function () {
+        return this + 1;
+    };
+    func.hello = "rafa";
+    var func2 = index_1.bindFunction(func, 10);
+    expect(func()).toBeNaN();
+    expect(func2()).toBe(11);
+    expect(func2.hello).toBe("rafa");
+    expect(func2).not.toBe(func);
 });

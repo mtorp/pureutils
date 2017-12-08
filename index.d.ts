@@ -261,5 +261,7 @@ export declare function formatNumber(number: number | null | undefined | string,
 export declare function formatDate(x: Date | null | undefined | string, fullDateTime?: boolean): string;
 /**Formatea una fecha de tal manera que sea compatible con el excel */
 export declare function formatDateExcel(x: Date): string;
-/**Devuelve una copia de una función */
+/**Devuelve una copia de una función. Respeta las propiedades agregadas a la función */
 export declare function cloneFunction<T extends (...args: any[]) => any>(func: T): T;
+/**Aplica un Function.bind respetando las propiedades agregadas a la función */
+export declare function bindFunction<T extends (...args: any[]) => any>(func: T, thisArg?: any, ...argArray: any[]): T;

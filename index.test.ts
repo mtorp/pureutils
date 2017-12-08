@@ -4,7 +4,7 @@ import {
     unique, filterIf, mapKeys, intersect, omitUndefined, single, awaitObj, shallowDiff, range, sort, defaultComparer, orderBy, orderByDesc,
     truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd, toObservable, isArray, isArrayLike, isPromise, isObservable,
     search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx, mapMany, runningTotal, mapPrevious, formatNumber, formatDate, formatDateExcel,
-    cloneFunction
+    cloneFunction, bindFunction
 } from "./index";
 
 import * as rx from "rxjs";
@@ -861,11 +861,14 @@ test("clone function", () => {
     const funcB = (a: number, b: number) => a + b;
     const funcC = (a: number, ...b: number[]) => a * b.reduce((a, b) => a + b, 0);
     const funcD = (a: string, b: number, c: number) => a + b + c;
-
+    const funcE: any = () => 20;
+    funcE.hello = "rafa";
+    
     const cloneA = cloneFunction(funcA);
     const cloneB = cloneFunction(funcB);
     const cloneC = cloneFunction(funcC);
     const cloneD = cloneFunction(funcD);
+    const cloneE = cloneFunction(funcE);
 
     expect(funcA).not.toBe(cloneA);
     expect(funcB).not.toBe(cloneB);
@@ -882,4 +885,23 @@ test("clone function", () => {
     expect(cloneC(2, ...[1, 2, 3])).toBe(12);
     expect(cloneC(2, 3, 4, 5, 6)).toBe(36);
     expect(cloneD("hola", 3, 4)).toBe("hola34");
+
+    expect(cloneE()).toBe(20);
+    expect(cloneE.hello).toBe("rafa");
 }); 
+
+test("bind function", () => {
+    const func =  function() {
+        return this + 1;
+    };
+
+    (func as any).hello = "rafa";
+
+    const func2 = bindFunction(func, 10);
+    
+    expect(func()).toBeNaN();
+    expect(func2()).toBe(11);
+
+    expect((func2 as any).hello).toBe("rafa");
+    expect(func2).not.toBe(func);
+}) ;
