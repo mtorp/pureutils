@@ -781,3 +781,9 @@ test("format datetime", function () {
     expect(index_1.formatDate(new Date(2017, 0, 7, 16, 54, 23), false)).toBe("07/ene/2017");
     expect(index_1.formatDate(new Date(2017, 5, 7, 16, 54, 23), false)).toBe("07/jun/2017");
 });
+test("format datetime excel", function () {
+    expect(index_1.formatDateExcel(new Date(2017, 11, 7))).toBe("2017-12-07 00:00:00");
+    expect(index_1.formatDateExcel(new Date(2017, 0, 7))).toBe("2017-01-07 00:00:00");
+    expect(index_1.formatDateExcel(new Date(2017, 0, 7, 16, 54, 23))).toBe("2017-01-07 16:54:23");
+    expect(index_1.formatDateExcel(new Date(2017, 5, 7, 16, 54, 23))).toBe("2017-06-07 16:54:23");
+});

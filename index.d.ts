@@ -259,3 +259,5 @@ export declare function formatNumber(number: number | null | undefined | string,
  * @param fullDateTime true o false para indicar si mostrar las horas o no. Por default es undefined e implicar que se mostraran las horas si el valor tiene componente de horas, si no, se mostrará sólo la fecha
  */
 export declare function formatDate(x: Date | null | undefined | string, fullDateTime?: boolean): string;
+/**Formatea una fecha de tal manera que sea compatible con el excel */
+export declare function formatDateExcel(x: Date): string;

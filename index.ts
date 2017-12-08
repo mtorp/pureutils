@@ -731,24 +731,32 @@ const monthNames = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep
  * @param fullDateTime true o false para indicar si mostrar las horas o no. Por default es undefined e implicar que se mostraran las horas si el valor tiene componente de horas, si no, se mostrará sólo la fecha
  */
 export function formatDate(x: Date | null | undefined | string, fullDateTime?: boolean) {
-    if(x == null) return "";
+    if (x == null) return "";
     x = new Date(x as any);
 
-    const year = "" + x.getFullYear();
+    const year = formatNumber(x.getFullYear(), 4);
     const month = monthNames[x.getMonth()];
-    const day = "0" + x.getDate();
+    const day = formatNumber(x.getDate(), 2);
 
-    const hours = "0" + x.getHours();
-    const minutes = "0" + x.getMinutes();
+    const hours = formatNumber(x.getHours(), 2);
+    const minutes = formatNumber(x.getMinutes(), 2);
 
     //True si se debe de mostrar hora y fecha, si no, solo la fecha
     const effFull = fullDateTime == null ? (hours != "00" || minutes != "00") : fullDateTime;
 
-    const dateStr = day.slice(-2) + "/" + month + "/" + year;
+    const dateStr = day + "/" + month + "/" + year;
     if (effFull) {
-        const hourStr = hours.slice(-2) + ":" + minutes.slice(-2);
+        const hourStr = hours + ":" + minutes;
         return dateStr + " " + hourStr;
     } else {
         return dateStr;
     }
+}
+
+/**Formatea una fecha de tal manera que sea compatible con el excel */
+export function formatDateExcel(x: Date): string {
+    const f = x => formatNumber(x, 2);
+    const f4 = x => formatNumber(x, 4);
+
+    return `${f4(x.getFullYear())}-${f(x.getMonth() + 1)}-${f(x.getDate())} ${f(x.getHours())}:${f(x.getMinutes())}:${f(x.getSeconds())}`;
 }

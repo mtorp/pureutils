@@ -3,7 +3,7 @@ import {
     deepEquals, pipe, enumObject, setEquals, all, any, arrayToMap, contains, filterObject, first, mapObject, omit, ObjMap, toMap, moveItem, swapItems, upDownItem, promiseAllObj,
     unique, filterIf, mapKeys, intersect, omitUndefined, single, awaitObj, shallowDiff, range, sort, defaultComparer, orderBy, orderByDesc,
     truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd, toObservable, isArray, isArrayLike, isPromise, isObservable,
-    search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx, mapMany, runningTotal, mapPrevious, formatNumber, formatDate
+    search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx, mapMany, runningTotal, mapPrevious, formatNumber, formatDate, formatDateExcel
 } from "./index";
 
 import * as rx from "rxjs";
@@ -842,5 +842,14 @@ test("format datetime", () => {
 
     expect(formatDate(new Date(2017, 0, 7, 16,54,23), false)).toBe("07/ene/2017");
     expect(formatDate(new Date(2017, 5, 7, 16,54,23), false)).toBe("07/jun/2017");
+    
+})
+
+
+test("format datetime excel", () => {
+    expect(formatDateExcel(new Date(2017, 11, 7))).toBe("2017-12-07 00:00:00");
+    expect(formatDateExcel(new Date(2017, 0, 7))).toBe("2017-01-07 00:00:00");
+    expect(formatDateExcel(new Date(2017, 0, 7, 16,54,23))).toBe("2017-01-07 16:54:23");
+    expect(formatDateExcel(new Date(2017, 5, 7, 16,54,23))).toBe("2017-06-07 16:54:23");
     
 })

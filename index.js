@@ -915,16 +915,16 @@ function formatDate(x, fullDateTime) {
     if (x == null)
         return "";
     x = new Date(x);
-    var year = "" + x.getFullYear();
+    var year = formatNumber(x.getFullYear(), 4);
     var month = monthNames[x.getMonth()];
-    var day = "0" + x.getDate();
-    var hours = "0" + x.getHours();
-    var minutes = "0" + x.getMinutes();
+    var day = formatNumber(x.getDate(), 2);
+    var hours = formatNumber(x.getHours(), 2);
+    var minutes = formatNumber(x.getMinutes(), 2);
     //True si se debe de mostrar hora y fecha, si no, solo la fecha
     var effFull = fullDateTime == null ? (hours != "00" || minutes != "00") : fullDateTime;
-    var dateStr = day.slice(-2) + "/" + month + "/" + year;
+    var dateStr = day + "/" + month + "/" + year;
     if (effFull) {
-        var hourStr = hours.slice(-2) + ":" + minutes.slice(-2);
+        var hourStr = hours + ":" + minutes;
         return dateStr + " " + hourStr;
     }
     else {
@@ -932,3 +932,10 @@ function formatDate(x, fullDateTime) {
     }
 }
 exports.formatDate = formatDate;
+/**Formatea una fecha de tal manera que sea compatible con el excel */
+function formatDateExcel(x) {
+    var f = function (x) { return formatNumber(x, 2); };
+    var f4 = function (x) { return formatNumber(x, 4); };
+    return f4(x.getFullYear()) + "-" + f(x.getMonth() + 1) + "-" + f(x.getDate()) + " " + f(x.getHours()) + ":" + f(x.getMinutes()) + ":" + f(x.getSeconds());
+}
+exports.formatDateExcel = formatDateExcel;
