@@ -891,7 +891,7 @@ test("clone function", () => {
 });
 
 test("bind function", () => {
-    const func = function (a) {
+    const func = function (this: number | void, a) {
         return this + a;
     };
 
@@ -908,7 +908,7 @@ test("bind function", () => {
 });
 
 test("unbind function", () => {
-    const func = function (a) { return this + a };
+    const func = function (this: number | void, a) { return this + a };
     const bind10 = bindFunction(func, 10);
     const bind10_10 = bindFunction(bind10, 10);
 

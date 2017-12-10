@@ -11,6 +11,9 @@
             "dom",
             "dom.iterable"
         ],
-        "downlevelIteration": true
+        "downlevelIteration": true,
+        "noImplicitThis": true,
+        "outDir": "dist",
+        "rootDir": "src"
     }
 }
