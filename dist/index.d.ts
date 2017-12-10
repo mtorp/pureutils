@@ -267,3 +267,15 @@ export declare function cloneFunction<T extends (...args: any[]) => any>(func: T
 export declare function bindFunction<T extends (...args: any[]) => any>(func: T, thisArg?: any, ...argArray: any[]): T;
 /**Deshace un bind aplicado con bindFunction. Un bind aplicado con Function.bind directamente no se puede deshacer. Si al argumento no se le fue aplicado un bind devuelve undefined */
 export declare function unbindFunction<T extends (...args: any[]) => any>(func: T): T | undefined;
+/**Arregla el problema con las librearias que han sido exportadas con babel 5 o con el plugin babel-plugin-add-module-exports, obteniendo el default del modulo.
+ *
+ * Para utilizar la función en lugar de escribir;
+ * import moize from "moize";
+ *
+ * Escriba;
+ * import * as _moize from "moize";
+ * const moize = interopRequireDefault(_moize);
+ */
+export declare function interopRequireDefault<T>(module: {
+    default: T;
+}): T;
