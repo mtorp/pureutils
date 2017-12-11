@@ -92,6 +92,26 @@ test("shallow equals", function () {
     expect(eq([1, 2], [2, 1])).toBe(false);
     expect(eq([1, 2], [2])).toBe(false);
     expect(eq([1, 2], [3, 4])).toBe(false);
+    var promA = Promise.resolve(1);
+    var promB = Promise.resolve(1);
+    var promC = Promise.resolve(2);
+    //Shallow equals compara por referencia en caso de que sean promesas u observables:
+    expect(eq(promA, promA)).toBe(true);
+    expect(eq(promA, promB)).toBe(false);
+    expect(eq(promA, promC)).toBe(false);
+    var obsA = rx.Observable.fromPromise(promA);
+    var obsB = rx.Observable.fromPromise(promA);
+    var obsC = rx.Observable.fromPromise(promC);
+    expect(eq(obsA, obsA)).toBe(true);
+    expect(eq(obsA, obsB)).toBe(false);
+    expect(eq(obsA, obsC)).toBe(false);
+    //Tambien comapra por referencia a las funciones
+    var funcA = function (x) { return 10; };
+    var funcB = function (x) { return 10; };
+    var funcC = function (x) { return 20; };
+    expect(eq(funcA, funcA)).toBe(true);
+    expect(eq(funcA, funcB)).toBe(false);
+    expect(eq(funcA, funcC)).toBe(false);
 });
 test("deep equals", function () {
     var eq = index_1.deepEquals;
@@ -136,6 +156,26 @@ test("deep equals", function () {
     expect(eq(a1, a2)).toBe(true);
     expect(eq(a1, b)).toBe(false);
     expect(eq(a1, c)).toBe(false);
+    var promA = Promise.resolve(1);
+    var promB = Promise.resolve(1);
+    var promC = Promise.resolve(2);
+    //Shallow equals compara por referencia en caso de que sean promesas u observables:
+    expect(eq(promA, promA)).toBe(true);
+    expect(eq(promA, promB)).toBe(false);
+    expect(eq(promA, promC)).toBe(false);
+    var obsA = rx.Observable.fromPromise(promA);
+    var obsB = rx.Observable.fromPromise(promA);
+    var obsC = rx.Observable.fromPromise(promC);
+    expect(eq(obsA, obsA)).toBe(true);
+    expect(eq(obsA, obsB)).toBe(false);
+    expect(eq(obsA, obsC)).toBe(false);
+    //Tambien comapra por referencia a las funciones
+    var funcA = function (x) { return 10; };
+    var funcB = function (x) { return 10; };
+    var funcC = function (x) { return 20; };
+    expect(eq(funcA, funcA)).toBe(true);
+    expect(eq(funcA, funcB)).toBe(false);
+    expect(eq(funcA, funcC)).toBe(false);
 });
 test("flatten", function () {
     var param = [[1, 2], [3, 4, 5, 6], [], [], [7]];
@@ -870,3 +910,125 @@ test("unbind function", function () {
     expect(bind20Over10_10unbind_unbind(1)).toBe(21);
     expect(unbindFunc).toBeUndefined();
 });
+test("async create selector simple test", function () { return __awaiter(_this, void 0, void 0, function () {
+    var value, incrementAsync, dup, sum, func, _a, _b;
+    return __generator(this, function (_c) {
+        switch (_c.label) {
+            case 0:
+                value = function (x) { return x.value; };
+                incrementAsync = index_1.createSelector(value, function (x) { return index_1.delay(100).then(function () { return x + 1; }); });
+                dup = index_1.createSelector(value, function (x) { return x * 2; });
+                sum = index_1.createSelector(incrementAsync, dup, function (a, b) { return a + b; });
+                func = function (x) { return (x + 1) + (x * 2); };
+                //(value + 1) + (value * 2)
+                _a = expect;
+                return [4 /*yield*/, sum({ value: 2 })];
+            case 1:
+                //(value + 1) + (value * 2)
+                _a.apply(void 0, [_c.sent()]).toBe(func(2));
+                _b = expect;
+                return [4 /*yield*/, sum({ value: 5 })];
+            case 2:
+                _b.apply(void 0, [_c.sent()]).toBe(func(5));
+                return [2 /*return*/];
+        }
+    });
+}); });
+test("async create selector sync test", function () {
+    var value = function (x) { return x.value; };
+    var increment = index_1.createSelector(value, function (x) { return x + 1; });
+    var dup = index_1.createSelector(value, function (x) { return x * 2; });
+    var sum = index_1.createSelector(increment, dup, function (a, b) { return a + b; });
+    var func = function (x) { return (x + 1) + (x * 2); };
+    //(value + 1) + (value * 2)
+    expect(sum({ value: 2 })).toBe(func(2));
+    expect(sum({ value: 5 })).toBe(func(5));
+});
+test("async create selector async memoize", function () { return __awaiter(_this, void 0, void 0, function () {
+    var a, increment, samePromiseCalls, samePromise, sumCalls, sum, _a, _b, _c, _d, _e;
+    return __generator(this, function (_f) {
+        switch (_f.label) {
+            case 0:
+                a = function (x) { return x.a; };
+                increment = index_1.createSelector(a, function (x) { return index_1.delay(100).then(function () { return x + 1; }); });
+                samePromiseCalls = 0;
+                samePromise = index_1.createSelector(increment, function (x) {
+                    samePromiseCalls++;
+                    return Promise.resolve(10);
+                });
+                sumCalls = 0;
+                sum = index_1.createSelector(samePromise, function (x) {
+                    sumCalls++;
+                    return x + 1;
+                });
+                expect(samePromiseCalls).toBe(0);
+                _a = expect;
+                return [4 /*yield*/, sum({ a: 10, b: 20 })];
+            case 1:
+                _a.apply(void 0, [_f.sent()]).toBe(11);
+                expect(samePromiseCalls).toBe(1);
+                expect(sumCalls).toBe(1);
+                _b = expect;
+                return [4 /*yield*/, sum({ a: 10, b: 25 })];
+            case 2:
+                _b.apply(void 0, [_f.sent()]).toBe(11);
+                //El cambio de B no ocasionó llamadas
+                expect(samePromiseCalls).toBe(1);
+                expect(sumCalls).toBe(1);
+                _c = expect;
+                return [4 /*yield*/, sum({ a: 15, b: 25 })];
+            case 3:
+                _c.apply(void 0, [_f.sent()]).toBe(11);
+                //El cambio de A ocasiono una llamada a samePromise ya que depende de increment, el cual depende de A
+                expect(samePromiseCalls).toBe(2);
+                //sumCalls no se llamo ya que la promesa aunque diferente, devolvió lo mismo que es 10
+                expect(sumCalls).toBe(1);
+                _d = expect;
+                return [4 /*yield*/, sum({ a: 15, b: 25 })];
+            case 4:
+                _d.apply(void 0, [_f.sent()]).toBe(11);
+                //No cambiaron los valores, no hay ninguna llamada:
+                expect(samePromiseCalls).toBe(2);
+                expect(sumCalls).toBe(1);
+                _e = expect;
+                return [4 /*yield*/, sum({ a: 10, b: 25 })];
+            case 5:
+                _e.apply(void 0, [_f.sent()]).toBe(11);
+                expect(samePromiseCalls).toBe(3);
+                expect(sumCalls).toBe(1);
+                return [2 /*return*/];
+        }
+    });
+}); });
+test("async same promise ", function () { return __awaiter(_this, void 0, void 0, function () {
+    var props, samePromiseCalls, samePromise, sumCalls, sum;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                props = function (x) { return x; };
+                samePromiseCalls = 0;
+                samePromise = index_1.createSelector(props, function (x) {
+                    samePromiseCalls++;
+                    return Promise.resolve({ a: 10, b: 30 });
+                });
+                sumCalls = 0;
+                sum = index_1.createDeepSelector(samePromise, function (x) {
+                    sumCalls++;
+                    return x.a + 1;
+                });
+                expect(samePromiseCalls).toBe(0);
+                expect(sumCalls).toBe(0);
+                return [4 /*yield*/, sum({ a: 10, b: 20 })];
+            case 1:
+                _a.sent();
+                expect(samePromiseCalls).toBe(1);
+                expect(sumCalls).toBe(1);
+                return [4 /*yield*/, sum({ a: 10, b: 20 })];
+            case 2:
+                _a.sent();
+                expect(samePromiseCalls).toBe(2);
+                expect(sumCalls).toBe(1);
+                return [2 /*return*/];
+        }
+    });
+}); });

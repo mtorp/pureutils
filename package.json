@@ -5,6 +5,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
+    "moize": "^4.0.3",
     "rxjs": "^5.4.3"
   },
   "devDependencies": {

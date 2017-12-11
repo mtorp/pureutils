@@ -4,7 +4,7 @@ import {
     unique, filterIf, mapKeys, intersect, omitUndefined, single, awaitObj, shallowDiff, range, sort, defaultComparer, orderBy, orderByDesc,
     truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd, toObservable, isArray, isArrayLike, isPromise, isObservable,
     search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx, mapMany, runningTotal, mapPrevious, formatNumber, formatDate, formatDateExcel,
-    cloneFunction, bindFunction, unbindFunction
+    cloneFunction, bindFunction, unbindFunction, createSelector, delay, createDeepSelector
 } from "./index";
 
 import * as rx from "rxjs";
@@ -38,6 +38,31 @@ test("shallow equals", () => {
     expect(eq([1, 2], [2])).toBe(false);
     expect(eq([1, 2], [3, 4])).toBe(false);
 
+    const promA = Promise.resolve(1);
+    const promB = Promise.resolve(1);
+    const promC = Promise.resolve(2);
+
+    //Shallow equals compara por referencia en caso de que sean promesas u observables:
+    expect(eq(promA, promA)).toBe(true);
+    expect(eq(promA, promB)).toBe(false);
+    expect(eq(promA, promC)).toBe(false);
+
+    const obsA = rx.Observable.fromPromise(promA);
+    const obsB = rx.Observable.fromPromise(promA);
+    const obsC = rx.Observable.fromPromise(promC);
+
+    expect(eq(obsA, obsA)).toBe(true);
+    expect(eq(obsA, obsB)).toBe(false);
+    expect(eq(obsA, obsC)).toBe(false);
+
+    //Tambien comapra por referencia a las funciones
+    const funcA = (x: number) => 10;
+    const funcB = (x: number) => 10;
+    const funcC = (x: number) => 20;
+
+    expect(eq(funcA, funcA)).toBe(true);
+    expect(eq(funcA, funcB)).toBe(false);
+    expect(eq(funcA, funcC)).toBe(false);
 
 });
 
@@ -91,6 +116,32 @@ test("deep equals", () => {
     expect(eq(a1, a2)).toBe(true);
     expect(eq(a1, b)).toBe(false);
     expect(eq(a1, c)).toBe(false);
+
+    const promA = Promise.resolve(1);
+    const promB = Promise.resolve(1);
+    const promC = Promise.resolve(2);
+
+    //Shallow equals compara por referencia en caso de que sean promesas u observables:
+    expect(eq(promA, promA)).toBe(true);
+    expect(eq(promA, promB)).toBe(false);
+    expect(eq(promA, promC)).toBe(false);
+
+    const obsA = rx.Observable.fromPromise(promA);
+    const obsB = rx.Observable.fromPromise(promA);
+    const obsC = rx.Observable.fromPromise(promC);
+
+    expect(eq(obsA, obsA)).toBe(true);
+    expect(eq(obsA, obsB)).toBe(false);
+    expect(eq(obsA, obsC)).toBe(false);
+
+    //Tambien comapra por referencia a las funciones
+    const funcA = (x: number) => 10;
+    const funcB = (x: number) => 10;
+    const funcC = (x: number) => 20;
+
+    expect(eq(funcA, funcA)).toBe(true);
+    expect(eq(funcA, funcB)).toBe(false);
+    expect(eq(funcA, funcC)).toBe(false);
 });
 
 test("flatten", () => {
@@ -929,4 +980,123 @@ test("unbind function", () => {
     expect(bind20Over10_10unbind(1)).toBe(11);
     expect(bind20Over10_10unbind_unbind(1)).toBe(21);
     expect(unbindFunc).toBeUndefined();
+});
+
+test("async create selector simple test", async () => {
+    interface Props {
+        value: number;
+    }
+    const value = (x: Props) => x.value;
+
+    const incrementAsync = createSelector(value, x => delay(100).then(() => x + 1));
+
+    const dup = createSelector(value, x => x * 2);
+    const sum = createSelector(incrementAsync, dup, (a, b) => a + b);
+
+    const func = (x: number) => (x + 1) + (x * 2);
+    //(value + 1) + (value * 2)
+    expect(await sum({ value: 2 })).toBe(func(2));
+    expect(await sum({ value: 5 })).toBe(func(5));
+});
+
+test("async create selector sync test", () => {
+    interface Props {
+        value: number;
+    }
+    const value = (x: Props) => x.value;
+
+    const increment = createSelector(value, x => x + 1);
+
+    const dup = createSelector(value, x => x * 2);
+    const sum = createSelector(increment, dup, (a, b) => a + b);
+
+    const func = (x: number) => (x + 1) + (x * 2);
+    //(value + 1) + (value * 2)
+    expect(sum({ value: 2 })).toBe(func(2));
+    expect(sum({ value: 5 })).toBe(func(5));
+});
+
+test("async create selector async memoize", async () => {
+    interface Props {
+        a: number;
+        b: number;
+    }
+    const a = (x: Props) => x.a;
+    const increment = createSelector(a, x => delay(100).then(() => x + 1));
+    let samePromiseCalls = 0;
+    const samePromise = createSelector(increment, x => {
+        samePromiseCalls++;
+        return Promise.resolve(10);
+    }); //Este selector cada vez devuelve una promesa diferente, pero con el mismo valor
+
+    let sumCalls = 0;
+    const sum = createSelector(samePromise, x => {
+        sumCalls++;
+        return x + 1;
+    });
+
+    expect(samePromiseCalls).toBe(0);
+    expect(await sum({ a: 10, b: 20 })).toBe(11);
+
+    expect(samePromiseCalls).toBe(1);
+    expect(sumCalls).toBe(1);
+
+    expect(await sum({ a: 10, b: 25 })).toBe(11);
+
+    //El cambio de B no ocasionó llamadas
+    expect(samePromiseCalls).toBe(1);
+    expect(sumCalls).toBe(1);
+
+    expect(await sum({ a: 15, b: 25 })).toBe(11);
+
+    //El cambio de A ocasiono una llamada a samePromise ya que depende de increment, el cual depende de A
+    expect(samePromiseCalls).toBe(2);
+    //sumCalls no se llamo ya que la promesa aunque diferente, devolvió lo mismo que es 10
+    expect(sumCalls).toBe(1);
+
+    expect(await sum({ a: 15, b: 25 })).toBe(11);
+
+    //No cambiaron los valores, no hay ninguna llamada:
+    expect(samePromiseCalls).toBe(2);
+    expect(sumCalls).toBe(1);
+
+    expect(await sum({ a: 10, b: 25 })).toBe(11);
+
+    expect(samePromiseCalls).toBe(3);
+    expect(sumCalls).toBe(1);
+
+});
+
+test("async same promise ", async () => {
+    
+
+    interface Props {
+        a: number;
+        b: number;
+    }
+    const props = (x: Props) => x;
+    let samePromiseCalls = 0;
+    const samePromise = createSelector(props, x => {
+        samePromiseCalls++;
+        return Promise.resolve({ a: 10, b: 30 });
+    }); //Este selector cada vez devuelve una promesa diferente, pero con el mismo valor
+
+    let sumCalls = 0;
+    const sum = createDeepSelector(samePromise, x => {
+        sumCalls++;
+        return x.a + 1;
+    });
+
+    expect(samePromiseCalls).toBe(0);
+    expect(sumCalls).toBe(0);
+
+    await sum({ a: 10, b: 20 });
+    
+    expect(samePromiseCalls).toBe(1);
+    expect(sumCalls).toBe(1);
+
+    await sum({ a: 10, b: 20 });
+    
+    expect(samePromiseCalls).toBe(2);
+    expect(sumCalls).toBe(1);
 });
