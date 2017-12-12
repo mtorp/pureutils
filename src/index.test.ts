@@ -1068,8 +1068,6 @@ test("async create selector async memoize", async () => {
 });
 
 test("async same promise ", async () => {
-    
-
     interface Props {
         a: number;
         b: number;
@@ -1091,12 +1089,26 @@ test("async same promise ", async () => {
     expect(sumCalls).toBe(0);
 
     await sum({ a: 10, b: 20 });
-    
+
     expect(samePromiseCalls).toBe(1);
     expect(sumCalls).toBe(1);
 
     await sum({ a: 10, b: 20 });
-    
+
     expect(samePromiseCalls).toBe(2);
     expect(sumCalls).toBe(1);
+});
+
+test("selector multiple", async () => {
+    interface Props {
+        a: number;
+        b: number;
+    }
+    const a = (x: Props, state: number) => x.a;
+    const b = (x: Props, state: number) => x.b;
+    const c = (x: Props, state: number) => x.b + state;
+
+    const sum = createSelector(a, b, c, (a, b, c) => a + b + c);
+
+    expect(sum({ a: 1, b: 2 }, 5)).toBe(10);
 });

@@ -1032,3 +1032,14 @@ test("async same promise ", function () { return __awaiter(_this, void 0, void 0
         }
     });
 }); });
+test("selector multiple", function () { return __awaiter(_this, void 0, void 0, function () {
+    var a, b, c, sum;
+    return __generator(this, function (_a) {
+        a = function (x, state) { return x.a; };
+        b = function (x, state) { return x.b; };
+        c = function (x, state) { return x.b + state; };
+        sum = index_1.createSelector(a, b, c, function (a, b, c) { return a + b + c; });
+        expect(sum({ a: 1, b: 2 }, 5)).toBe(10);
+        return [2 /*return*/];
+    });
+}); });

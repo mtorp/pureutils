@@ -21,6 +21,9 @@ const defaultCreateSelectorAsync = createSelectorCreator({ deepEquals: false });
 
 export const createDeepSelector = createSelectorCreator({ deepEquals: true });
 
+//*********************************************************************************** */
+//SELECTOR 1
+//*********************************************************************************** */
 //SelectorAsync1 S1
 export function createSelector<T1, R1, O>(
     s1: SelectorAsync1<T1, R1>,
@@ -87,100 +90,264 @@ export function createSelector<T1, R1, R2, R3, O>(
     s1: SelectorAsync1<T1, R1>,
     s2: SelectorAsync1<T1, R2>,
     s3: SelectorAsync1<T1, R3>,
-    combiner: (s1: R1, s2: R2) => Promise<O>
+    combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>
 ): SelectorAsync1<T1, O>
 export function createSelector<T1, R1, R2, R3, O>(
     s1: SelectorAsync1<T1, R1>,
     s2: SelectorAsync1<T1, R2>,
     s3: Selector1<T1, R3>,
-    combiner: (s1: R1, s2: R2) => Promise<O>
+    combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>
 ): SelectorAsync1<T1, O>
 export function createSelector<T1, R1, R2, R3, O>(
     s1: SelectorAsync1<T1, R1>,
     s2: Selector1<T1, R2>,
     s3: SelectorAsync1<T1, R3>,
-    combiner: (s1: R1, s2: R2) => Promise<O>
+    combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>
 ): SelectorAsync1<T1, O>
 export function createSelector<T1, R1, R2, R3, O>(
     s1: SelectorAsync1<T1, R1>,
     s2: Selector1<T1, R2>,
     s3: Selector1<T1, R3>,
-    combiner: (s1: R1, s2: R2) => Promise<O>
+    combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>
 ): SelectorAsync1<T1, O>
 
 export function createSelector<T1, R1, R2, R3, O>(
     s1: Selector1<T1, R1>,
     s2: SelectorAsync1<T1, R2>,
     s3: SelectorAsync1<T1, R3>,
-    combiner: (s1: R1, s2: R2) => Promise<O>
+    combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>
 ): SelectorAsync1<T1, O>
 export function createSelector<T1, R1, R2, R3, O>(
     s1: Selector1<T1, R1>,
     s2: SelectorAsync1<T1, R2>,
     s3: Selector1<T1, R3>,
-    combiner: (s1: R1, s2: R2) => Promise<O>
+    combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>
 ): SelectorAsync1<T1, O>
 export function createSelector<T1, R1, R2, R3, O>(
     s1: Selector1<T1, R1>,
     s2: Selector1<T1, R2>,
     s3: SelectorAsync1<T1, R3>,
-    combiner: (s1: R1, s2: R2) => Promise<O>
+    combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>
 ): SelectorAsync1<T1, O>
 export function createSelector<T1, R1, R2, R3, O>(
     s1: Selector1<T1, R1>,
     s2: Selector1<T1, R2>,
     s3: Selector1<T1, R3>,
-    combiner: (s1: R1, s2: R2) => Promise<O>
+    combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>
 ): SelectorAsync1<T1, O>
 export function createSelector<T1, R1, R2, R3, O>(
     s1: SelectorAsync1<T1, R1>,
     s2: SelectorAsync1<T1, R2>,
     s3: SelectorAsync1<T1, R3>,
-    combiner: (s1: R1, s2: R2) => O
+    combiner: (s1: R1, s2: R2, s3: R3) => O
 ): SelectorAsync1<T1, O>
 export function createSelector<T1, R1, R2, R3, O>(
     s1: SelectorAsync1<T1, R1>,
     s2: SelectorAsync1<T1, R2>,
     s3: Selector1<T1, R3>,
-    combiner: (s1: R1, s2: R2) => O
+    combiner: (s1: R1, s2: R2, s3: R3) => O
 ): SelectorAsync1<T1, O>
 export function createSelector<T1, R1, R2, R3, O>(
     s1: SelectorAsync1<T1, R1>,
     s2: Selector1<T1, R2>,
     s3: SelectorAsync1<T1, R3>,
-    combiner: (s1: R1, s2: R2) => O
+    combiner: (s1: R1, s2: R2, s3: R3) => O
 ): SelectorAsync1<T1, O>
 export function createSelector<T1, R1, R2, R3, O>(
     s1: SelectorAsync1<T1, R1>,
     s2: Selector1<T1, R2>,
     s3: Selector1<T1, R3>,
-    combiner: (s1: R1, s2: R2) => O
+    combiner: (s1: R1, s2: R2, s3: R3) => O
 ): SelectorAsync1<T1, O>
 
 export function createSelector<T1, R1, R2, R3, O>(
     s1: Selector1<T1, R1>,
     s2: SelectorAsync1<T1, R2>,
     s3: SelectorAsync1<T1, R3>,
-    combiner: (s1: R1, s2: R2) => O
+    combiner: (s1: R1, s2: R2, s3: R3) => O
 ): SelectorAsync1<T1, O>
 export function createSelector<T1, R1, R2, R3, O>(
     s1: Selector1<T1, R1>,
     s2: SelectorAsync1<T1, R2>,
     s3: Selector1<T1, R3>,
-    combiner: (s1: R1, s2: R2) => O
+    combiner: (s1: R1, s2: R2, s3: R3) => O
 ): SelectorAsync1<T1, O>
 export function createSelector<T1, R1, R2, R3, O>(
     s1: Selector1<T1, R1>,
     s2: Selector1<T1, R2>,
     s3: SelectorAsync1<T1, R3>,
-    combiner: (s1: R1, s2: R2) => O
+    combiner: (s1: R1, s2: R2, s3: R3) => O
 ): SelectorAsync1<T1, O>
 export function createSelector<T1, R1, R2, R3, O>(
     s1: Selector1<T1, R1>,
     s2: Selector1<T1, R2>,
     s3: Selector1<T1, R3>,
-    combiner: (s1: R1, s2: R2) => O
+    combiner: (s1: R1, s2: R2, s3: R3) => O
 ): Selector1<T1, O>
+
+//*********************************************************************************** */
+//SELECTOR 2
+//*********************************************************************************** */
+//SelectorAsync1 S1
+export function createSelector<T1, T2, R1, O>(
+    s1: SelectorAsync2<T1, T2, R1>,
+    combiner: (s1: R1) => Promise<O>
+): SelectorAsync2<T1, T2, O>
+export function createSelector<T1, T2, R1, O>(
+    s1: SelectorAsync2<T1, T2, R1>,
+    combiner: (s1: R1) => O
+): SelectorAsync2<T1, T2, O>
+export function createSelector<T1, T2, R1, O>(
+    s1: Selector2<T1, T2, R1>,
+    combiner: (s1: R1) => Promise<O>
+): SelectorAsync2<T1, T2, O>
+export function createSelector<T1, T2, R1, O>(
+    s1: Selector2<T1, T2, R1>,
+    combiner: (s1: R1) => O
+): Selector2<T1, T2, O>
+
+//SelectorAsync1 S2
+export function createSelector<T1, T2, R1, R2, O>(
+    s1: SelectorAsync2<T1, T2, R1>,
+    s2: SelectorAsync2<T1, T2, R2>,
+    combiner: (s1: R1, s2: R2) => Promise<O>
+): SelectorAsync2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, O>(
+    s1: SelectorAsync2<T1, T2, R1>,
+    s2: Selector2<T1, T2, R2>,
+    combiner: (s1: R1, s2: R2) => Promise<O>
+): SelectorAsync2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, O>(
+    s1: Selector2<T1, T2, R1>,
+    s2: SelectorAsync2<T1, T2, R2>,
+    combiner: (s1: R1, s2: R2) => Promise<O>
+): SelectorAsync2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, O>(
+    s1: Selector2<T1, T2, R1>,
+    s2: Selector2<T1, T2, R2>,
+    combiner: (s1: R1, s2: R2) => Promise<O>
+): SelectorAsync2<T1, T2, O>
+
+export function createSelector<T1, T2, R1, R2, O>(
+    s1: SelectorAsync2<T1, T2, R1>,
+    s2: SelectorAsync2<T1, T2, R2>,
+    combiner: (s1: R1, s2: R2) => O
+): SelectorAsync2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, O>(
+    s1: SelectorAsync2<T1, T2, R1>,
+    s2: Selector2<T1, T2, R2>,
+    combiner: (s1: R1, s2: R2) => O
+): SelectorAsync2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, O>(
+    s1: Selector2<T1, T2, R1>,
+    s2: SelectorAsync2<T1, T2, R2>,
+    combiner: (s1: R1, s2: R2) => O
+): SelectorAsync2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, O>(
+    s1: Selector2<T1, T2, R1>,
+    s2: Selector2<T1, T2, R2>,
+    combiner: (s1: R1, s2: R2) => O
+): Selector2<T1, T2, O>
+
+//SelectorAsync1 S3
+export function createSelector<T1, T2, R1, R2, R3, O>(
+    s1: SelectorAsync2<T1, T2, R1>,
+    s2: SelectorAsync2<T1, T2, R2>,
+    s3: SelectorAsync2<T1, T2, R3>,
+    combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>
+): SelectorAsync2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, O>(
+    s1: SelectorAsync2<T1, T2, R1>,
+    s2: SelectorAsync2<T1, T2, R2>,
+    s3: Selector2<T1, T2, R3>,
+    combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>
+): SelectorAsync2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, O>(
+    s1: SelectorAsync2<T1, T2, R1>,
+    s2: Selector2<T1, T2, R2>,
+    s3: SelectorAsync2<T1, T2, R3>,
+    combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>
+): SelectorAsync2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, O>(
+    s1: SelectorAsync2<T1, T2, R1>,
+    s2: Selector2<T1, T2, R2>,
+    s3: Selector2<T1, T2, R3>,
+    combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>
+): SelectorAsync2<T1, T2, O>
+
+export function createSelector<T1, T2, R1, R2, R3, O>(
+    s1: Selector2<T1, T2, R1>,
+    s2: SelectorAsync2<T1, T2, R2>,
+    s3: SelectorAsync2<T1, T2, R3>,
+    combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>
+): SelectorAsync2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, O>(
+    s1: Selector2<T1, T2, R1>,
+    s2: SelectorAsync2<T1, T2, R2>,
+    s3: Selector2<T1, T2, R3>,
+    combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>
+): SelectorAsync2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, O>(
+    s1: Selector2<T1, T2, R1>,
+    s2: Selector2<T1, T2, R2>,
+    s3: SelectorAsync2<T1, T2, R3>,
+    combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>
+): SelectorAsync2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, O>(
+    s1: Selector2<T1, T2, R1>,
+    s2: Selector2<T1, T2, R2>,
+    s3: Selector2<T1, T2, R3>,
+    combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>
+): SelectorAsync2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, O>(
+    s1: SelectorAsync2<T1, T2, R1>,
+    s2: SelectorAsync2<T1, T2, R2>,
+    s3: SelectorAsync2<T1, T2, R3>,
+    combiner: (s1: R1, s2: R2, s3: R3) => O
+): SelectorAsync2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, O>(
+    s1: SelectorAsync2<T1, T2, R1>,
+    s2: SelectorAsync2<T1, T2, R2>,
+    s3: Selector2<T1, T2, R3>,
+    combiner: (s1: R1, s2: R2, s3: R3) => O
+): SelectorAsync2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, O>(
+    s1: SelectorAsync2<T1, T2, R1>,
+    s2: Selector2<T1, T2, R2>,
+    s3: SelectorAsync2<T1, T2, R3>,
+    combiner: (s1: R1, s2: R2, s3: R3) => O
+): SelectorAsync2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, O>(
+    s1: SelectorAsync2<T1, T2, R1>,
+    s2: Selector2<T1, T2, R2>,
+    s3: Selector2<T1, T2, R3>,
+    combiner: (s1: R1, s2: R2, s3: R3) => O
+): SelectorAsync2<T1, T2, O>
+
+export function createSelector<T1, T2, R1, R2, R3, O>(
+    s1: Selector2<T1, T2, R1>,
+    s2: SelectorAsync2<T1, T2, R2>,
+    s3: SelectorAsync2<T1, T2, R3>,
+    combiner: (s1: R1, s2: R2, s3: R3) => O
+): SelectorAsync2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, O>(
+    s1: Selector2<T1, T2, R1>,
+    s2: SelectorAsync2<T1, T2, R2>,
+    s3: Selector2<T1, T2, R3>,
+    combiner: (s1: R1, s2: R2, s3: R3) => O
+): SelectorAsync2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, O>(
+    s1: Selector2<T1, T2, R1>,
+    s2: Selector2<T1, T2, R2>,
+    s3: SelectorAsync2<T1, T2, R3>,
+    combiner: (s1: R1, s2: R2, s3: R3) => O
+): SelectorAsync2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, O>(
+    s1: Selector2<T1, T2, R1>,
+    s2: Selector2<T1, T2, R2>,
+    s3: Selector2<T1, T2, R3>,
+    combiner: (s1: R1, s2: R2, s3: R3) => O
+): Selector2<T1, T2, O>
 
 export function createSelector<T, R, O>(...args: (SelectorAsyncN<T, R> | ((...s: R[]) => O))[]) {
     const func = defaultCreateSelectorAsync as any;
