@@ -27,7 +27,7 @@ export function truncateDate(value: Date, precision: DateUnits): Date {
 }
 
 /**Suma un valor en cierta unidad a una fecha */
-export function addDate(date: Date, value: number, units: DateUnits): Date {
+export function addDate(date: Date, units: DateUnits, value: number): Date {
     const ms = date.valueOf();
     switch (units) {
         case "milliseconds":

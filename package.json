@@ -1,6 +1,6 @@
 {
   "name": "keautils",
-  "version": "1.4.38",
+  "version": "1.5.0",
   "description": "metodos de linq para javascript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

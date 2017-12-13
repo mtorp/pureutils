@@ -589,12 +589,12 @@ test("add to date", () => {
     const plusMonths = new Date(2026, 1, 10, 8, 52, 32, 542);
     const plusYear = new Date(2117, 9, 10, 8, 52, 32, 542);
 
-    expect(addDate(test, 100, "milliseconds")).toEqual(plusMilliseconds);
-    expect(addDate(test, 100, "seconds")).toEqual(plusSeconds);
-    expect(addDate(test, 100, "minutes")).toEqual(plusMinutes);
-    expect(addDate(test, 100, "days")).toEqual(plusDays);
-    expect(addDate(test, 100, "months")).toEqual(plusMonths);
-    expect(addDate(test, 100, "years")).toEqual(plusYear);
+    expect(addDate(test, "milliseconds", 100)).toEqual(plusMilliseconds);
+    expect(addDate(test, "seconds", 100)).toEqual(plusSeconds);
+    expect(addDate(test, "minutes", 100)).toEqual(plusMinutes);
+    expect(addDate(test, "days", 100)).toEqual(plusDays);
+    expect(addDate(test, "months", 100)).toEqual(plusMonths);
+    expect(addDate(test, "years", 100)).toEqual(plusYear);
 });
 
 test("rx flatten", async () => {

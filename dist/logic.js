@@ -1003,3 +1003,8 @@ function delay(ms) {
     return new Promise(function (resolve) { return setTimeout(resolve, ms); });
 }
 exports.delay = delay;
+/**Una funcion que siempre lanza una excepción al ser llamada. Sirve para implementar cases exhaustivos, tal como esta descrito en https://stackoverflow.com/questions/39419170/how-do-i-check-that-a-switch-block-is-exhaustive-in-typescript*/
+function assertUnreachable(x) {
+    throw new Error("Se llamó a la función assertUnreachable, esto puede indicar un tipo inesperado en una discriminación de tips");
+}
+exports.assertUnreachable = assertUnreachable;

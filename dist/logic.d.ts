@@ -264,3 +264,5 @@ export declare function bindFunction<T extends (...args: any[]) => any>(func: T,
 export declare function unbindFunction<T extends (...args: any[]) => any>(func: T): T | undefined;
 /**Devuelve una promesa que se resuelve en cierto tiempo*/
 export declare function delay(ms: number): Promise<void>;
+/**Una funcion que siempre lanza una excepción al ser llamada. Sirve para implementar cases exhaustivos, tal como esta descrito en https://stackoverflow.com/questions/39419170/how-do-i-check-that-a-switch-block-is-exhaustive-in-typescript*/
+export declare function assertUnreachable(x: never): never;

@@ -558,12 +558,12 @@ test("add to date", function () {
     var plusDays = new Date(2018, 0, 18, 8, 52, 32, 542);
     var plusMonths = new Date(2026, 1, 10, 8, 52, 32, 542);
     var plusYear = new Date(2117, 9, 10, 8, 52, 32, 542);
-    expect(index_1.addDate(test, 100, "milliseconds")).toEqual(plusMilliseconds);
-    expect(index_1.addDate(test, 100, "seconds")).toEqual(plusSeconds);
-    expect(index_1.addDate(test, 100, "minutes")).toEqual(plusMinutes);
-    expect(index_1.addDate(test, 100, "days")).toEqual(plusDays);
-    expect(index_1.addDate(test, 100, "months")).toEqual(plusMonths);
-    expect(index_1.addDate(test, 100, "years")).toEqual(plusYear);
+    expect(index_1.addDate(test, "milliseconds", 100)).toEqual(plusMilliseconds);
+    expect(index_1.addDate(test, "seconds", 100)).toEqual(plusSeconds);
+    expect(index_1.addDate(test, "minutes", 100)).toEqual(plusMinutes);
+    expect(index_1.addDate(test, "days", 100)).toEqual(plusDays);
+    expect(index_1.addDate(test, "months", 100)).toEqual(plusMonths);
+    expect(index_1.addDate(test, "years", 100)).toEqual(plusYear);
 });
 test("rx flatten", function () { return __awaiter(_this, void 0, void 0, function () {
     var arr, flat;
