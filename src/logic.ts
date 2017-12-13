@@ -802,3 +802,8 @@ export function unbindFunction<T extends (...args: any[]) => any>(func: T): T | 
 export function delay(ms: number) {
     return new Promise<void>(resolve => setTimeout(resolve, ms));
 }
+
+/**Una funcion que siempre lanza una excepción al ser llamada. Sirve para implementar cases exhaustivos, tal como esta descrito en https://stackoverflow.com/questions/39419170/how-do-i-check-that-a-switch-block-is-exhaustive-in-typescript*/
+export function assertUnreachable(x: never): never {
+    throw new Error("Se llamó a la función assertUnreachable, esto puede indicar un tipo inesperado en una discriminación de tips");
+}
