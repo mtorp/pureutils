@@ -88,6 +88,11 @@ export function shallowEquals<T>(a: T, b: T, comparer?: (a: T[keyof T], b: T[key
     if (shallowEqualsCompareByRef(a) || shallowEqualsCompareByRef(b)) {
         return a === b;
     }
+    if (a instanceof Date || b instanceof Date) {
+        if (a instanceof Date && b instanceof Date) {
+            return a.valueOf() == b.valueOf();
+        } else return false;
+    }
 
     if (a === b) return true;
     if (a == null || b == null) return false;

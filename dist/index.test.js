@@ -92,6 +92,8 @@ test("shallow equals", function () {
     expect(eq([1, 2], [2, 1])).toBe(false);
     expect(eq([1, 2], [2])).toBe(false);
     expect(eq([1, 2], [3, 4])).toBe(false);
+    expect(eq(new Date(2016, 13, 11), new Date(2016, 13, 11))).toBe(true);
+    expect(eq(new Date(2016, 13, 11), new Date(2016, 13, 20))).toBe(false);
     var promA = Promise.resolve(1);
     var promB = Promise.resolve(1);
     var promC = Promise.resolve(2);
@@ -132,6 +134,8 @@ test("deep equals", function () {
     expect(eq([1, 2], [2, 1])).toBe(false);
     expect(eq([1, 2], [2])).toBe(false);
     expect(eq([1, 2], [3, 4])).toBe(false);
+    expect(eq(new Date(2016, 13, 11), new Date(2016, 13, 11))).toBe(true);
+    expect(eq(new Date(2016, 13, 11), new Date(2016, 13, 20))).toBe(false);
     var a1 = [
         { key: [1, 1], items: ["A", "E"] },
         { key: [1, { x: 10, b: "hello" }], items: ["B", "C", "F"] },
