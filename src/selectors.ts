@@ -21,6 +21,7 @@ const defaultCreateSelectorAsync = createSelectorCreator({ deepEquals: false });
 
 export const createDeepSelector = createSelectorCreator({ deepEquals: true });
 
+
 //*********************************************************************************** */
 //SELECTOR 1
 //*********************************************************************************** */
@@ -371,24 +372,76 @@ function createSelectorAsyncArrCreator(options: createSelectorAsyncCreatorOption
         selectors: (SelectorAsyncN<T, R> | SelectorN<T, R>)[],
         combiner: (...s: R[]) => O
     ): SelectorAsyncN<T, Promise<O>> {
-        const memoCombiner = moize(combiner);
+        const memoCombiner: Function & { clear: () => void } = moize(combiner) as any;
 
         const asyncCombiner = (...asyncS: (Promise<R> | R)[]): Promise<O> | O => {
-            const anyPromise = any(asyncS, x => isPromise(x));
-            if (!anyPromise) {
-                //Ruta sincrona:
-                return memoCombiner(...asyncS);
+            const anyPromiseInArgs = any(asyncS, x => isPromise(x));
+
+            if (!anyPromiseInArgs) {
+                //Ruta sincrona, el resultado puede ser asíncrono
+                try {
+                    const promOrSync = memoCombiner(...asyncS);
+                    if (isPromise(promOrSync)) {
+                        //El resultado fue promesa, tomamos la ruta asíncrona
+                        return (async () => {
+                            try {
+                                return await promOrSync;
+                            } catch (error) {
+                                //La promesa lanzó error, limpiamos el cache
+                                memoCombiner.clear();
+                                throw error;
+                            }
+                        })();
+                    } else {
+                        //Resuktado sincrono y argumentos sincronos, tomamos la ruta sincrona
+                        return promOrSync;
+                    }
+                } catch (error) {
+                    //Error síncrono
+                    memoCombiner.clear();
+                    throw error;
+                }
             } else {
-                //Ruta asincrona
-                return Promise.all(asyncS).then(s => memoCombiner(...s));
+                //Ruta asincrona para los arguments y para la función
+                return (async () => {
+                    const args = await Promise.all(asyncS);
+                    try {
+                        return await memoCombiner(...args);
+                    } catch (error) {
+                        //Si la promesa lanzó error, limpiamos el cache del memo
+                        memoCombiner.clear();
+                        throw error;
+                    }
+
+                })();
             }
         }
 
-        const memoAsyncCombiner = moize(asyncCombiner);
+        const memoAsyncCombiner: Function & { clear: () => void } = moize(asyncCombiner) as any;
 
         const ret = (...args: T[]): Promise<O> | O => {
             const myArgs = selectors.map(x => x(...args));
-            return memoAsyncCombiner(...myArgs);
+            try {
+                const ret = memoAsyncCombiner(...myArgs);
+                if (isPromise(ret)) {
+                    //Ruta asíncrona
+                    return (async () => {
+                        try {
+                            return await ret;
+                        } catch (error) {
+                            //Si hubo error hay que limpiar el cache
+                            memoAsyncCombiner.clear();
+                            throw error;
+                        }
+                    })();
+                } else {
+                    return ret;
+                }
+            } catch (error) {
+                //Error sincrono
+                memoAsyncCombiner.clear();
+                throw error;
+            }
         }
 
         return ret as any;

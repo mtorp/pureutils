@@ -208,7 +208,7 @@ export function first<T>(arr: T[], pred?: (item: T) => boolean): T | undefined {
 }
 
 /**
- * Devuelve el unico elemento de un arreglo que cumpla con la condición, si no se encontró ninguo o mas de uno devuelve null
+ * Devuelve el unico elemento de un arreglo que cumpla con la condición, si no se encontró ninguo o mas de uno devuelve undefined
  */
 export function single<T>(arr: T[], pred?: (item: T) => boolean): T | undefined {
     let firstItem: T | undefined = undefined;

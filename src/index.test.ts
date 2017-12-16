@@ -38,8 +38,8 @@ test("shallow equals", () => {
     expect(eq([1, 2], [2])).toBe(false);
     expect(eq([1, 2], [3, 4])).toBe(false);
 
-    expect(eq(new Date(2016,13,11), new Date(2016,13,11))).toBe(true);
-    expect(eq(new Date(2016,13,11), new Date(2016,13,20))).toBe(false);
+    expect(eq(new Date(2016, 13, 11), new Date(2016, 13, 11))).toBe(true);
+    expect(eq(new Date(2016, 13, 11), new Date(2016, 13, 20))).toBe(false);
 
     const promA = Promise.resolve(1);
     const promB = Promise.resolve(1);
@@ -92,9 +92,9 @@ test("deep equals", () => {
     expect(eq([1, 2], [2])).toBe(false);
     expect(eq([1, 2], [3, 4])).toBe(false);
 
-    expect(eq(new Date(2016,13,11), new Date(2016,13,11))).toBe(true);
-    expect(eq(new Date(2016,13,11), new Date(2016,13,20))).toBe(false);
-    
+    expect(eq(new Date(2016, 13, 11), new Date(2016, 13, 11))).toBe(true);
+    expect(eq(new Date(2016, 13, 11), new Date(2016, 13, 20))).toBe(false);
+
     const a1 = [
         { key: [1, 1], items: ["A", "E"] },
         { key: [1, { x: 10, b: "hello" }], items: ["B", "C", "F"] },
@@ -1118,4 +1118,55 @@ test("selector multiple", async () => {
     const sum = createSelector(a, b, c, (a, b, c) => a + b + c);
 
     expect(sum({ a: 1, b: 2 }, 5)).toBe(10);
+});
+
+test("selector al tener error no debe de memoizar SYNC", async () => {
+    const a = () => 10;
+    let count = 0;
+    const sum = createSelector(a, x => {
+        count++;
+        if (count >= 3) return x;
+        else
+            throw new Error("Error de prueba");
+    });
+
+    let errCount = 0;
+    try { sum({}); } catch (error) {  errCount++ ;}
+    try { sum({}); } catch (error) {  errCount++ ;}
+    expect(sum({})).toBe(10);
+
+    expect(errCount).toBe(2);
+    expect(count).toBe(3);
+
+    sum({});
+    sum({});
+
+    expect(errCount).toBe(2);
+    expect(count).toBe(3);
+});
+
+test("selector al tener error no debe de memoizar ASYNC", async () => {
+    const a = () => 10;
+    let count = 0;
+    const sum = createSelector(a, async x => {
+        count++;
+        await delay(100);
+        if (count >= 3) return x;
+        else
+            throw new Error("Error de prueba");
+    });
+
+    let errCount = 0;
+    try { await sum({}); } catch (error) {  errCount++ ;}
+    try { await sum({}); } catch (error) {  errCount++ ;}
+    expect(await sum({})).toBe(10);
+
+    expect(errCount).toBe(2);
+    expect(count).toBe(3);
+
+    await sum({});
+    await sum({});
+
+    expect(errCount).toBe(2);
+    expect(count).toBe(3);
 });
