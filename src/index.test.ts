@@ -1131,8 +1131,8 @@ test("selector al tener error no debe de memoizar SYNC", async () => {
     });
 
     let errCount = 0;
-    try { sum({}); } catch (error) {  errCount++ ;}
-    try { sum({}); } catch (error) {  errCount++ ;}
+    try { sum({}); } catch (error) { errCount++; }
+    try { sum({}); } catch (error) { errCount++; }
     expect(sum({})).toBe(10);
 
     expect(errCount).toBe(2);
@@ -1157,8 +1157,8 @@ test("selector al tener error no debe de memoizar ASYNC", async () => {
     });
 
     let errCount = 0;
-    try { await sum({}); } catch (error) {  errCount++ ;}
-    try { await sum({}); } catch (error) {  errCount++ ;}
+    try { await sum({}); } catch (error) { errCount++; }
+    try { await sum({}); } catch (error) { errCount++; }
     expect(await sum({})).toBe(10);
 
     expect(errCount).toBe(2);
@@ -1168,5 +1168,75 @@ test("selector al tener error no debe de memoizar ASYNC", async () => {
     await sum({});
 
     expect(errCount).toBe(2);
+    expect(count).toBe(3);
+});
+
+test("selector con observable", async () => {
+    interface Props {
+        a: number;
+    };
+    const a = (x: Props) => x.a;
+    let count = 0;
+    const contarA = createSelector(a, a => {
+        count++;
+        return rx.Observable.range(0, a);
+    });
+    const conteoPor2 = createSelector(contarA, a => a * 2);
+
+    let obs2 = await conteoPor2({ a: 2 }).toArray().toPromise();
+    expect(obs2).toEqual([0, 2]);
+
+    obs2 = await conteoPor2({ a: 2 }).toArray().toPromise();
+    expect(obs2).toEqual([0, 2]);
+    expect(count).toBe(1);
+
+    let obs4 = await conteoPor2({ a: 4 }).toArray().toPromise();
+    expect(obs4).toEqual([0, 2, 4, 6]);
+
+    obs4 = await conteoPor2({ a: 4 }).toArray().toPromise();
+    expect(obs4).toEqual([0, 2, 4, 6]);
+
+    expect(count).toBe(2);
+
+});
+
+test("selector con observable que lanza error", async () => {
+    interface Props {
+        a: number;
+    };
+    const a = (x: Props) => x.a;
+    let count = 0;
+    const contarA = createSelector(a, a => {
+        count++;
+        if (count == 2) {
+            return rx.Observable.throw("Error de prueba");
+        }
+        return rx.Observable.range(0, a);
+    });
+    const conteoPor2 = createSelector(contarA, a => a * 2);
+
+    let obs2 = await conteoPor2({ a: 2 }).toArray().toPromise();
+    expect(obs2).toEqual([0, 2]);
+
+    obs2 = await conteoPor2({ a: 2 }).toArray().toPromise();
+    expect(obs2).toEqual([0, 2]);
+    expect(count).toBe(1);
+
+    let errCount = 0;
+    try {
+        const obs =  conteoPor2({ a: 3 });
+        let obs3 = await obs.toArray().toPromise();
+    } catch (error) {
+        errCount++;
+    }
+
+    expect(errCount).toBe(1);
+    expect(count).toBe(2);
+
+    //Una segunda llamada con los mismos argumentos SI ocasiona llamada, ya que la llamada anterior lanzó una excepción
+    const obs= conteoPor2({ a: 3 });
+    let obs3 = await obs.toArray().toPromise();
+    expect(obs3).toEqual([0, 2, 4]);
+    expect(errCount).toBe(1);
     expect(count).toBe(3);
 });
