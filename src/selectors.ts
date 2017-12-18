@@ -23,7 +23,7 @@ export const createDeepSelector = createSelectorCreator({ deepEquals: true });
 //**********************************
 export type Selector1<T1, R> = (a1: T1) => R;
 export type SelectorAsync1<T1, R> = (a1: T1) => Promise<R>;
-export type SelectorRx1<T1, R> = (a1: T1) => Observable<R>;
+export type SelectorRx1<T1, R> = (a1: T1) => Observable<R> ;
 export type Selector2<T1, T2, R> = (a1: T1, a2: T2) => R;
 export type SelectorAsync2<T1, T2, R> = (a1: T1, a2: T2) => Promise<R>;
 export type SelectorRx2<T1, T2, R> = (a1: T1, a2: T2) => Observable<R>;
@@ -41,7 +41,7 @@ export type SelectorRxN<T, R> = (...args: T[]) => Observable<R>;
 //**********************************
 //SelectorCount: 1
 //**********************************
-export function createSelector<T1, R1, O>(s1: SelectorRx1<T1, R1>, combiner: (s1: R1) => Observable<O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, O>(s1: SelectorRx1<T1, R1> , combiner: (s1: R1) => Observable<O>): SelectorRx1<T1, O>
 export function createSelector<T1, R1, O>(s1: SelectorRx1<T1, R1>, combiner: (s1: R1) => Promise<O>): SelectorRx1<T1, O>
 export function createSelector<T1, R1, O>(s1: SelectorRx1<T1, R1>, combiner: (s1: R1) => O): SelectorRx1<T1, O>
 export function createSelector<T1, R1, O>(s1: SelectorAsync1<T1, R1>, combiner: (s1: R1) => Observable<O>): SelectorRx1<T1, O>

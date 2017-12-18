@@ -1340,7 +1340,25 @@ test("selector con observable de observables", async () => {
     });
     const conteoPor2 = createSelector(contarA, a => rx.Observable.timer(0, 10).takeWhile(x => x < 20).map(x => x + a * 100));
 
-    const conteoPor2Obs = conteoPor2({a:3});
+    const conteoPor2Obs = conteoPor2({ a: 3 });
     const result = await conteoPor2Obs.toArray().toPromise();
-    expect(result).toEqual([0,1,2,3,4,100,101,102,103,104,200,201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218,219]);
+    expect(result).toEqual([0, 1, 2, 3, 4, 100, 101, 102, 103, 104, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219]);
+});
+
+
+test("selecotr con observable y nulo", async () => {
+    interface Props {
+        value?: number | null;
+        loading?: boolean;
+    }
+    const idClienteDireccion = (props: Props) => props.value;
+    const clienteDireccion = createSelector(idClienteDireccion, id => {
+        var b = new rx.BehaviorSubject<{ Cliente: number, IdCliente: number }>({ Cliente: 10, IdCliente: 1 } as any);
+        const ret   = id != null ? b : null;
+        const ret2 = toObservable(ret);
+        return ret2;
+    });
+
+    const clienteFromValue = createSelector(clienteDireccion, x => x && x.Cliente);
+
 });

@@ -569,6 +569,10 @@ export function rxFlatten<T>(observable: rx.Observable<T | PromiseLike<T> | rx.O
 }
 
 /**Convierte un valor o una promesa a un observable, si el valor ya es un observable lo devuelve tal cual */
+export function toObservable<T1 >(value: rx.Observable<T1> | null): rx.Observable<T1 | null>
+export function toObservable<T1>(value: rx.Observable<T1> | undefined): rx.Observable<T1 | undefined>
+export function toObservable<T1, T2 extends null | undefined>(value: rx.Observable<T1> | T2): rx.Observable<T1 | T2>
+export function toObservable<T>(value: T | PromiseLike<T> | rx.Observable<T>): rx.Observable<T>
 export function toObservable<T>(value: T | PromiseLike<T> | rx.Observable<T>): rx.Observable<T> {
     if (value instanceof rx.Observable) {
         return value;
