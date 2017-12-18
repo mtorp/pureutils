@@ -1002,8 +1002,8 @@ test("async create selector simple test", async () => {
 
     const func = (x: number) => (x + 1) + (x * 2);
     //(value + 1) + (value * 2)
-    expect(await sum({ value: 2 })).toBe(func(2));
-    expect(await sum({ value: 5 })).toBe(func(5));
+    expect(await sum({ value: 2 }).toPromise()).toBe(func(2));
+    expect(await sum({ value: 5 }).toPromise()).toBe(func(5));
 });
 
 test("async create selector sync test", () => {
@@ -1037,10 +1037,12 @@ test("async create selector async memoize", async () => {
     }); //Este selector cada vez devuelve una promesa diferente, pero con el mismo valor
 
     let sumCalls = 0;
-    const sum = createSelector(samePromise, x => {
+    const sumObs = createSelector(samePromise, x => {
         sumCalls++;
         return x + 1;
     });
+
+    const sum = (x: Props) => sumObs(x).toPromise();
 
     expect(samePromiseCalls).toBe(0);
     expect(await sum({ a: 10, b: 20 })).toBe(11);
@@ -1095,12 +1097,12 @@ test("async same promise ", async () => {
     expect(samePromiseCalls).toBe(0);
     expect(sumCalls).toBe(0);
 
-    await sum({ a: 10, b: 20 });
+    await sum({ a: 10, b: 20 }).toPromise();
 
     expect(samePromiseCalls).toBe(1);
     expect(sumCalls).toBe(1);
 
-    await sum({ a: 10, b: 20 });
+    await sum({ a: 10, b: 20 }).toPromise();
 
     expect(samePromiseCalls).toBe(2);
     expect(sumCalls).toBe(1);
@@ -1179,7 +1181,7 @@ test("selector con observable", async () => {
     let count = 0;
     const contarA = createSelector(a, a => {
         count++;
-        return rx.Observable.range(0, a);
+        return rx.Observable.timer(0, 100).takeWhile(x => x < a);
     });
     const conteoPor2 = createSelector(contarA, a => a * 2);
 
@@ -1211,11 +1213,12 @@ test("selector con observable que lanza error", async () => {
         if (count == 2) {
             return rx.Observable.throw("Error de prueba");
         }
-        return rx.Observable.range(0, a);
+        return rx.Observable.timer(0, 100).takeWhile(x => x < a);
     });
     const conteoPor2 = createSelector(contarA, a => a * 2);
 
-    let obs2 = await conteoPor2({ a: 2 }).toArray().toPromise();
+    const conteoPor2Obs = conteoPor2({ a: 2 });
+    let obs2 = await conteoPor2Obs.toArray().toPromise();
     expect(obs2).toEqual([0, 2]);
 
     obs2 = await conteoPor2({ a: 2 }).toArray().toPromise();
@@ -1224,7 +1227,7 @@ test("selector con observable que lanza error", async () => {
 
     let errCount = 0;
     try {
-        const obs =  conteoPor2({ a: 3 });
+        const obs = conteoPor2({ a: 3 });
         let obs3 = await obs.toArray().toPromise();
     } catch (error) {
         errCount++;
@@ -1234,9 +1237,110 @@ test("selector con observable que lanza error", async () => {
     expect(count).toBe(2);
 
     //Una segunda llamada con los mismos argumentos SI ocasiona llamada, ya que la llamada anterior lanzó una excepción
-    const obs= conteoPor2({ a: 3 });
+    const obs = conteoPor2({ a: 3 });
     let obs3 = await obs.toArray().toPromise();
     expect(obs3).toEqual([0, 2, 4]);
     expect(errCount).toBe(1);
     expect(count).toBe(3);
+});
+
+test("is observable", () => {
+    expect(isObservable(rx.Observable.from([undefined]))).toBe(true);
+});
+
+test("selecotr con observable problema TEST", async () => {
+    console.log("hello");
+    interface State {
+    }
+
+    const idCliente = (state: State) => new rx.BehaviorSubject<number>(10);
+
+    const idClienteObs = idCliente({});
+    const idClienteValue = await idClienteObs.first().toArray().toPromise();
+    expect(isObservable(idClienteObs)).toBe(true);
+    expect(idClienteValue).toEqual([10]);
+
+    const cliente = createSelector(idCliente, id => {
+        expect(id).toBe(10);
+        var b = new rx.BehaviorSubject<{ Direcciones: any[] }>({ Direcciones: [1, 2, 3] } as any);
+        const isObs = isObservable(b);
+        return b;
+    });
+
+
+    const clienteObs = cliente({});
+    const clienteResult = await clienteObs.first().toArray().toPromise();
+
+    expect(clienteResult).toEqual([{ Direcciones: [1, 2, 3] }]);
+
+}, 10000);
+
+test("selecotr con observable problema COMPLETA", async () => {
+
+    interface State {
+        idCliente?: number;
+    }
+    interface Props {
+        value?: number | null;
+        loading?: boolean;
+    }
+    const idClienteDireccion = (state: State, props: Props) => props.value;
+    const clienteDireccion = createSelector(idClienteDireccion, id => {
+        //Hello
+        console.log("id: " + id);
+        var b = new rx.BehaviorSubject<{ Cliente: number, IdCliente: number }>({ Cliente: 10, IdCliente: 1 } as any);
+        const ret = id != null ? b : rx.Observable.from([id]);
+        return ret as rx.Observable<{ Cliente: number, IdCliente: number } | null | undefined>;
+    });
+    const clienteFromValue = createSelector(clienteDireccion, x => x && x.Cliente);
+    const idClienteFromValue = createSelector(clienteDireccion, x => x && x.IdCliente);
+    const idClienteFromState = (state: State, props: Props) => state.idCliente;
+    //NOTA: Le damos prioridad al NULL sobre el UNDEFINED, esto por que un NULL indica una limpieza por parte del usuario, en cambio un undefined indica que el valor no se conoce
+    const idCliente = createSelector(idClienteFromValue, idClienteFromState, (val, state) => val === null ? null : (state || val));;
+    const cliente = createSelector(idCliente, id => {
+        var b = new rx.BehaviorSubject<{ Direcciones: any[] }>({ Direcciones: [1, 2, 3] } as any);
+        const isObs = isObservable(b);
+        return b;
+    });
+
+
+    const clienteResult = await cliente({}, {}).first().toArray().toPromise();
+
+    expect(clienteResult).toEqual([{ Direcciones: [1, 2, 3] }]);
+
+    const direcciones = createSelector(cliente, cli => {
+        console.log("Llamando a direcciones");
+        if (isObservable(cli)) {
+            console.log("cli en direcciones es observable");
+        }
+
+        return (cli && cli.Direcciones) || []
+    });
+
+    const direccionesSelect = createSelector(direcciones, direcciones => {
+        return direcciones.map<{}>(x => ({ id: x, view: x }));
+    });
+
+    const obs = direcciones({}, { value: null, loading: false, });
+    const ret = await obs.first().toArray().toPromise();
+
+    expect(ret).toEqual([[1, 2, 3]]);
+});
+
+
+test("selector con observable de observables", async () => {
+    interface Props {
+        a: number;
+    };
+    const a = (x: Props) => x.a;
+    let count = 0;
+    const contarA = createSelector(a, a => {
+        count++;
+        return rx.Observable.timer(0, 50).takeWhile(x => x < a);
+    });
+    const conteoPor2 = createSelector(contarA, a => rx.Observable.timer(0, 10).takeWhile(x => x < 20).map(x => x + a * 100));
+
+    const conteoPor2Obs = conteoPor2({a:3});
+    const result = await conteoPor2Obs.toArray().toPromise();
+    expect(result).toEqual([0,1,2,3,4,100,101,102,103,104,200,201,202,203,204,205,206,207,208,209,210,211,212,213,214,215,216,217,218,219]);
 });
