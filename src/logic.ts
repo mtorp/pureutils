@@ -569,7 +569,7 @@ export function rxFlatten<T>(observable: rx.Observable<T | PromiseLike<T> | rx.O
 }
 
 /**Convierte un valor o una promesa a un observable, si el valor ya es un observable lo devuelve tal cual */
-export function toObservable<T1 >(value: rx.Observable<T1> | null): rx.Observable<T1 | null>
+export function toObservable<T1>(value: rx.Observable<T1> | null): rx.Observable<T1 | null>
 export function toObservable<T1>(value: rx.Observable<T1> | undefined): rx.Observable<T1 | undefined>
 export function toObservable<T1, T2 extends null | undefined>(value: rx.Observable<T1> | T2): rx.Observable<T1 | T2>
 export function toObservable<T>(value: T | PromiseLike<T> | rx.Observable<T>): rx.Observable<T>
@@ -734,6 +734,18 @@ export function formatNumber(number: number | null | undefined | string, integer
     const fracPart = fracZeroStr.substring(0, decimals);
 
     return sign + prefix + intPart + "." + fracPart;
+}
+
+/**Devuelve true si la cadena es null, undefined o string */
+export function nullOrEmpty(x: string): x is ("")
+/**Devuelve true si la cadena es null, undefined o string */
+export function nullOrEmpty(x: null | string): x is (null | "")
+/**Devuelve true si la cadena es null, undefined o string */
+export function nullOrEmpty(x: undefined | string): x is (undefined | "")
+/**Devuelve true si la cadena es null, undefined o string */
+export function nullOrEmpty(x: null | undefined | string): x is (null | undefined | "")
+export function nullOrEmpty(x: null | undefined | string): x is (null | undefined | "") {
+    return x == null || x == "";
 }
 
 const monthNames = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
