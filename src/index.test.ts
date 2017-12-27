@@ -4,7 +4,7 @@ import {
     unique, filterIf, mapKeys, intersect, omitUndefined, single, awaitObj, shallowDiff, range, sort, defaultComparer, orderBy, orderByDesc,
     truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd, toObservable, isArray, isArrayLike, isPromise, isObservable,
     search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx, mapMany, runningTotal, mapPrevious, formatNumber, formatDate, formatDateExcel,
-    cloneFunction, bindFunction, unbindFunction, createSelector, delay, createDeepSelector
+    cloneFunction, bindFunction, unbindFunction, createSelector, delay, createDeepSelector, uuid
 } from "./index";
 
 import * as rx from "rxjs";
@@ -1354,11 +1354,17 @@ test("selecotr con observable y nulo", async () => {
     const idClienteDireccion = (props: Props) => props.value;
     const clienteDireccion = createSelector(idClienteDireccion, id => {
         var b = new rx.BehaviorSubject<{ Cliente: number, IdCliente: number }>({ Cliente: 10, IdCliente: 1 } as any);
-        const ret   = id != null ? b : null;
+        const ret = id != null ? b : null;
         const ret2 = toObservable(ret);
         return ret2;
     });
 
     const clienteFromValue = createSelector(clienteDireccion, x => x && x.Cliente);
+});
 
+test("uuid random", () => {
+    const arr = range(0, 100).map(x => uuid());
+    const uni = unique(arr);
+    
+    expect(uni.length).toBe(arr.length);
 });

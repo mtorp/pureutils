@@ -1,5 +1,14 @@
 import { pipe } from "./pipe";
 import * as rx from "rxjs";
+import * as _uuidRandom from "uuid-random";
+
+import { interopRequireDefault } from "./interop";
+const uuidRandom = interopRequireDefault(_uuidRandom) as any;
+/**Devuelve un nuevo UUID */
+export function uuid() : string {
+    return uuidRandom();
+}
+
 /**Devuelve true si todos los elementos de un arreglo encajan con el predicado */
 export function all<T>(arr: T[], pred: (x: T) => boolean): boolean {
     for (const x of arr) {

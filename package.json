@@ -1,12 +1,13 @@
 {
   "name": "keautils",
-  "version": "1.5.5",
+  "version": "1.5.6",
   "description": "metodos de linq para javascript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
     "moize": "^4.0.3",
-    "rxjs": "^5.4.3"
+    "rxjs": "^5.4.3",
+    "uuid-random": "^1.0.6"
   },
   "devDependencies": {
     "@types/jest": "^21.1.4",
