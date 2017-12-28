@@ -4,7 +4,7 @@ import {
     unique, filterIf, mapKeys, intersect, omitUndefined, single, awaitObj, shallowDiff, range, sort, defaultComparer, orderBy, orderByDesc,
     truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd, toObservable, isArray, isArrayLike, isPromise, isObservable,
     search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx, mapMany, runningTotal, mapPrevious, formatNumber, formatDate, formatDateExcel,
-    cloneFunction, bindFunction, unbindFunction, createSelector, delay, createDeepSelector, uuid
+    cloneFunction, bindFunction, unbindFunction, createSelector, delay, createDeepSelector, uuid, allEqual
 } from "./index";
 
 import * as rx from "rxjs";
@@ -1367,4 +1367,14 @@ test("uuid random", () => {
     const uni = unique(arr);
     
     expect(uni.length).toBe(arr.length);
+});
+
+test("all equal", () => {
+    const arr = [1,1,1];
+    expect(allEqual(arr)).toBe(true);
+
+    expect(allEqual([])).toBe(true);
+    expect(allEqual([1])).toBe(true);
+    expect(allEqual([1,1,1,2])).toBe(false);
+    expect(allEqual([2,1,1,1])).toBe(false);
 });

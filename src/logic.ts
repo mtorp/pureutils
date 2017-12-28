@@ -18,6 +18,21 @@ export function all<T>(arr: T[], pred: (x: T) => boolean): boolean {
     return true;
 }
 
+/**Devuelve true si todos los elementos de un arreglo son iguales. Si el arreglo esta vacío devuelve true
+ * @param comparer El comparador de igualdar, por default es @see referenceEquals
+ */
+export function allEqual<T>(arr: T[], comparer?: (a:T , b:T) => boolean): boolean {
+    if(arr.length == 0) return true;
+    const effectiveComparer = comparer || referenceEquals;
+    const first = arr[0];
+    for(let i = 1; i < arr.length; i++) {
+        const it = arr[i];
+        if(!effectiveComparer(first, it))
+            return false;
+    }
+    return true;
+}
+
 /**Devuelve true si por lo menos un elemento del arreglo encaja con el predicado, o si existe por lo menos un elemento en caso
  * de que el predicado este indefinido
  */
@@ -247,7 +262,7 @@ export type Grouping<TKey, TItem> = { key: TKey, items: TItem[] };
 
 /**Agrupa un arreglo por una llave. Se preserva el orden original de los elementos del arreglo, segun los elementos agrupadores que aparezcan primero, tambien
  * el orden adentro del grupo es preservado
- * @param comparer Comparador, por default es un shallowEquals
+ * @param comparer Comparador de la llave por default es un shallowEquals
  */
 export function groupBy<T, TKey>(arr: T[], groupBy: (item: T) => TKey, comparer?: (a: TKey, b: TKey) => boolean) {
     const ret: Grouping<TKey, T>[] = [];
