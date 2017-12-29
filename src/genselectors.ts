@@ -40,7 +40,7 @@ function title(message: string) {
 
 function inputSelector(digit: number, selectorSize: number, selectorIndex: number) {
     const pre = [
-        "SelectorRx",
+        "SelectorRxProm",
         "SelectorAsync",
         "Selector"
     ][digit];
@@ -52,14 +52,13 @@ function inputSelector(digit: number, selectorSize: number, selectorIndex: numbe
 }
 
 function combiner(digit: number, selectorCount: number) {
-    const selectors = range(1, selectorCount).map(i => `s${i}: R${i}`).join(", ");
-    const ret = [
-        "Observable<O>",
-        "Promise<O>",
-        "O"
+    const name = [
+        "CombinerRxProm",
+        "CombinerAsync",
+        "Combiner"
     ][digit];
-
-    return `combiner: (${selectors}) => ${ret}`;
+    const args = [...range(1, selectorCount ).map(x => "R" + x), "O"].join(", ");
+    return `combiner: ${name}${selectorCount}<${args}>`;
 }
 
 function retType(digits: number[], selectorSize: number) {
@@ -71,7 +70,7 @@ function retType(digits: number[], selectorSize: number) {
     const pre = [
         "SelectorRx",
         "SelectorAsync",
-        "Selector"
+        "Selector",
     ][resultDigit];
     const T = [...range(1, selectorSize).map(x => "T" + x), "O"].join(", ");
 
@@ -87,44 +86,61 @@ function functionDef(selectorSize: number, selectorCount: number) {
     return `export function createSelector<${T}>(`
 }
 
-function types(selectorSize: number) {
+function completeFuncDef(selectorSize: number, selectorCount: number, power: number[]) {
+    const argsS = power.slice(0, power.length - 1).map((x, i) => inputSelector(x, selectorSize, i + 1));
+    const argsC = combiner(power[power.length - 1], selectorCount);
+    const args = [...argsS, argsC].join(", ");
+
+    let ret: string = "";
+    ret += functionDef(selectorSize, selectorCount);
+    ret += args;
+    ret += "): " + retType(power, selectorSize) + "\r\n";
+    return ret;
+}
+
+function types(selectorSize: number, selectorCount: number) {
     let ret = "";
     for (let i = 0; i < selectorSize; i++) {
-        const T = [...range(1, i + 1).map(x => "T" + x), "R"].join(", ");
+        const TSelector = [...range(1, i + 1).map(x => "T" + x), "R"].join(", ");
         const args = range(1, i + 1).map(x => `a${x}: T${x} `).join(", ");
-        ret += `export type Selector${i + 1}<${T}> = (${args}) => R;\r\n`;
-        ret += `export type SelectorAsync${i + 1}<${T}> = (${args}) => Promise<R>;\r\n`;
-        ret += `export type SelectorRx${i + 1}<${T}> = (${args}) => Observable<R>;\r\n`;
+        ret += `export type Selector${i + 1}<${TSelector}> = (${args}) => R;\r\n`;
+        ret += `export type SelectorAsync${i + 1}<${TSelector}> = (${args}) => Promise<R>;\r\n`;
+        ret += `export type SelectorRx${i + 1}<${TSelector}> = (${args}) => Observable<R>;\r\n`;
+        ret += `export type SelectorRxProm${i + 1}<${TSelector}> = (${args}) => Observable<R> | Promise<R>;\r\n`;
+    }
+    for(let i = 0; i < selectorCount; i++ ) {
+        const TCombiner = [...range(1, i + 1).map(x => "R" + x), "O"].join(", ");
+        const args = range(1, i + 1).map(x => `s${x}: R${x} `).join(", ");
+        ret += `export type Combiner${i + 1}<${TCombiner}> = (${args}) => O;\r\n`;
+        ret += `export type CombinerAsync${i + 1}<${TCombiner}> = (${args}) => Promise<O>;\r\n`;
+        ret += `export type CombinerRxProm${i + 1}<${TCombiner}> = (${args}) => Observable<O> | Promise<O>;\r\n`;
     }
 
     ret += "\r\n";
     ret += "export type SelectorN<T,R> = (...args: T[]) => R;\r\n";
     ret += "export type SelectorAsyncN<T,R> = (...args: T[]) => Promise<R>;\r\n";
-    ret += "export type SelectorRxN<T,R> = (...args: T[]) => Observable<R>;\r\n";
-return ret;
+    ret += "export type SelectorRxN<T,R> = (...args: T[]) => Observable<R> | Promise<R>;\r\n";
+    return ret;
 }
 
 let ret = title("Codigo autogenerado por genselectors.ts");
 const maxSelectorSize = 2;
 ret += title("Types: ");
-ret += types(maxSelectorSize);
+const maxSelectorCount = 5;
+ret += types(maxSelectorSize, maxSelectorCount);
 for (let selectorSize = 1; selectorSize <= maxSelectorSize; selectorSize++) {
     ret += title(`SelectorSize: ${selectorSize}`);
-    for (let selectorCount = 1; selectorCount <= 3; selectorCount++) {
+    for (let selectorCount = 1; selectorCount <= maxSelectorCount; selectorCount++) {
         ret += title(`SelectorCount: ${selectorCount}`);
 
         const digitCount = selectorCount + 1;
-        const combinations = powerCombine(3, digitCount);
+        const combinations = powerCombine(2, digitCount);
 
         for (const power of combinations) {
-            const argsS = power.slice(0, power.length - 1).map((x, i) => inputSelector(x, selectorSize, i + 1));
-            const argsC = combiner(power[power.length - 1], selectorCount);
-            const args = [...argsS, argsC].join(", ");
-
-            ret += functionDef(selectorSize, selectorCount);
-            ret += args;
-            ret += "): " + retType(power, selectorSize) + "\r\n";
+            const powerMap = power.map(x => x== 0 ? x : 2 );
+            ret += completeFuncDef(selectorSize, selectorCount, powerMap);
         }
+        ret += completeFuncDef(selectorSize, selectorCount, [...range(0, selectorCount).map(x => 2), 1]);
     }
 }
 

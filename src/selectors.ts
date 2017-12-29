@@ -13,303 +13,368 @@ export interface createSelectorAsyncCreatorOptions {
 const defaultCreateSelectorAsync = createSelectorCreator({ deepEquals: false });
 
 export const createDeepSelector = createSelectorCreator({ deepEquals: true });
+
+
+        
 //**********************************
 //Codigo autogenerado por genselectors.ts
 //**********************************
 
-
+        
 //**********************************
-//Types:
+//Types: 
 //**********************************
-export type Selector1<T1, R> = (a1: T1) => R;
-export type SelectorAsync1<T1, R> = (a1: T1) => Promise<R>;
-export type SelectorRx1<T1, R> = (a1: T1) => Observable<R> ;
-export type Selector2<T1, T2, R> = (a1: T1, a2: T2) => R;
-export type SelectorAsync2<T1, T2, R> = (a1: T1, a2: T2) => Promise<R>;
-export type SelectorRx2<T1, T2, R> = (a1: T1, a2: T2) => Observable<R>;
+export type Selector1<T1, R> = (a1: T1 ) => R;
+export type SelectorAsync1<T1, R> = (a1: T1 ) => Promise<R>;
+export type SelectorRx1<T1, R> = (a1: T1 ) => Observable<R>;
+export type SelectorRxProm1<T1, R> = (a1: T1 ) => Observable<R> | Promise<R>;
+export type Selector2<T1, T2, R> = (a1: T1 , a2: T2 ) => R;
+export type SelectorAsync2<T1, T2, R> = (a1: T1 , a2: T2 ) => Promise<R>;
+export type SelectorRx2<T1, T2, R> = (a1: T1 , a2: T2 ) => Observable<R>;
+export type SelectorRxProm2<T1, T2, R> = (a1: T1 , a2: T2 ) => Observable<R> | Promise<R>;
+export type Combiner1<R1, O> = (s1: R1 ) => O;
+export type CombinerAsync1<R1, O> = (s1: R1 ) => Promise<O>;
+export type CombinerRxProm1<R1, O> = (s1: R1 ) => Observable<O> | Promise<O>;
+export type Combiner2<R1, R2, O> = (s1: R1 , s2: R2 ) => O;
+export type CombinerAsync2<R1, R2, O> = (s1: R1 , s2: R2 ) => Promise<O>;
+export type CombinerRxProm2<R1, R2, O> = (s1: R1 , s2: R2 ) => Observable<O> | Promise<O>;
+export type Combiner3<R1, R2, R3, O> = (s1: R1 , s2: R2 , s3: R3 ) => O;
+export type CombinerAsync3<R1, R2, R3, O> = (s1: R1 , s2: R2 , s3: R3 ) => Promise<O>;
+export type CombinerRxProm3<R1, R2, R3, O> = (s1: R1 , s2: R2 , s3: R3 ) => Observable<O> | Promise<O>;
+export type Combiner4<R1, R2, R3, R4, O> = (s1: R1 , s2: R2 , s3: R3 , s4: R4 ) => O;
+export type CombinerAsync4<R1, R2, R3, R4, O> = (s1: R1 , s2: R2 , s3: R3 , s4: R4 ) => Promise<O>;
+export type CombinerRxProm4<R1, R2, R3, R4, O> = (s1: R1 , s2: R2 , s3: R3 , s4: R4 ) => Observable<O> | Promise<O>;
+export type Combiner5<R1, R2, R3, R4, R5, O> = (s1: R1 , s2: R2 , s3: R3 , s4: R4 , s5: R5 ) => O;
+export type CombinerAsync5<R1, R2, R3, R4, R5, O> = (s1: R1 , s2: R2 , s3: R3 , s4: R4 , s5: R5 ) => Promise<O>;
+export type CombinerRxProm5<R1, R2, R3, R4, R5, O> = (s1: R1 , s2: R2 , s3: R3 , s4: R4 , s5: R5 ) => Observable<O> | Promise<O>;
 
-export type SelectorN<T, R> = (...args: T[]) => R;
-export type SelectorAsyncN<T, R> = (...args: T[]) => Promise<R>;
-export type SelectorRxN<T, R> = (...args: T[]) => Observable<R>;
+export type SelectorN<T,R> = (...args: T[]) => R;
+export type SelectorAsyncN<T,R> = (...args: T[]) => Promise<R>;
+export type SelectorRxN<T,R> = (...args: T[]) => Observable<R> | Promise<R>;
 
-
+        
 //**********************************
 //SelectorSize: 1
 //**********************************
 
-
+        
 //**********************************
 //SelectorCount: 1
 //**********************************
-export function createSelector<T1, R1, O>(s1: SelectorRx1<T1, R1> , combiner: (s1: R1) => Observable<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, O>(s1: SelectorRx1<T1, R1>, combiner: (s1: R1) => Promise<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, O>(s1: SelectorRx1<T1, R1>, combiner: (s1: R1) => O): SelectorRx1<T1, O>
-export function createSelector<T1, R1, O>(s1: SelectorAsync1<T1, R1>, combiner: (s1: R1) => Observable<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, O>(s1: SelectorAsync1<T1, R1>, combiner: (s1: R1) => Promise<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, O>(s1: SelectorAsync1<T1, R1>, combiner: (s1: R1) => O): SelectorRx1<T1, O>
-export function createSelector<T1, R1, O>(s1: Selector1<T1, R1>, combiner: (s1: R1) => Observable<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, O>(s1: Selector1<T1, R1>, combiner: (s1: R1) => Promise<O>): SelectorAsync1<T1, O>
-export function createSelector<T1, R1, O>(s1: Selector1<T1, R1>, combiner: (s1: R1) => O): Selector1<T1, O>
+export function createSelector<T1, R1, O>(s1: SelectorRxProm1<T1, R1>, combiner: CombinerRxProm1<R1, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, O>(s1: SelectorRxProm1<T1, R1>, combiner: Combiner1<R1, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, O>(s1: Selector1<T1, R1>, combiner: CombinerRxProm1<R1, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, O>(s1: Selector1<T1, R1>, combiner: Combiner1<R1, O>): Selector1<T1, O>
+export function createSelector<T1, R1, O>(s1: Selector1<T1, R1>, combiner: CombinerAsync1<R1, O>): SelectorAsync1<T1, O>
 
-
+        
 //**********************************
 //SelectorCount: 2
 //**********************************
-export function createSelector<T1, R1, R2, O>(s1: SelectorRx1<T1, R1>, s2: SelectorRx1<T1, R2>, combiner: (s1: R1, s2: R2) => Observable<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, O>(s1: SelectorRx1<T1, R1>, s2: SelectorRx1<T1, R2>, combiner: (s1: R1, s2: R2) => Promise<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, O>(s1: SelectorRx1<T1, R1>, s2: SelectorRx1<T1, R2>, combiner: (s1: R1, s2: R2) => O): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, O>(s1: SelectorRx1<T1, R1>, s2: SelectorAsync1<T1, R2>, combiner: (s1: R1, s2: R2) => Observable<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, O>(s1: SelectorRx1<T1, R1>, s2: SelectorAsync1<T1, R2>, combiner: (s1: R1, s2: R2) => Promise<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, O>(s1: SelectorRx1<T1, R1>, s2: SelectorAsync1<T1, R2>, combiner: (s1: R1, s2: R2) => O): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, O>(s1: SelectorRx1<T1, R1>, s2: Selector1<T1, R2>, combiner: (s1: R1, s2: R2) => Observable<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, O>(s1: SelectorRx1<T1, R1>, s2: Selector1<T1, R2>, combiner: (s1: R1, s2: R2) => Promise<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, O>(s1: SelectorRx1<T1, R1>, s2: Selector1<T1, R2>, combiner: (s1: R1, s2: R2) => O): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, O>(s1: SelectorAsync1<T1, R1>, s2: SelectorRx1<T1, R2>, combiner: (s1: R1, s2: R2) => Observable<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, O>(s1: SelectorAsync1<T1, R1>, s2: SelectorRx1<T1, R2>, combiner: (s1: R1, s2: R2) => Promise<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, O>(s1: SelectorAsync1<T1, R1>, s2: SelectorRx1<T1, R2>, combiner: (s1: R1, s2: R2) => O): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, O>(s1: SelectorAsync1<T1, R1>, s2: SelectorAsync1<T1, R2>, combiner: (s1: R1, s2: R2) => Observable<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, O>(s1: SelectorAsync1<T1, R1>, s2: SelectorAsync1<T1, R2>, combiner: (s1: R1, s2: R2) => Promise<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, O>(s1: SelectorAsync1<T1, R1>, s2: SelectorAsync1<T1, R2>, combiner: (s1: R1, s2: R2) => O): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, O>(s1: SelectorAsync1<T1, R1>, s2: Selector1<T1, R2>, combiner: (s1: R1, s2: R2) => Observable<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, O>(s1: SelectorAsync1<T1, R1>, s2: Selector1<T1, R2>, combiner: (s1: R1, s2: R2) => Promise<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, O>(s1: SelectorAsync1<T1, R1>, s2: Selector1<T1, R2>, combiner: (s1: R1, s2: R2) => O): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, O>(s1: Selector1<T1, R1>, s2: SelectorRx1<T1, R2>, combiner: (s1: R1, s2: R2) => Observable<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, O>(s1: Selector1<T1, R1>, s2: SelectorRx1<T1, R2>, combiner: (s1: R1, s2: R2) => Promise<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, O>(s1: Selector1<T1, R1>, s2: SelectorRx1<T1, R2>, combiner: (s1: R1, s2: R2) => O): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, O>(s1: Selector1<T1, R1>, s2: SelectorAsync1<T1, R2>, combiner: (s1: R1, s2: R2) => Observable<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, O>(s1: Selector1<T1, R1>, s2: SelectorAsync1<T1, R2>, combiner: (s1: R1, s2: R2) => Promise<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, O>(s1: Selector1<T1, R1>, s2: SelectorAsync1<T1, R2>, combiner: (s1: R1, s2: R2) => O): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, combiner: (s1: R1, s2: R2) => Observable<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, combiner: (s1: R1, s2: R2) => Promise<O>): SelectorAsync1<T1, O>
-export function createSelector<T1, R1, R2, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, combiner: (s1: R1, s2: R2) => O): Selector1<T1, O>
+export function createSelector<T1, R1, R2, O>(s1: SelectorRxProm1<T1, R1>, s2: SelectorRxProm1<T1, R2>, combiner: CombinerRxProm2<R1, R2, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, O>(s1: SelectorRxProm1<T1, R1>, s2: SelectorRxProm1<T1, R2>, combiner: Combiner2<R1, R2, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, O>(s1: SelectorRxProm1<T1, R1>, s2: Selector1<T1, R2>, combiner: CombinerRxProm2<R1, R2, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, O>(s1: SelectorRxProm1<T1, R1>, s2: Selector1<T1, R2>, combiner: Combiner2<R1, R2, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, combiner: CombinerRxProm2<R1, R2, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, combiner: Combiner2<R1, R2, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, combiner: CombinerRxProm2<R1, R2, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, combiner: Combiner2<R1, R2, O>): Selector1<T1, O>
+export function createSelector<T1, R1, R2, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, combiner: CombinerAsync2<R1, R2, O>): SelectorAsync1<T1, O>
 
-
+        
 //**********************************
 //SelectorCount: 3
 //**********************************
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorRx1<T1, R1>, s2: SelectorRx1<T1, R2>, s3: SelectorRx1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorRx1<T1, R1>, s2: SelectorRx1<T1, R2>, s3: SelectorRx1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorRx1<T1, R1>, s2: SelectorRx1<T1, R2>, s3: SelectorRx1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorRx1<T1, R1>, s2: SelectorRx1<T1, R2>, s3: SelectorAsync1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorRx1<T1, R1>, s2: SelectorRx1<T1, R2>, s3: SelectorAsync1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorRx1<T1, R1>, s2: SelectorRx1<T1, R2>, s3: SelectorAsync1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorRx1<T1, R1>, s2: SelectorRx1<T1, R2>, s3: Selector1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorRx1<T1, R1>, s2: SelectorRx1<T1, R2>, s3: Selector1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorRx1<T1, R1>, s2: SelectorRx1<T1, R2>, s3: Selector1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorRx1<T1, R1>, s2: SelectorAsync1<T1, R2>, s3: SelectorRx1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorRx1<T1, R1>, s2: SelectorAsync1<T1, R2>, s3: SelectorRx1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorRx1<T1, R1>, s2: SelectorAsync1<T1, R2>, s3: SelectorRx1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorRx1<T1, R1>, s2: SelectorAsync1<T1, R2>, s3: SelectorAsync1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorRx1<T1, R1>, s2: SelectorAsync1<T1, R2>, s3: SelectorAsync1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorRx1<T1, R1>, s2: SelectorAsync1<T1, R2>, s3: SelectorAsync1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorRx1<T1, R1>, s2: SelectorAsync1<T1, R2>, s3: Selector1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorRx1<T1, R1>, s2: SelectorAsync1<T1, R2>, s3: Selector1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorRx1<T1, R1>, s2: SelectorAsync1<T1, R2>, s3: Selector1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorRx1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorRx1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorRx1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorRx1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorRx1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorRx1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorRx1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorAsync1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorRx1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorAsync1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorRx1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorAsync1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorRx1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorRx1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorRx1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorAsync1<T1, R1>, s2: SelectorRx1<T1, R2>, s3: SelectorRx1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorAsync1<T1, R1>, s2: SelectorRx1<T1, R2>, s3: SelectorRx1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorAsync1<T1, R1>, s2: SelectorRx1<T1, R2>, s3: SelectorRx1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorAsync1<T1, R1>, s2: SelectorRx1<T1, R2>, s3: SelectorAsync1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorAsync1<T1, R1>, s2: SelectorRx1<T1, R2>, s3: SelectorAsync1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorAsync1<T1, R1>, s2: SelectorRx1<T1, R2>, s3: SelectorAsync1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorAsync1<T1, R1>, s2: SelectorRx1<T1, R2>, s3: Selector1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorAsync1<T1, R1>, s2: SelectorRx1<T1, R2>, s3: Selector1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorAsync1<T1, R1>, s2: SelectorRx1<T1, R2>, s3: Selector1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorAsync1<T1, R1>, s2: SelectorAsync1<T1, R2>, s3: SelectorRx1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorAsync1<T1, R1>, s2: SelectorAsync1<T1, R2>, s3: SelectorRx1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorAsync1<T1, R1>, s2: SelectorAsync1<T1, R2>, s3: SelectorRx1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorAsync1<T1, R1>, s2: SelectorAsync1<T1, R2>, s3: SelectorAsync1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorAsync1<T1, R1>, s2: SelectorAsync1<T1, R2>, s3: SelectorAsync1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorAsync1<T1, R1>, s2: SelectorAsync1<T1, R2>, s3: SelectorAsync1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorAsync1<T1, R1>, s2: SelectorAsync1<T1, R2>, s3: Selector1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorAsync1<T1, R1>, s2: SelectorAsync1<T1, R2>, s3: Selector1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorAsync1<T1, R1>, s2: SelectorAsync1<T1, R2>, s3: Selector1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorAsync1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorRx1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorAsync1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorRx1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorAsync1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorRx1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorAsync1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorAsync1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorAsync1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorAsync1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorAsync1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorAsync1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorAsync1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorAsync1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: SelectorAsync1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: SelectorRx1<T1, R2>, s3: SelectorRx1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: SelectorRx1<T1, R2>, s3: SelectorRx1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: SelectorRx1<T1, R2>, s3: SelectorRx1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: SelectorRx1<T1, R2>, s3: SelectorAsync1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: SelectorRx1<T1, R2>, s3: SelectorAsync1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: SelectorRx1<T1, R2>, s3: SelectorAsync1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: SelectorRx1<T1, R2>, s3: Selector1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: SelectorRx1<T1, R2>, s3: Selector1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: SelectorRx1<T1, R2>, s3: Selector1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: SelectorAsync1<T1, R2>, s3: SelectorRx1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: SelectorAsync1<T1, R2>, s3: SelectorRx1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: SelectorAsync1<T1, R2>, s3: SelectorRx1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: SelectorAsync1<T1, R2>, s3: SelectorAsync1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: SelectorAsync1<T1, R2>, s3: SelectorAsync1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: SelectorAsync1<T1, R2>, s3: SelectorAsync1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: SelectorAsync1<T1, R2>, s3: Selector1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: SelectorAsync1<T1, R2>, s3: Selector1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: SelectorAsync1<T1, R2>, s3: Selector1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorRx1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorRx1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorRx1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorAsync1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorAsync1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorAsync1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorAsync1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): Selector1<T1, O>
+export function createSelector<T1, R1, R2, R3, O>(s1: SelectorRxProm1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: SelectorRxProm1<T1, R3>, combiner: CombinerRxProm3<R1, R2, R3, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, O>(s1: SelectorRxProm1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: SelectorRxProm1<T1, R3>, combiner: Combiner3<R1, R2, R3, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, O>(s1: SelectorRxProm1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: Selector1<T1, R3>, combiner: CombinerRxProm3<R1, R2, R3, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, O>(s1: SelectorRxProm1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: Selector1<T1, R3>, combiner: Combiner3<R1, R2, R3, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, O>(s1: SelectorRxProm1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorRxProm1<T1, R3>, combiner: CombinerRxProm3<R1, R2, R3, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, O>(s1: SelectorRxProm1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorRxProm1<T1, R3>, combiner: Combiner3<R1, R2, R3, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, O>(s1: SelectorRxProm1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, combiner: CombinerRxProm3<R1, R2, R3, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, O>(s1: SelectorRxProm1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, combiner: Combiner3<R1, R2, R3, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: SelectorRxProm1<T1, R3>, combiner: CombinerRxProm3<R1, R2, R3, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: SelectorRxProm1<T1, R3>, combiner: Combiner3<R1, R2, R3, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: Selector1<T1, R3>, combiner: CombinerRxProm3<R1, R2, R3, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: Selector1<T1, R3>, combiner: Combiner3<R1, R2, R3, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorRxProm1<T1, R3>, combiner: CombinerRxProm3<R1, R2, R3, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorRxProm1<T1, R3>, combiner: Combiner3<R1, R2, R3, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, combiner: CombinerRxProm3<R1, R2, R3, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, combiner: Combiner3<R1, R2, R3, O>): Selector1<T1, O>
+export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, combiner: CombinerAsync3<R1, R2, R3, O>): SelectorAsync1<T1, O>
 
+        
+//**********************************
+//SelectorCount: 4
+//**********************************
+export function createSelector<T1, R1, R2, R3, R4, O>(s1: SelectorRxProm1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: SelectorRxProm1<T1, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, O>(s1: SelectorRxProm1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: SelectorRxProm1<T1, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, O>(s1: SelectorRxProm1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: Selector1<T1, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, O>(s1: SelectorRxProm1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: Selector1<T1, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, O>(s1: SelectorRxProm1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: Selector1<T1, R3>, s4: SelectorRxProm1<T1, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, O>(s1: SelectorRxProm1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: Selector1<T1, R3>, s4: SelectorRxProm1<T1, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, O>(s1: SelectorRxProm1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: Selector1<T1, R3>, s4: Selector1<T1, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, O>(s1: SelectorRxProm1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: Selector1<T1, R3>, s4: Selector1<T1, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, O>(s1: SelectorRxProm1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: SelectorRxProm1<T1, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, O>(s1: SelectorRxProm1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: SelectorRxProm1<T1, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, O>(s1: SelectorRxProm1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: Selector1<T1, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, O>(s1: SelectorRxProm1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: Selector1<T1, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, O>(s1: SelectorRxProm1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: SelectorRxProm1<T1, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, O>(s1: SelectorRxProm1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: SelectorRxProm1<T1, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, O>(s1: SelectorRxProm1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: Selector1<T1, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, O>(s1: SelectorRxProm1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: Selector1<T1, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: SelectorRxProm1<T1, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: SelectorRxProm1<T1, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: Selector1<T1, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: Selector1<T1, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: Selector1<T1, R3>, s4: SelectorRxProm1<T1, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: Selector1<T1, R3>, s4: SelectorRxProm1<T1, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: Selector1<T1, R3>, s4: Selector1<T1, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: Selector1<T1, R3>, s4: Selector1<T1, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: SelectorRxProm1<T1, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: SelectorRxProm1<T1, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: Selector1<T1, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: Selector1<T1, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: SelectorRxProm1<T1, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: SelectorRxProm1<T1, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: Selector1<T1, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: Selector1<T1, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): Selector1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: Selector1<T1, R4>, combiner: CombinerAsync4<R1, R2, R3, R4, O>): SelectorAsync1<T1, O>
 
+        
+//**********************************
+//SelectorCount: 5
+//**********************************
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: SelectorRxProm1<T1, R4>, s5: SelectorRxProm1<T1, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: SelectorRxProm1<T1, R4>, s5: SelectorRxProm1<T1, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: SelectorRxProm1<T1, R4>, s5: Selector1<T1, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: SelectorRxProm1<T1, R4>, s5: Selector1<T1, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: Selector1<T1, R4>, s5: SelectorRxProm1<T1, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: Selector1<T1, R4>, s5: SelectorRxProm1<T1, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: Selector1<T1, R4>, s5: Selector1<T1, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: Selector1<T1, R4>, s5: Selector1<T1, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: Selector1<T1, R3>, s4: SelectorRxProm1<T1, R4>, s5: SelectorRxProm1<T1, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: Selector1<T1, R3>, s4: SelectorRxProm1<T1, R4>, s5: SelectorRxProm1<T1, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: Selector1<T1, R3>, s4: SelectorRxProm1<T1, R4>, s5: Selector1<T1, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: Selector1<T1, R3>, s4: SelectorRxProm1<T1, R4>, s5: Selector1<T1, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: Selector1<T1, R3>, s4: Selector1<T1, R4>, s5: SelectorRxProm1<T1, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: Selector1<T1, R3>, s4: Selector1<T1, R4>, s5: SelectorRxProm1<T1, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: Selector1<T1, R3>, s4: Selector1<T1, R4>, s5: Selector1<T1, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: Selector1<T1, R3>, s4: Selector1<T1, R4>, s5: Selector1<T1, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: SelectorRxProm1<T1, R4>, s5: SelectorRxProm1<T1, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: SelectorRxProm1<T1, R4>, s5: SelectorRxProm1<T1, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: SelectorRxProm1<T1, R4>, s5: Selector1<T1, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: SelectorRxProm1<T1, R4>, s5: Selector1<T1, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: Selector1<T1, R4>, s5: SelectorRxProm1<T1, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: Selector1<T1, R4>, s5: SelectorRxProm1<T1, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: Selector1<T1, R4>, s5: Selector1<T1, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: Selector1<T1, R4>, s5: Selector1<T1, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: SelectorRxProm1<T1, R4>, s5: SelectorRxProm1<T1, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: SelectorRxProm1<T1, R4>, s5: SelectorRxProm1<T1, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: SelectorRxProm1<T1, R4>, s5: Selector1<T1, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: SelectorRxProm1<T1, R4>, s5: Selector1<T1, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: Selector1<T1, R4>, s5: SelectorRxProm1<T1, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: Selector1<T1, R4>, s5: SelectorRxProm1<T1, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: Selector1<T1, R4>, s5: Selector1<T1, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: Selector1<T1, R4>, s5: Selector1<T1, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: SelectorRxProm1<T1, R4>, s5: SelectorRxProm1<T1, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: SelectorRxProm1<T1, R4>, s5: SelectorRxProm1<T1, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: SelectorRxProm1<T1, R4>, s5: Selector1<T1, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: SelectorRxProm1<T1, R4>, s5: Selector1<T1, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: Selector1<T1, R4>, s5: SelectorRxProm1<T1, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: Selector1<T1, R4>, s5: SelectorRxProm1<T1, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: Selector1<T1, R4>, s5: Selector1<T1, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: Selector1<T1, R4>, s5: Selector1<T1, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: Selector1<T1, R3>, s4: SelectorRxProm1<T1, R4>, s5: SelectorRxProm1<T1, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: Selector1<T1, R3>, s4: SelectorRxProm1<T1, R4>, s5: SelectorRxProm1<T1, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: Selector1<T1, R3>, s4: SelectorRxProm1<T1, R4>, s5: Selector1<T1, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: Selector1<T1, R3>, s4: SelectorRxProm1<T1, R4>, s5: Selector1<T1, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: Selector1<T1, R3>, s4: Selector1<T1, R4>, s5: SelectorRxProm1<T1, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: Selector1<T1, R3>, s4: Selector1<T1, R4>, s5: SelectorRxProm1<T1, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: Selector1<T1, R3>, s4: Selector1<T1, R4>, s5: Selector1<T1, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: Selector1<T1, R3>, s4: Selector1<T1, R4>, s5: Selector1<T1, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: SelectorRxProm1<T1, R4>, s5: SelectorRxProm1<T1, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: SelectorRxProm1<T1, R4>, s5: SelectorRxProm1<T1, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: SelectorRxProm1<T1, R4>, s5: Selector1<T1, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: SelectorRxProm1<T1, R4>, s5: Selector1<T1, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: Selector1<T1, R4>, s5: SelectorRxProm1<T1, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: Selector1<T1, R4>, s5: SelectorRxProm1<T1, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: Selector1<T1, R4>, s5: Selector1<T1, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: Selector1<T1, R4>, s5: Selector1<T1, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: SelectorRxProm1<T1, R4>, s5: SelectorRxProm1<T1, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: SelectorRxProm1<T1, R4>, s5: SelectorRxProm1<T1, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: SelectorRxProm1<T1, R4>, s5: Selector1<T1, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: SelectorRxProm1<T1, R4>, s5: Selector1<T1, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: Selector1<T1, R4>, s5: SelectorRxProm1<T1, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: Selector1<T1, R4>, s5: SelectorRxProm1<T1, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: Selector1<T1, R4>, s5: Selector1<T1, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: Selector1<T1, R4>, s5: Selector1<T1, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): Selector1<T1, O>
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: Selector1<T1, R4>, s5: Selector1<T1, R5>, combiner: CombinerAsync5<R1, R2, R3, R4, R5, O>): SelectorAsync1<T1, O>
+
+        
 //**********************************
 //SelectorSize: 2
 //**********************************
 
-
+        
 //**********************************
 //SelectorCount: 1
 //**********************************
-export function createSelector<T1, T2, R1, O>(s1: SelectorRx2<T1, T2, R1>, combiner: (s1: R1) => Observable<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, O>(s1: SelectorRx2<T1, T2, R1>, combiner: (s1: R1) => Promise<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, O>(s1: SelectorRx2<T1, T2, R1>, combiner: (s1: R1) => O): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, O>(s1: SelectorAsync2<T1, T2, R1>, combiner: (s1: R1) => Observable<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, O>(s1: SelectorAsync2<T1, T2, R1>, combiner: (s1: R1) => Promise<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, O>(s1: SelectorAsync2<T1, T2, R1>, combiner: (s1: R1) => O): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, O>(s1: Selector2<T1, T2, R1>, combiner: (s1: R1) => Observable<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, O>(s1: Selector2<T1, T2, R1>, combiner: (s1: R1) => Promise<O>): SelectorAsync2<T1, T2, O>
-export function createSelector<T1, T2, R1, O>(s1: Selector2<T1, T2, R1>, combiner: (s1: R1) => O): Selector2<T1, T2, O>
+export function createSelector<T1, T2, R1, O>(s1: SelectorRxProm2<T1, T2, R1>, combiner: CombinerRxProm1<R1, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, O>(s1: SelectorRxProm2<T1, T2, R1>, combiner: Combiner1<R1, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, O>(s1: Selector2<T1, T2, R1>, combiner: CombinerRxProm1<R1, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, O>(s1: Selector2<T1, T2, R1>, combiner: Combiner1<R1, O>): Selector2<T1, T2, O>
+export function createSelector<T1, T2, R1, O>(s1: Selector2<T1, T2, R1>, combiner: CombinerAsync1<R1, O>): SelectorAsync2<T1, T2, O>
 
-
+        
 //**********************************
 //SelectorCount: 2
 //**********************************
-export function createSelector<T1, T2, R1, R2, O>(s1: SelectorRx2<T1, T2, R1>, s2: SelectorRx2<T1, T2, R2>, combiner: (s1: R1, s2: R2) => Observable<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, O>(s1: SelectorRx2<T1, T2, R1>, s2: SelectorRx2<T1, T2, R2>, combiner: (s1: R1, s2: R2) => Promise<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, O>(s1: SelectorRx2<T1, T2, R1>, s2: SelectorRx2<T1, T2, R2>, combiner: (s1: R1, s2: R2) => O): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, O>(s1: SelectorRx2<T1, T2, R1>, s2: SelectorAsync2<T1, T2, R2>, combiner: (s1: R1, s2: R2) => Observable<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, O>(s1: SelectorRx2<T1, T2, R1>, s2: SelectorAsync2<T1, T2, R2>, combiner: (s1: R1, s2: R2) => Promise<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, O>(s1: SelectorRx2<T1, T2, R1>, s2: SelectorAsync2<T1, T2, R2>, combiner: (s1: R1, s2: R2) => O): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, O>(s1: SelectorRx2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, combiner: (s1: R1, s2: R2) => Observable<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, O>(s1: SelectorRx2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, combiner: (s1: R1, s2: R2) => Promise<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, O>(s1: SelectorRx2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, combiner: (s1: R1, s2: R2) => O): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, O>(s1: SelectorAsync2<T1, T2, R1>, s2: SelectorRx2<T1, T2, R2>, combiner: (s1: R1, s2: R2) => Observable<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, O>(s1: SelectorAsync2<T1, T2, R1>, s2: SelectorRx2<T1, T2, R2>, combiner: (s1: R1, s2: R2) => Promise<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, O>(s1: SelectorAsync2<T1, T2, R1>, s2: SelectorRx2<T1, T2, R2>, combiner: (s1: R1, s2: R2) => O): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, O>(s1: SelectorAsync2<T1, T2, R1>, s2: SelectorAsync2<T1, T2, R2>, combiner: (s1: R1, s2: R2) => Observable<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, O>(s1: SelectorAsync2<T1, T2, R1>, s2: SelectorAsync2<T1, T2, R2>, combiner: (s1: R1, s2: R2) => Promise<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, O>(s1: SelectorAsync2<T1, T2, R1>, s2: SelectorAsync2<T1, T2, R2>, combiner: (s1: R1, s2: R2) => O): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, O>(s1: SelectorAsync2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, combiner: (s1: R1, s2: R2) => Observable<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, O>(s1: SelectorAsync2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, combiner: (s1: R1, s2: R2) => Promise<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, O>(s1: SelectorAsync2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, combiner: (s1: R1, s2: R2) => O): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRx2<T1, T2, R2>, combiner: (s1: R1, s2: R2) => Observable<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRx2<T1, T2, R2>, combiner: (s1: R1, s2: R2) => Promise<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRx2<T1, T2, R2>, combiner: (s1: R1, s2: R2) => O): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, O>(s1: Selector2<T1, T2, R1>, s2: SelectorAsync2<T1, T2, R2>, combiner: (s1: R1, s2: R2) => Observable<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, O>(s1: Selector2<T1, T2, R1>, s2: SelectorAsync2<T1, T2, R2>, combiner: (s1: R1, s2: R2) => Promise<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, O>(s1: Selector2<T1, T2, R1>, s2: SelectorAsync2<T1, T2, R2>, combiner: (s1: R1, s2: R2) => O): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, combiner: (s1: R1, s2: R2) => Observable<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, combiner: (s1: R1, s2: R2) => Promise<O>): SelectorAsync2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, combiner: (s1: R1, s2: R2) => O): Selector2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, combiner: CombinerRxProm2<R1, R2, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, combiner: Combiner2<R1, R2, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, combiner: CombinerRxProm2<R1, R2, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, combiner: Combiner2<R1, R2, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, combiner: CombinerRxProm2<R1, R2, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, combiner: Combiner2<R1, R2, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, combiner: CombinerRxProm2<R1, R2, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, combiner: Combiner2<R1, R2, O>): Selector2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, combiner: CombinerAsync2<R1, R2, O>): SelectorAsync2<T1, T2, O>
 
-
+        
 //**********************************
 //SelectorCount: 3
 //**********************************
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorRx2<T1, T2, R1>, s2: SelectorRx2<T1, T2, R2>, s3: SelectorRx2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorRx2<T1, T2, R1>, s2: SelectorRx2<T1, T2, R2>, s3: SelectorRx2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorRx2<T1, T2, R1>, s2: SelectorRx2<T1, T2, R2>, s3: SelectorRx2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorRx2<T1, T2, R1>, s2: SelectorRx2<T1, T2, R2>, s3: SelectorAsync2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorRx2<T1, T2, R1>, s2: SelectorRx2<T1, T2, R2>, s3: SelectorAsync2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorRx2<T1, T2, R1>, s2: SelectorRx2<T1, T2, R2>, s3: SelectorAsync2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorRx2<T1, T2, R1>, s2: SelectorRx2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorRx2<T1, T2, R1>, s2: SelectorRx2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorRx2<T1, T2, R1>, s2: SelectorRx2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorRx2<T1, T2, R1>, s2: SelectorAsync2<T1, T2, R2>, s3: SelectorRx2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorRx2<T1, T2, R1>, s2: SelectorAsync2<T1, T2, R2>, s3: SelectorRx2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorRx2<T1, T2, R1>, s2: SelectorAsync2<T1, T2, R2>, s3: SelectorRx2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorRx2<T1, T2, R1>, s2: SelectorAsync2<T1, T2, R2>, s3: SelectorAsync2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorRx2<T1, T2, R1>, s2: SelectorAsync2<T1, T2, R2>, s3: SelectorAsync2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorRx2<T1, T2, R1>, s2: SelectorAsync2<T1, T2, R2>, s3: SelectorAsync2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorRx2<T1, T2, R1>, s2: SelectorAsync2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorRx2<T1, T2, R1>, s2: SelectorAsync2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorRx2<T1, T2, R1>, s2: SelectorAsync2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorRx2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorRx2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorRx2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorRx2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorRx2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorRx2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorRx2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorAsync2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorRx2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorAsync2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorRx2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorAsync2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorRx2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorRx2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorRx2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorAsync2<T1, T2, R1>, s2: SelectorRx2<T1, T2, R2>, s3: SelectorRx2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorAsync2<T1, T2, R1>, s2: SelectorRx2<T1, T2, R2>, s3: SelectorRx2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorAsync2<T1, T2, R1>, s2: SelectorRx2<T1, T2, R2>, s3: SelectorRx2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorAsync2<T1, T2, R1>, s2: SelectorRx2<T1, T2, R2>, s3: SelectorAsync2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorAsync2<T1, T2, R1>, s2: SelectorRx2<T1, T2, R2>, s3: SelectorAsync2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorAsync2<T1, T2, R1>, s2: SelectorRx2<T1, T2, R2>, s3: SelectorAsync2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorAsync2<T1, T2, R1>, s2: SelectorRx2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorAsync2<T1, T2, R1>, s2: SelectorRx2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorAsync2<T1, T2, R1>, s2: SelectorRx2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorAsync2<T1, T2, R1>, s2: SelectorAsync2<T1, T2, R2>, s3: SelectorRx2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorAsync2<T1, T2, R1>, s2: SelectorAsync2<T1, T2, R2>, s3: SelectorRx2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorAsync2<T1, T2, R1>, s2: SelectorAsync2<T1, T2, R2>, s3: SelectorRx2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorAsync2<T1, T2, R1>, s2: SelectorAsync2<T1, T2, R2>, s3: SelectorAsync2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorAsync2<T1, T2, R1>, s2: SelectorAsync2<T1, T2, R2>, s3: SelectorAsync2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorAsync2<T1, T2, R1>, s2: SelectorAsync2<T1, T2, R2>, s3: SelectorAsync2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorAsync2<T1, T2, R1>, s2: SelectorAsync2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorAsync2<T1, T2, R1>, s2: SelectorAsync2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorAsync2<T1, T2, R1>, s2: SelectorAsync2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorAsync2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorRx2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorAsync2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorRx2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorAsync2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorRx2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorAsync2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorAsync2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorAsync2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorAsync2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorAsync2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorAsync2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorAsync2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorAsync2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorAsync2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRx2<T1, T2, R2>, s3: SelectorRx2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRx2<T1, T2, R2>, s3: SelectorRx2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRx2<T1, T2, R2>, s3: SelectorRx2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRx2<T1, T2, R2>, s3: SelectorAsync2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRx2<T1, T2, R2>, s3: SelectorAsync2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRx2<T1, T2, R2>, s3: SelectorAsync2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRx2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRx2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRx2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: SelectorAsync2<T1, T2, R2>, s3: SelectorRx2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: SelectorAsync2<T1, T2, R2>, s3: SelectorRx2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: SelectorAsync2<T1, T2, R2>, s3: SelectorRx2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: SelectorAsync2<T1, T2, R2>, s3: SelectorAsync2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: SelectorAsync2<T1, T2, R2>, s3: SelectorAsync2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: SelectorAsync2<T1, T2, R2>, s3: SelectorAsync2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: SelectorAsync2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: SelectorAsync2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: SelectorAsync2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorRx2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorRx2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorRx2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorAsync2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorAsync2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorAsync2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Observable<O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => Promise<O>): SelectorAsync2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: (s1: R1, s2: R2, s3: R3) => O): Selector2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, combiner: CombinerRxProm3<R1, R2, R3, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, combiner: Combiner3<R1, R2, R3, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: CombinerRxProm3<R1, R2, R3, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: Combiner3<R1, R2, R3, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, combiner: CombinerRxProm3<R1, R2, R3, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, combiner: Combiner3<R1, R2, R3, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: CombinerRxProm3<R1, R2, R3, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: Combiner3<R1, R2, R3, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, combiner: CombinerRxProm3<R1, R2, R3, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, combiner: Combiner3<R1, R2, R3, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: CombinerRxProm3<R1, R2, R3, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: Combiner3<R1, R2, R3, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, combiner: CombinerRxProm3<R1, R2, R3, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, combiner: Combiner3<R1, R2, R3, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: CombinerRxProm3<R1, R2, R3, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: Combiner3<R1, R2, R3, O>): Selector2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: CombinerAsync3<R1, R2, R3, O>): SelectorAsync2<T1, T2, O>
 
+        
+//**********************************
+//SelectorCount: 4
+//**********************************
+export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): Selector2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, combiner: CombinerAsync4<R1, R2, R3, R4, O>): SelectorAsync2<T1, T2, O>
 
+        
+//**********************************
+//SelectorCount: 5
+//**********************************
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, s5: SelectorRxProm2<T1, T2, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, s5: SelectorRxProm2<T1, T2, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: SelectorRxProm2<T1, T2, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: SelectorRxProm2<T1, T2, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, s5: SelectorRxProm2<T1, T2, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, s5: SelectorRxProm2<T1, T2, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: SelectorRxProm2<T1, T2, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: SelectorRxProm2<T1, T2, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, s5: SelectorRxProm2<T1, T2, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, s5: SelectorRxProm2<T1, T2, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: SelectorRxProm2<T1, T2, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: SelectorRxProm2<T1, T2, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, s5: SelectorRxProm2<T1, T2, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, s5: SelectorRxProm2<T1, T2, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: SelectorRxProm2<T1, T2, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: SelectorRxProm2<T1, T2, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, s5: SelectorRxProm2<T1, T2, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, s5: SelectorRxProm2<T1, T2, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: SelectorRxProm2<T1, T2, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: SelectorRxProm2<T1, T2, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, s5: SelectorRxProm2<T1, T2, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, s5: SelectorRxProm2<T1, T2, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: SelectorRxProm2<T1, T2, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: SelectorRxProm2<T1, T2, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, s5: SelectorRxProm2<T1, T2, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, s5: SelectorRxProm2<T1, T2, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: SelectorRxProm2<T1, T2, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: SelectorRxProm2<T1, T2, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, s5: SelectorRxProm2<T1, T2, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, s5: SelectorRxProm2<T1, T2, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: SelectorRxProm2<T1, T2, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: SelectorRxProm2<T1, T2, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): Selector2<T1, T2, O>
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: CombinerAsync5<R1, R2, R3, R4, R5, O>): SelectorAsync2<T1, T2, O>
+
+        
 //**********************************
 //Termina codigo autogenerado por genselectors.ts
 //**********************************
+
 
 export function createSelector<T, R, O>(...args: (SelectorRxN<T, R> | ((...s: R[]) => O))[]) {
     const func = defaultCreateSelectorAsync as any;

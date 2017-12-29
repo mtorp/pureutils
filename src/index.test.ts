@@ -999,7 +999,7 @@ test("async create selector simple test", async () => {
 
     const dup = createSelector(value, x => x * 2);
     const sum = createSelector(incrementAsync, dup, (a, b) => a + b);
-
+    
     const func = (x: number) => (x + 1) + (x * 2);
     //(value + 1) + (value * 2)
     expect(await sum({ value: 2 }).toPromise()).toBe(func(2));
@@ -1358,6 +1358,8 @@ test("selecotr con observable y nulo", async () => {
         const ret2 = toObservable(ret);
         return ret2;
     });
+
+    createSelector(idClienteDireccion, clienteDireccion, (a,b) => b)
 
     const clienteFromValue = createSelector(clienteDireccion, x => x && x.Cliente);
 });
