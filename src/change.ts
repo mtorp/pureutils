@@ -17,6 +17,12 @@ export interface OnChangeFunction<T> {
     (next: OnChangeArgument<T>): Promise<void>;
 }
 
+
+/**Una función onChange la cual toma el siguiente valor tal cual */
+export interface OnChangeFunctionStatic<T> {
+    (next: T): Promise<void> | void;
+}
+
 /**Convierte un argumento de un onChange a una función de onChange */
 export function toChangeArgumentFunction<T>(arg: OnChangeArgument<T>): OnChangeArgumentFunction<T> {
     if (typeof (arg) == "function") {
@@ -30,7 +36,7 @@ export function toChangeArgumentFunction<T>(arg: OnChangeArgument<T>): OnChangeA
  * @param onChangeThunk Función que devuelve la función onChange del objeto completo
  * @param key Propiedad que se desea editar con el onChange devuelto
  */
-export function composeChangeFunction<T extends {}, TKey extends keyof T>(onChangeThunk: () => OnChangeFunction<T> | undefined, key: TKey): OnChangeFunction<T[TKey]> {
+export function composeChangeFunction<T extends {}, TKey extends keyof T>(onChangeThunk: () =>( OnChangeFunction<T> | undefined), key: TKey): OnChangeFunction<T[TKey]> {
     type TOut = T[TKey];
     return async (x: OnChangeArgument<TOut>) => {
         const onChange = onChangeThunk();
@@ -60,7 +66,7 @@ export function onChangeFromSetState<TState, TKey extends keyof TState>(setState
  * @param onChangeThunk Función que obtiene la función de onChange la cual solo acepta el siguiente valor
  * @param valueThunk Obtiene el valor actual
  */
-export function onChangeFunctionFromStaticOnChange<T>( onChangeThunk: () => (next: T) => void | Promise<void>, valueThunk: () => T  ) : OnChangeFunction<T> {
+export function onChangeFunctionFromStaticOnChange<T>( onChangeThunk: () =>OnChangeFunction<T>, valueThunk: () => T  ) : OnChangeFunction<T> {
     return async (x: OnChangeArgument<T>) => {
         const onChange = onChangeThunk();
         if (onChange == null) return;
