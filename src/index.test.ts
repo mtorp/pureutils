@@ -4,7 +4,7 @@ import {
     unique, filterIf, mapKeys, intersect, omitUndefined, single, awaitObj, shallowDiff, range, sort, defaultComparer, orderBy, orderByDesc,
     truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd, toObservable, isArray, isArrayLike, isPromise, isObservable,
     search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx, mapMany, runningTotal, mapPrevious, formatNumber, formatDate, formatDateExcel,
-    cloneFunction, bindFunction, unbindFunction, createSelector, delay, createDeepSelector, uuid, allEqual
+    cloneFunction, bindFunction, unbindFunction, createSelector, delay, createDeepSelector, uuid, allEqual, pick
 } from "./index";
 
 import * as rx from "rxjs";
@@ -999,7 +999,7 @@ test("async create selector simple test", async () => {
 
     const dup = createSelector(value, x => x * 2);
     const sum = createSelector(incrementAsync, dup, (a, b) => a + b);
-    
+
     const func = (x: number) => (x + 1) + (x * 2);
     //(value + 1) + (value * 2)
     expect(await sum({ value: 2 }).toPromise()).toBe(func(2));
@@ -1359,7 +1359,7 @@ test("selecotr con observable y nulo", async () => {
         return ret2;
     });
 
-    createSelector(idClienteDireccion, clienteDireccion, (a,b) => b)
+    createSelector(idClienteDireccion, clienteDireccion, (a, b) => b)
 
     const clienteFromValue = createSelector(clienteDireccion, x => x && x.Cliente);
 });
@@ -1367,16 +1367,28 @@ test("selecotr con observable y nulo", async () => {
 test("uuid random", () => {
     const arr = range(0, 100).map(x => uuid());
     const uni = unique(arr);
-    
+
     expect(uni.length).toBe(arr.length);
 });
 
 test("all equal", () => {
-    const arr = [1,1,1];
+    const arr = [1, 1, 1];
     expect(allEqual(arr)).toBe(true);
 
     expect(allEqual([])).toBe(true);
     expect(allEqual([1])).toBe(true);
-    expect(allEqual([1,1,1,2])).toBe(false);
-    expect(allEqual([2,1,1,1])).toBe(false);
+    expect(allEqual([1, 1, 1, 2])).toBe(false);
+    expect(allEqual([2, 1, 1, 1])).toBe(false);
+});
+
+test("pick", () => {
+    const test = { a: 1, b: 2, c: 3, d: 4 };
+    const ret = pick(test, "a", "b");
+
+    expect(pick(test, "a")).toEqual({ a: 1 });
+    expect(pick(test, "b")).toEqual({ b: 2 });
+    expect(pick(test, "a", "b")).toEqual({ a: 1, b: 2 });
+
+    expect(pick(test as any, "a", "b", "x")).toEqual({ a: 1, b: 2 });
+
 });

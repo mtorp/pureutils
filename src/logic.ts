@@ -5,7 +5,7 @@ import * as _uuidRandom from "uuid-random";
 import { interopRequireDefault } from "./interop";
 const uuidRandom = interopRequireDefault(_uuidRandom) as any;
 /**Devuelve un nuevo UUID */
-export function uuid() : string {
+export function uuid(): string {
     return uuidRandom();
 }
 
@@ -21,13 +21,13 @@ export function all<T>(arr: T[], pred: (x: T) => boolean): boolean {
 /**Devuelve true si todos los elementos de un arreglo son iguales. Si el arreglo esta vacío devuelve true
  * @param comparer El comparador de igualdar, por default es @see referenceEquals
  */
-export function allEqual<T>(arr: T[], comparer?: (a:T , b:T) => boolean): boolean {
-    if(arr.length == 0) return true;
+export function allEqual<T>(arr: T[], comparer?: (a: T, b: T) => boolean): boolean {
+    if (arr.length == 0) return true;
     const effectiveComparer = comparer || referenceEquals;
     const first = arr[0];
-    for(let i = 1; i < arr.length; i++) {
+    for (let i = 1; i < arr.length; i++) {
         const it = arr[i];
-        if(!effectiveComparer(first, it))
+        if (!effectiveComparer(first, it))
             return false;
     }
     return true;
@@ -373,6 +373,16 @@ export function omitUndefined<T>(obj: T): Partial<T> {
     return filterObject(obj, value => value !== undefined);
 }
 
+/**Devuelve un objeto son solo ciertas propiedades del objeto incluidas. Si se escoge una propiedad que no existe en el objeto esta no estará incluida en el objeto devuelto */
+export function pick<T extends {}, Keys extends keyof T>(obj: T, ...props: Keys[]): {[K in Keys]: T[K]} {
+    let ret: Partial<T> = {};
+    for (const key of props) {
+        if (key in obj) {
+            ret[key] = obj[key];
+        }
+    }
+    return ret as any;
+}
 
 /**Intercambia 2 elementos de un arreglo, si los indices dados estan afuera del arreglo, lanza una excepción */
 export function swapItems<T>(array: T[], a: number, b: number) {
