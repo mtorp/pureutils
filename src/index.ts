@@ -6,3 +6,5 @@ export { removeDiacritics } from "./diacritics";
 export { interopRequireDefault } from "./interop";
 export * from "./logic";
 export { createSelector, createDeepSelector } from "./selectors";
+import  * as change  from "./change";
+export { change }
