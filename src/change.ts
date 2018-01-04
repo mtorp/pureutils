@@ -66,7 +66,7 @@ export function onChangeFromSetState<TState, TKey extends keyof TState>(setState
  * @param onChangeThunk Función que obtiene la función de onChange la cual solo acepta el siguiente valor
  * @param valueThunk Obtiene el valor actual
  */
-export function onChangeFunctionFromStaticOnChange<T>( onChangeThunk: () =>OnChangeFunction<T>, valueThunk: () => T  ) : OnChangeFunction<T> {
+export function onChangeFunctionFromStaticOnChange<T>( onChangeThunk: () =>OnChangeFunctionStatic<T>, valueThunk: () => T  ) : OnChangeFunction<T> {
     return async (x: OnChangeArgument<T>) => {
         const onChange = onChangeThunk();
         if (onChange == null) return;
