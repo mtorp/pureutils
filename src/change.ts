@@ -23,6 +23,11 @@ export interface OnChangeFunctionStatic<T> {
     (next: T): Promise<void> | void;
 }
 
+/**Una función onChange la cual toma una función que toma el ultimo valor y devuelve el siguiente valor */
+export interface OnChangeFunctionFunc<T> { 
+    (next: OnChangeArgumentFunction<T>): Promise<void>;
+}
+
 /**Convierte un argumento de un onChange a una función de onChange */
 export function toChangeArgumentFunction<T>(arg: OnChangeArgument<T>): OnChangeArgumentFunction<T> {
     if (typeof (arg) == "function") {
@@ -66,15 +71,22 @@ export function onChangeFromSetState<TState, TKey extends keyof TState>(setState
  * @param onChangeThunk Función que obtiene la función de onChange la cual solo acepta el siguiente valor
  * @param valueThunk Obtiene el valor actual
  */
-export function onChangeFunctionFromStaticOnChange<T>( onChangeThunk: () =>OnChangeFunctionStatic<T>, valueThunk: () => T  ) : OnChangeFunction<T> {
+export function fromStatic<T>(valueThunk: () => T, onChange: OnChangeFunctionStatic<T>,   ) : OnChangeFunction<T> {
     return async (x: OnChangeArgument<T>) => {
-        const onChange = onChangeThunk();
-        if (onChange == null) return;
-        
         const onChangeNext = toChangeArgumentFunction(x);
         const prevValue = valueThunk();
         const nextValue = onChangeNext(prevValue);
 
         await onChange(nextValue);
+    }
+}
+
+/**Crea una función de onChange a partir de otra que toma solamente la funcion de cambio
+ * @param onChangeFunc Función onChange que toma la función de cambio
+ */
+export function fromFunc<T>(onChangeFunc: OnChangeFunctionFunc<T> ) : OnChangeFunction<T> {
+    return async (x: OnChangeArgument<T>) => {
+        const onChangeNext = toChangeArgumentFunction(x);
+        await onChangeFunc(onChangeNext);
     }
 }

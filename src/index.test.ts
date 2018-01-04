@@ -1411,7 +1411,7 @@ test("change onChangeFunctionFromStaticOnChange", () => {
     let value: MyType = origValue;
     const onChangeSimple = (next: MyType) => { value = next; };
 
-    const onChangeFunc = change.onChangeFunctionFromStaticOnChange(() => onChangeSimple, () => value);
+    const onChangeFunc = change.fromStatic(() => value,  onChangeSimple);
 
     expect(value).toEqual(origValue);
 
@@ -1432,7 +1432,7 @@ test("change composeChangeFunction", () => {
     const origValue = { a: 10, b: "hola" };
     let value: MyType = origValue;
     const onChangeSimple = (next: MyType) => { value = next; };
-    const onChangeFunc = change.onChangeFunctionFromStaticOnChange(() => onChangeSimple, () => value);
+    const onChangeFunc = change.fromStatic(() => value, onChangeSimple);
 
     const onChangeB = change.composeChangeFunction(() => onChangeFunc, "b");
 
@@ -1448,13 +1448,13 @@ test("change composeChangeFunction", () => {
     expect(value).toEqual({ a: 10, b: "rafa!!!" });
 });
 
-test("change onChangeFromSetState",  async () => {
+test("change onChangeFromSetState", async () => {
     interface State {
         value: number;
         otro: string;
     };
-    let state = { value: 2, otro: "rafa"};
-    const setState :change.SetStateFunction<State> = (f: (prev: State) => State, callback: () => any) : void => {
+    let state = { value: 2, otro: "rafa" };
+    const setState: change.SetStateFunction<State> = (f: (prev: State) => State, callback: () => any): void => {
         delay(30).then(() => {
             state = f(state);
             callback();
@@ -1463,14 +1463,49 @@ test("change onChangeFromSetState",  async () => {
 
     const onChange = change.onChangeFromSetState(setState, "value");
 
-    expect(state).toEqual({value: 2, otro: "rafa"});
+    expect(state).toEqual({ value: 2, otro: "rafa" });
     await onChange(3);
-    expect(state).toEqual({value: 3, otro: "rafa"});
+    expect(state).toEqual({ value: 3, otro: "rafa" });
 
     await onChange(x => x + 1);
     await onChange(x => x + 1);
     await onChange(x => x + 1);
 
-    expect(state).toEqual({value: 6, otro: "rafa"});
+    expect(state).toEqual({ value: 6, otro: "rafa" });
+
+});
+
+test("change onChangeFunctionFromFuncOnChange", async () => {
+    interface MyType {
+        a: number;
+        b: string
+    }
+    const origValue = { a: 10, b: "hola" };
+    let value: MyType = origValue;
+    const onChange = change.fromStatic( () => value,  x => { value = x; });
+
+    const handleOnChangeA1 = change.fromFunc(async (next: change.OnChangeArgumentFunction<number>) => {
+        await onChange(oldValue => ({ ...oldValue, a: next(oldValue.a) }))
+    });
+
+    const handleOnChangeA2 = change.fromStatic(() => value.a, async (next: number) => {
+        await onChange(oldValue => ({... oldValue, a: next}));
+    });
+
+    await handleOnChangeA1(2);
+    expect(value).toEqual({a: 2, b: "hola"});
+
+    await handleOnChangeA1(x => x + 1);
+    await handleOnChangeA1(x => x + 1);
+    expect(value).toEqual({a: 4, b: "hola"});
+    
+
+    await handleOnChangeA2(6);
+    expect(value).toEqual({a: 6, b: "hola"});
+    
+    await handleOnChangeA2(x => x * 2);
+    await handleOnChangeA2(x => x * 2);
+
+    expect(value).toEqual({a: 24, b: "hola"});
     
 });
