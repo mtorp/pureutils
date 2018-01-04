@@ -4,7 +4,7 @@ import {
     unique, filterIf, mapKeys, intersect, omitUndefined, single, awaitObj, shallowDiff, range, sort, defaultComparer, orderBy, orderByDesc,
     truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd, toObservable, isArray, isArrayLike, isPromise, isObservable,
     search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx, mapMany, runningTotal, mapPrevious, formatNumber, formatDate, formatDateExcel,
-    cloneFunction, bindFunction, unbindFunction, createSelector, delay, createDeepSelector, uuid, allEqual, pick
+    cloneFunction, bindFunction, unbindFunction, createSelector, delay, createDeepSelector, uuid, allEqual, pick, change
 } from "./index";
 
 import * as rx from "rxjs";
@@ -1391,4 +1391,86 @@ test("pick", () => {
 
     expect(pick(test as any, "a", "b", "x")).toEqual({ a: 1, b: 2 });
 
+});
+
+test("change toChangeArgumentFunction", () => {
+    const funcA = change.toChangeArgumentFunction(3);
+    const funcB = change.toChangeArgumentFunction((old: number) => old + 1);
+
+    expect(funcA(10)).toBe(3);
+    expect(funcB(3)).toBe(4);
+});
+
+test("change onChangeFunctionFromStaticOnChange", () => {
+    interface MyType {
+        a: number;
+        b: string
+    }
+
+    const origValue = { a: 10, b: "hola" };
+    let value: MyType = origValue;
+    const onChangeSimple = (next: MyType) => { value = next; };
+
+    const onChangeFunc = change.onChangeFunctionFromStaticOnChange(() => onChangeSimple, () => value);
+
+    expect(value).toEqual(origValue);
+
+    onChangeFunc({ a: 20, b: "rafa" });
+    expect(value).toEqual({ a: 20, b: "rafa" });
+
+    value = origValue;
+    onChangeFunc(old => ({ ...old, b: "hey" }));
+    expect(value).toEqual({ a: 10, b: "hey" });
+});
+
+test("change composeChangeFunction", () => {
+    interface MyType {
+        a: number;
+        b: string
+    }
+
+    const origValue = { a: 10, b: "hola" };
+    let value: MyType = origValue;
+    const onChangeSimple = (next: MyType) => { value = next; };
+    const onChangeFunc = change.onChangeFunctionFromStaticOnChange(() => onChangeSimple, () => value);
+
+    const onChangeB = change.composeChangeFunction(() => onChangeFunc, "b");
+
+    expect(value).toEqual(origValue);
+    onChangeB("rafa");
+
+    expect(value).toEqual({ a: 10, b: "rafa" });
+
+    onChangeB(x => x + "!");
+    onChangeB(x => x + "!");
+    onChangeB(x => x + "!");
+
+    expect(value).toEqual({ a: 10, b: "rafa!!!" });
+});
+
+test("change onChangeFromSetState",  async () => {
+    interface State {
+        value: number;
+        otro: string;
+    };
+    let state = { value: 2, otro: "rafa"};
+    const setState :change.SetStateFunction<State> = (f: (prev: State) => State, callback: () => any) : void => {
+        delay(30).then(() => {
+            state = f(state);
+            callback();
+        });
+    };
+
+    const onChange = change.onChangeFromSetState(setState, "value");
+
+    expect(state).toEqual({value: 2, otro: "rafa"});
+    await onChange(3);
+    expect(state).toEqual({value: 3, otro: "rafa"});
+
+    await onChange(x => x + 1);
+    await onChange(x => x + 1);
+    await onChange(x => x + 1);
+
+    expect(state).toEqual({value: 6, otro: "rafa"});
+    
 });
