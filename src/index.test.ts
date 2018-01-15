@@ -4,7 +4,7 @@ import {
     unique, filterIf, mapKeys, intersect, omitUndefined, single, awaitObj, shallowDiff, range, sort, defaultComparer, orderBy, orderByDesc,
     truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd, toObservable, isArray, isArrayLike, isPromise, isObservable,
     search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx, mapMany, runningTotal, mapPrevious, formatNumber, formatDate, formatDateExcel,
-    cloneFunction, bindFunction, unbindFunction, createSelector, delay, createDeepSelector, uuid, allEqual, pick, change
+    cloneFunction, bindFunction, unbindFunction, createSelector, delay, createDeepSelector, uuid, allEqual, pick, zip, binarySearch
 } from "./index";
 
 import * as rx from "rxjs";
@@ -1392,3 +1392,38 @@ test("pick", () => {
     expect(pick(test as any, "a", "b", "x")).toEqual({ a: 1, b: 2 });
 
 });
+
+test("zip", () => {
+    const edad = [10, 20, 30, 40, 50];
+    const nombre = ["rafa", "ale", "jose", "juan", "carlos"];
+    const otro = [1, 2, 3, 4, 5];
+
+    const ret =  zip({edad,nombre,otro})
+
+    expect(ret).toEqual([
+        {edad: 10, nombre: "rafa", otro: 1},
+        {edad: 20, nombre: "ale", otro: 2},
+        {edad: 30, nombre: "jose", otro: 3},
+        {edad: 40, nombre: "juan", otro: 4},
+        {edad: 50, nombre: "carlos", otro: 5},
+    ])
+});
+
+test("binary search", () => {
+    const arr = [10, 20, 30, 40, 50];
+    expect(binarySearch(arr, x => x, 10)).toEqual({index: 0, match: true});
+
+    expect(binarySearch(arr, x => x, 40)).toEqual({index: 3, match: true});
+    expect(binarySearch(arr, x => x, 50)).toEqual({index: 4, match: true});
+    expect(binarySearch(arr, x => x, 51)).toEqual({index: 4, match: false});
+    expect(binarySearch(arr, x => x, 500)).toEqual({index: 4, match: false});
+    
+    expect(binarySearch(arr, x => x, -10)).toEqual({index: -1, match: false});
+    expect(binarySearch(arr, x => x, 0)).toEqual({index: -1, match: false});
+    expect(binarySearch(arr, x => x, 9)).toEqual({index: -1, match: false});
+    expect(binarySearch(arr, x => x, 11)).toEqual({index: 0, match: false});
+    expect(binarySearch(arr, x => x, 19)).toEqual({index: 0, match: false});
+
+    expect(binarySearch(arr, x => x, 41)).toEqual({index: 3, match: false});
+    expect(binarySearch(arr, x => x, 59)).toEqual({index: 4, match: false});
+})

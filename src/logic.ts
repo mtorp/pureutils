@@ -722,6 +722,24 @@ export function mapMany<T, TR>(items: T[], map: (x: T) => TR[]): TR[] {
     return result;
 }
 
+/**Convierte un objeto de arreglos a un arreglo de objetos, si el objeto de arreglos esta vacio, devuelve un arreglo vacio*/
+export function zip<TData>(data: {[K in keyof TData]: TData[K][]}): TData[] {
+    //Checa que todo los arreglos tengan la misma longitud
+    const lengths = enumObject(data).map(x => x.value.length);
+    if (!allEqual(lengths)) {
+        throw new Error("Todos los arreglos deben de tener la misma longitud");
+    }
+    if (lengths.length == 0) return [];
+
+    const count = lengths[0];
+    const ret: TData[] = [];
+    for (let i = 0; i < count; i++) {
+        const fila = mapObject(data, (value, key) => (value as any[])[i]);
+        ret.push(fila);
+    }
+    return ret;
+}
+
 /**A una cadena que representa un numero entero, aplica el separador de miles */
 function aplicarSepMiles(intpart: string, sep: string = ","): string {
     if (intpart.length < 4)
@@ -861,4 +879,31 @@ export function delay(ms: number) {
 /**Una funcion que siempre lanza una excepción al ser llamada. Sirve para implementar cases exhaustivos, tal como esta descrito en https://stackoverflow.com/questions/39419170/how-do-i-check-that-a-switch-block-is-exhaustive-in-typescript*/
 export function assertUnreachable(x: never): never {
     throw new Error("Se llamó a la función assertUnreachable, esto puede indicar un tipo inesperado en una discriminación de tips");
+}
+
+/**Realiza una busqueda binaria en un arreglo, devuelve el indice del elemento mas cercano y si fue encontrado o no el elemento.
+ * En caso de que no encaje devuelve el indice del ultimo elemento que es menor que el valor de busqueda. Si ningun elemento del arreglo es menor al valor de busqueda devuelve -1.
+ */
+export function binarySearch<T>(arr: T[], keySelector: (x: T) => string | number, value: string | number): { index: number, match: boolean } {
+    let minIndex = 0;
+    let maxIndex = arr.length - 1;
+    let currentIndex: number = 0;
+    let currentElement;
+
+    while (minIndex <= maxIndex) {
+        currentIndex = (minIndex + maxIndex) / 2 | 0;
+        currentElement = keySelector(arr[currentIndex]);
+
+        if (currentElement < value) {
+            minIndex = currentIndex + 1;
+        }
+        else if (currentElement > value) {
+            maxIndex = currentIndex - 1;
+        }
+        else {
+            return { index: currentIndex, match: true };
+        }
+    }
+
+    return { index: minIndex - 1, match: false };
 }
