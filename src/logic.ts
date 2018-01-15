@@ -547,7 +547,7 @@ export function combineComparers<T>(...comparers: ((a: T, b: T) => number)[]): (
     };
 }
 
-/**Comparador de ordenamiento por default */
+/**Comparador de ordenamiento por default. Si a es mayor que b devuelve 1, si es menor -1  */
 export function defaultComparer<T>(a: T, b: T): number {
     if (a === b) {
         return 0;
@@ -884,7 +884,8 @@ export function assertUnreachable(x: never): never {
 /**Realiza una busqueda binaria en un arreglo, devuelve el indice del elemento mas cercano y si fue encontrado o no el elemento.
  * En caso de que no encaje devuelve el indice del ultimo elemento que es menor que el valor de busqueda. Si ningun elemento del arreglo es menor al valor de busqueda devuelve -1.
  */
-export function binarySearch<T>(arr: T[], keySelector: (x: T) => string | number, value: string | number): { index: number, match: boolean } {
+export function binarySearch<T, TKey>(arr: T[], keySelector: (x: T) => TKey, value: TKey, comparer? : (a: TKey, b: TKey) => number): { index: number, match: boolean } {
+    const effComparer = comparer || defaultComparer;
     let minIndex = 0;
     let maxIndex = arr.length - 1;
     let currentIndex: number = 0;
@@ -894,10 +895,11 @@ export function binarySearch<T>(arr: T[], keySelector: (x: T) => string | number
         currentIndex = (minIndex + maxIndex) / 2 | 0;
         currentElement = keySelector(arr[currentIndex]);
 
-        if (currentElement < value) {
+        const comp = effComparer(currentElement, value);
+        if ( comp < 0) {
             minIndex = currentIndex + 1;
         }
-        else if (currentElement > value) {
+        else if (comp > 0) {
             maxIndex = currentIndex - 1;
         }
         else {
