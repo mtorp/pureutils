@@ -500,6 +500,14 @@ export function intersect<T>(a: T[], b: T[], comparer?: (a: T, b: T) => boolean)
     return intersectKeys(a, b, x => x, comparer || referenceEquals);
 }
 
+/**Devuelve true si SET contiene todos los elementos en SUBSET. Si los conjuntos son iguales devuelve true.
+ * Si los dos arreglos estan vacios devuelve true
+ */
+export function isSubset<T>(set: T[], subset: T[], comparer?: (a: T, b: T) => boolean) : boolean {
+    //Si por lo menos un elemento en subset no existe en set, ya no es un subset
+    return !any(subset,x => !contains(set, x ));
+}
+
 /**Devuelve todos los elementos en "items" tal que su key se encuentre una o mas veces en "keys". Conserva el orden original de "items".
  * @param keySelector Obtiene la clave de un elemento
  * @param comparer Comparedor de igualdad. Por default se usa el shallowEquals

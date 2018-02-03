@@ -4,7 +4,8 @@ import {
     unique, filterIf, mapKeys, intersect, omitUndefined, single, awaitObj, shallowDiff, range, sort, defaultComparer, orderBy, orderByDesc,
     truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd, toObservable, isArray, isArrayLike, isPromise, isObservable,
     search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx, mapMany, runningTotal, mapPrevious, formatNumber, formatDate, formatDateExcel,
-    cloneFunction, bindFunction, unbindFunction, createSelector, delay, createDeepSelector, uuid, allEqual, pick, zip, binarySearch, exclude
+    cloneFunction, bindFunction, unbindFunction, createSelector, delay, createDeepSelector, uuid, allEqual, pick, zip, binarySearch, exclude,
+    isSubset
 } from "./index";
 
 import * as rx from "rxjs";
@@ -1434,4 +1435,18 @@ test("exclude", () => {
     expect(exclude(a, [1, 6, 7])).toEqual([2, 3, 4, 5]);
     expect(exclude(a, [7, 6, 1])).toEqual([2, 3, 4, 5]);
     expect(exclude(a, [1, 6, 7, 8, 9, 10])).toEqual([2, 3, 4, 5]);
+})
+
+test("isSubset", () => {
+    const a = [1,2,3,4];
+    expect(isSubset(a,  [] )).toBe(true);
+    expect(isSubset(a,  [1,2,3,4] )).toBe(true);
+    expect(isSubset(a,  [4,3,2,1] )).toBe(true);
+    expect(isSubset(a,  [4,1] )).toBe(true);
+    
+    expect(isSubset(a,  [4,1,5] )).toBe(false);
+    expect(isSubset([], [] )).toBe(true);
+
+    expect(isSubset([],  [1] )).toBe(false);
+    
 })
