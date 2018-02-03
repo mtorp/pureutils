@@ -459,9 +459,16 @@ export function unique<T>(arr: T[], comparer?: (a: T, b: T) => boolean) {
     return groupBy<T, T>(arr, x => x, referenceEquals).map(x => x.key)
 }
 
-/**Devuelve todos los elementos de todos los arreglos que no esten repetidos */
+/**Devuelve todos los elementos de todos los arreglos que no esten repetidos.
+ * Conserva el orden pero no los elementos repetidos
+ */
 export function union<T>(...arr: T[][]) {
     return unique(concat(...arr));
+}
+
+/**Devuelve todos los elementos en A que no esten en B. Es la operacion A-B de conjuntos. Conserva el orden y los elementos repetidos de A */
+export function exclude<T>(a: T[], b: T[], comparer?: (a: T, b: T) => boolean) {
+    return a.filter(aItem => !contains(b, aItem, comparer));
 }
 
 /**Pega todos los elementos de los arreglos */
@@ -884,7 +891,7 @@ export function assertUnreachable(x: never): never {
 /**Realiza una busqueda binaria en un arreglo, devuelve el indice del elemento mas cercano y si fue encontrado o no el elemento.
  * En caso de que no encaje devuelve el indice del ultimo elemento que es menor que el valor de busqueda. Si ningun elemento del arreglo es menor al valor de busqueda devuelve -1.
  */
-export function binarySearch<T, TKey>(arr: T[], keySelector: (x: T) => TKey, value: TKey, comparer? : (a: TKey, b: TKey) => number): { index: number, match: boolean } {
+export function binarySearch<T, TKey>(arr: T[], keySelector: (x: T) => TKey, value: TKey, comparer?: (a: TKey, b: TKey) => number): { index: number, match: boolean } {
     const effComparer = comparer || defaultComparer;
     let minIndex = 0;
     let maxIndex = arr.length - 1;
@@ -896,7 +903,7 @@ export function binarySearch<T, TKey>(arr: T[], keySelector: (x: T) => TKey, val
         currentElement = keySelector(arr[currentIndex]);
 
         const comp = effComparer(currentElement, value);
-        if ( comp < 0) {
+        if (comp < 0) {
             minIndex = currentIndex + 1;
         }
         else if (comp > 0) {
