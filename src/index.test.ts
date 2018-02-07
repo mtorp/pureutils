@@ -1038,7 +1038,7 @@ test("async create selector async memoize", async () => {
     }); //Este selector cada vez devuelve una promesa diferente, pero con el mismo valor
 
     let sumCalls = 0;
-    const sumObs = createSelector(samePromise, x => {
+    const sumObs = createSelector<Props, number, number>(samePromise, x => {
         sumCalls++;
         return x + 1;
     });
@@ -1276,6 +1276,81 @@ test("selecotr con observable problema TEST", async () => {
 
 }, 10000);
 
+test("selector debe de devolver la misma instancia de observable argumento sincrono", async () => {
+    interface State {
+    }
+
+    const idCliente = (state: State) => 10;
+    let calls = 0;
+    const cliente = createSelector(idCliente, id => {
+        calls++;
+        const instance = { id: id };
+        return rx.Observable.from([instance]);
+    });
+
+    const state: State = {};
+    const miCliente1 = cliente(state);
+    const miCliente2 = cliente(state);
+
+    expect(calls).toBe(1);
+    expect(miCliente1).toBe(miCliente2);
+
+    const miClienteResult1 = await miCliente1.first().toArray().toPromise();
+    const miClienteResult2 = await miCliente2.first().toArray().toPromise();
+    expect(miClienteResult1[0]).toBe(miClienteResult2[0]);
+});
+
+test("selector debe de devolver la misma instancia de observable con argumento observable", async () => {
+    interface State {
+    }
+
+const idCliente = (state: State) => 10;
+    const idClienteObs =  createSelector(idCliente, id =>  new rx.BehaviorSubject<number>(id));
+    
+    let calls = 0;
+    const cliente = createSelector(idClienteObs, id => {
+        calls++;
+        const instance = { id: id };
+        return rx.Observable.from([instance]);
+    });
+
+
+    const state: State = {};
+    const miCliente1 = cliente(state);
+    const miCliente2 = cliente(state);
+
+    const miClienteResult1 = await miCliente1.first().toArray().toPromise();
+    const miClienteResult2 = await miCliente2.first().toArray().toPromise();
+
+    expect(calls).toBe(1);
+    expect(miClienteResult1[0]).toBe(miClienteResult2[0]);
+    expect(miCliente1).toBe(miCliente2);
+});
+
+test("selector debe de devolver la misma instancia de promesa argumento sincrono", async () => {
+    interface State {
+    }
+
+    const idCliente = (state: State) => 10;
+    let calls = 0;
+    const cliente = createSelector(idCliente, id => {
+        calls++;
+        const instance = { id: id };
+        return Promise.resolve(instance);
+    });
+
+    const state: State = {};
+    const miCliente1 = cliente(state);
+    const miCliente2 = cliente(state);
+
+    expect(calls).toBe(1);
+    expect(miCliente1).toBe(miCliente2);
+
+    const miClienteResult1 = await miCliente1;
+    const miClienteResult2 = await miCliente2;
+    expect(miClienteResult1).toBe(miClienteResult2);
+});
+
 test("selecotr con observable problema COMPLETA", async () => {
 
     interface State {
@@ -1438,15 +1513,15 @@ test("exclude", () => {
 })
 
 test("isSubset", () => {
-    const a = [1,2,3,4];
-    expect(isSubset(a,  [] )).toBe(true);
-    expect(isSubset(a,  [1,2,3,4] )).toBe(true);
-    expect(isSubset(a,  [4,3,2,1] )).toBe(true);
-    expect(isSubset(a,  [4,1] )).toBe(true);
-    
-    expect(isSubset(a,  [4,1,5] )).toBe(false);
-    expect(isSubset([], [] )).toBe(true);
+    const a = [1, 2, 3, 4];
+    expect(isSubset(a, [])).toBe(true);
+    expect(isSubset(a, [1, 2, 3, 4])).toBe(true);
+    expect(isSubset(a, [4, 3, 2, 1])).toBe(true);
+    expect(isSubset(a, [4, 1])).toBe(true);
 
-    expect(isSubset([],  [1] )).toBe(false);
-    
+    expect(isSubset(a, [4, 1, 5])).toBe(false);
+    expect(isSubset([], [])).toBe(true);
+
+    expect(isSubset([], [1])).toBe(false);
+
 })

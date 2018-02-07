@@ -64,8 +64,10 @@ export type SelectorRxN<T,R> = (...args: T[]) => Observable<R> | Promise<R>;
 export function createSelector<T1, R1, O>(s1: SelectorRxProm1<T1, R1>, combiner: CombinerRxProm1<R1, O>): SelectorRx1<T1, O>
 export function createSelector<T1, R1, O>(s1: SelectorRxProm1<T1, R1>, combiner: Combiner1<R1, O>): SelectorRx1<T1, O>
 export function createSelector<T1, R1, O>(s1: Selector1<T1, R1>, combiner: CombinerRxProm1<R1, O>): SelectorRx1<T1, O>
-export function createSelector<T1, R1, O>(s1: Selector1<T1, R1>, combiner: Combiner1<R1, O>): Selector1<T1, O>
+//prom
 export function createSelector<T1, R1, O>(s1: Selector1<T1, R1>, combiner: CombinerAsync1<R1, O>): SelectorAsync1<T1, O>
+//
+export function createSelector<T1, R1, O>(s1: Selector1<T1, R1>, combiner: Combiner1<R1, O>): Selector1<T1, O>
 
         
 //**********************************
@@ -76,10 +78,12 @@ export function createSelector<T1, R1, R2, O>(s1: SelectorRxProm1<T1, R1>, s2: S
 export function createSelector<T1, R1, R2, O>(s1: SelectorRxProm1<T1, R1>, s2: Selector1<T1, R2>, combiner: CombinerRxProm2<R1, R2, O>): SelectorRx1<T1, O>
 export function createSelector<T1, R1, R2, O>(s1: SelectorRxProm1<T1, R1>, s2: Selector1<T1, R2>, combiner: Combiner2<R1, R2, O>): SelectorRx1<T1, O>
 export function createSelector<T1, R1, R2, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, combiner: CombinerRxProm2<R1, R2, O>): SelectorRx1<T1, O>
+//prom
+export function createSelector<T1, R1, R2, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, combiner: CombinerAsync2<R1, R2, O>): SelectorAsync1<T1, O>
+//
 export function createSelector<T1, R1, R2, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, combiner: Combiner2<R1, R2, O>): SelectorRx1<T1, O>
 export function createSelector<T1, R1, R2, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, combiner: CombinerRxProm2<R1, R2, O>): SelectorRx1<T1, O>
 export function createSelector<T1, R1, R2, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, combiner: Combiner2<R1, R2, O>): Selector1<T1, O>
-export function createSelector<T1, R1, R2, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, combiner: CombinerAsync2<R1, R2, O>): SelectorAsync1<T1, O>
 
         
 //**********************************
@@ -94,6 +98,9 @@ export function createSelector<T1, R1, R2, R3, O>(s1: SelectorRxProm1<T1, R1>, s
 export function createSelector<T1, R1, R2, R3, O>(s1: SelectorRxProm1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, combiner: CombinerRxProm3<R1, R2, R3, O>): SelectorRx1<T1, O>
 export function createSelector<T1, R1, R2, R3, O>(s1: SelectorRxProm1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, combiner: Combiner3<R1, R2, R3, O>): SelectorRx1<T1, O>
 export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: SelectorRxProm1<T1, R3>, combiner: CombinerRxProm3<R1, R2, R3, O>): SelectorRx1<T1, O>
+//prom
+export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, combiner: CombinerAsync3<R1, R2, R3, O>): SelectorAsync1<T1, O>
+//
 export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: SelectorRxProm1<T1, R3>, combiner: Combiner3<R1, R2, R3, O>): SelectorRx1<T1, O>
 export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: Selector1<T1, R3>, combiner: CombinerRxProm3<R1, R2, R3, O>): SelectorRx1<T1, O>
 export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: Selector1<T1, R3>, combiner: Combiner3<R1, R2, R3, O>): SelectorRx1<T1, O>
@@ -101,7 +108,6 @@ export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: Sel
 export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: SelectorRxProm1<T1, R3>, combiner: Combiner3<R1, R2, R3, O>): SelectorRx1<T1, O>
 export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, combiner: CombinerRxProm3<R1, R2, R3, O>): SelectorRx1<T1, O>
 export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, combiner: Combiner3<R1, R2, R3, O>): Selector1<T1, O>
-export function createSelector<T1, R1, R2, R3, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, combiner: CombinerAsync3<R1, R2, R3, O>): SelectorAsync1<T1, O>
 
         
 //**********************************
@@ -124,6 +130,9 @@ export function createSelector<T1, R1, R2, R3, R4, O>(s1: SelectorRxProm1<T1, R1
 export function createSelector<T1, R1, R2, R3, R4, O>(s1: SelectorRxProm1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: Selector1<T1, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx1<T1, O>
 export function createSelector<T1, R1, R2, R3, R4, O>(s1: SelectorRxProm1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: Selector1<T1, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): SelectorRx1<T1, O>
 export function createSelector<T1, R1, R2, R3, R4, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: SelectorRxProm1<T1, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx1<T1, O>
+//prom
+export function createSelector<T1, R1, R2, R3, R4, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: Selector1<T1, R4>, combiner: CombinerAsync4<R1, R2, R3, R4, O>): SelectorAsync1<T1, O>
+//
 export function createSelector<T1, R1, R2, R3, R4, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: SelectorRxProm1<T1, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): SelectorRx1<T1, O>
 export function createSelector<T1, R1, R2, R3, R4, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: Selector1<T1, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx1<T1, O>
 export function createSelector<T1, R1, R2, R3, R4, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: Selector1<T1, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): SelectorRx1<T1, O>
@@ -139,7 +148,6 @@ export function createSelector<T1, R1, R2, R3, R4, O>(s1: Selector1<T1, R1>, s2:
 export function createSelector<T1, R1, R2, R3, R4, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: SelectorRxProm1<T1, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): SelectorRx1<T1, O>
 export function createSelector<T1, R1, R2, R3, R4, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: Selector1<T1, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx1<T1, O>
 export function createSelector<T1, R1, R2, R3, R4, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: Selector1<T1, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): Selector1<T1, O>
-export function createSelector<T1, R1, R2, R3, R4, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: Selector1<T1, R4>, combiner: CombinerAsync4<R1, R2, R3, R4, O>): SelectorAsync1<T1, O>
 
         
 //**********************************
@@ -178,6 +186,9 @@ export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm1<T1
 export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: Selector1<T1, R4>, s5: Selector1<T1, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
 export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: Selector1<T1, R4>, s5: Selector1<T1, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
 export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: SelectorRxProm1<T1, R4>, s5: SelectorRxProm1<T1, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
+//prom
+export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: Selector1<T1, R4>, s5: Selector1<T1, R5>, combiner: CombinerAsync5<R1, R2, R3, R4, R5, O>): SelectorAsync1<T1, O>
+//
 export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: SelectorRxProm1<T1, R4>, s5: SelectorRxProm1<T1, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
 export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: SelectorRxProm1<T1, R4>, s5: Selector1<T1, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
 export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: SelectorRxProm1<T1, R2>, s3: SelectorRxProm1<T1, R3>, s4: SelectorRxProm1<T1, R4>, s5: Selector1<T1, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
@@ -209,7 +220,6 @@ export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>,
 export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: Selector1<T1, R4>, s5: SelectorRxProm1<T1, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
 export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: Selector1<T1, R4>, s5: Selector1<T1, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx1<T1, O>
 export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: Selector1<T1, R4>, s5: Selector1<T1, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): Selector1<T1, O>
-export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>, s2: Selector1<T1, R2>, s3: Selector1<T1, R3>, s4: Selector1<T1, R4>, s5: Selector1<T1, R5>, combiner: CombinerAsync5<R1, R2, R3, R4, R5, O>): SelectorAsync1<T1, O>
 
         
 //**********************************
@@ -223,8 +233,10 @@ export function createSelector<T1, R1, R2, R3, R4, R5, O>(s1: Selector1<T1, R1>,
 export function createSelector<T1, T2, R1, O>(s1: SelectorRxProm2<T1, T2, R1>, combiner: CombinerRxProm1<R1, O>): SelectorRx2<T1, T2, O>
 export function createSelector<T1, T2, R1, O>(s1: SelectorRxProm2<T1, T2, R1>, combiner: Combiner1<R1, O>): SelectorRx2<T1, T2, O>
 export function createSelector<T1, T2, R1, O>(s1: Selector2<T1, T2, R1>, combiner: CombinerRxProm1<R1, O>): SelectorRx2<T1, T2, O>
-export function createSelector<T1, T2, R1, O>(s1: Selector2<T1, T2, R1>, combiner: Combiner1<R1, O>): Selector2<T1, T2, O>
+//prom
 export function createSelector<T1, T2, R1, O>(s1: Selector2<T1, T2, R1>, combiner: CombinerAsync1<R1, O>): SelectorAsync2<T1, T2, O>
+//
+export function createSelector<T1, T2, R1, O>(s1: Selector2<T1, T2, R1>, combiner: Combiner1<R1, O>): Selector2<T1, T2, O>
 
         
 //**********************************
@@ -235,10 +247,12 @@ export function createSelector<T1, T2, R1, R2, O>(s1: SelectorRxProm2<T1, T2, R1
 export function createSelector<T1, T2, R1, R2, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, combiner: CombinerRxProm2<R1, R2, O>): SelectorRx2<T1, T2, O>
 export function createSelector<T1, T2, R1, R2, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, combiner: Combiner2<R1, R2, O>): SelectorRx2<T1, T2, O>
 export function createSelector<T1, T2, R1, R2, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, combiner: CombinerRxProm2<R1, R2, O>): SelectorRx2<T1, T2, O>
+//prom
+export function createSelector<T1, T2, R1, R2, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, combiner: CombinerAsync2<R1, R2, O>): SelectorAsync2<T1, T2, O>
+//
 export function createSelector<T1, T2, R1, R2, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, combiner: Combiner2<R1, R2, O>): SelectorRx2<T1, T2, O>
 export function createSelector<T1, T2, R1, R2, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, combiner: CombinerRxProm2<R1, R2, O>): SelectorRx2<T1, T2, O>
 export function createSelector<T1, T2, R1, R2, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, combiner: Combiner2<R1, R2, O>): Selector2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, combiner: CombinerAsync2<R1, R2, O>): SelectorAsync2<T1, T2, O>
 
         
 //**********************************
@@ -253,6 +267,9 @@ export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorRxProm2<T1, T2
 export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: CombinerRxProm3<R1, R2, R3, O>): SelectorRx2<T1, T2, O>
 export function createSelector<T1, T2, R1, R2, R3, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: Combiner3<R1, R2, R3, O>): SelectorRx2<T1, T2, O>
 export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, combiner: CombinerRxProm3<R1, R2, R3, O>): SelectorRx2<T1, T2, O>
+//prom
+export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: CombinerAsync3<R1, R2, R3, O>): SelectorAsync2<T1, T2, O>
+//
 export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, combiner: Combiner3<R1, R2, R3, O>): SelectorRx2<T1, T2, O>
 export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: CombinerRxProm3<R1, R2, R3, O>): SelectorRx2<T1, T2, O>
 export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: Combiner3<R1, R2, R3, O>): SelectorRx2<T1, T2, O>
@@ -260,7 +277,6 @@ export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>,
 export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, combiner: Combiner3<R1, R2, R3, O>): SelectorRx2<T1, T2, O>
 export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: CombinerRxProm3<R1, R2, R3, O>): SelectorRx2<T1, T2, O>
 export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: Combiner3<R1, R2, R3, O>): Selector2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, combiner: CombinerAsync3<R1, R2, R3, O>): SelectorAsync2<T1, T2, O>
 
         
 //**********************************
@@ -283,6 +299,9 @@ export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: SelectorRxProm2<T1
 export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx2<T1, T2, O>
 export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): SelectorRx2<T1, T2, O>
 export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx2<T1, T2, O>
+//prom
+export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, combiner: CombinerAsync4<R1, R2, R3, R4, O>): SelectorAsync2<T1, T2, O>
+//
 export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): SelectorRx2<T1, T2, O>
 export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx2<T1, T2, O>
 export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): SelectorRx2<T1, T2, O>
@@ -298,7 +317,6 @@ export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: Selector2<T1, T2, 
 export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): SelectorRx2<T1, T2, O>
 export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, combiner: CombinerRxProm4<R1, R2, R3, R4, O>): SelectorRx2<T1, T2, O>
 export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, combiner: Combiner4<R1, R2, R3, R4, O>): Selector2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, R4, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, combiner: CombinerAsync4<R1, R2, R3, R4, O>): SelectorAsync2<T1, T2, O>
 
         
 //**********************************
@@ -337,6 +355,9 @@ export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm
 export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
 export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: SelectorRxProm2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
 export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, s5: SelectorRxProm2<T1, T2, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
+//prom
+export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: CombinerAsync5<R1, R2, R3, R4, R5, O>): SelectorAsync2<T1, T2, O>
+//
 export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, s5: SelectorRxProm2<T1, T2, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
 export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
 export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: SelectorRxProm2<T1, T2, R2>, s3: SelectorRxProm2<T1, T2, R3>, s4: SelectorRxProm2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
@@ -368,12 +389,12 @@ export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, 
 export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: SelectorRxProm2<T1, T2, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
 export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: CombinerRxProm5<R1, R2, R3, R4, R5, O>): SelectorRx2<T1, T2, O>
 export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: Combiner5<R1, R2, R3, R4, R5, O>): Selector2<T1, T2, O>
-export function createSelector<T1, T2, R1, R2, R3, R4, R5, O>(s1: Selector2<T1, T2, R1>, s2: Selector2<T1, T2, R2>, s3: Selector2<T1, T2, R3>, s4: Selector2<T1, T2, R4>, s5: Selector2<T1, T2, R5>, combiner: CombinerAsync5<R1, R2, R3, R4, R5, O>): SelectorAsync2<T1, T2, O>
 
         
 //**********************************
 //Termina codigo autogenerado por genselectors.ts
 //**********************************
+
 
 
 export function createSelector<T, R, O>(...args: (SelectorRxN<T, R> | ((...s: R[]) => O))[]) {
@@ -392,10 +413,10 @@ export function createSelectorCreator(options: createSelectorAsyncCreatorOptions
     }
 }
 
-function getSelectorValueClearMemoOnError<R>(valueThunk: () => R | Promise<R> | Observable<R>, clearMemo: () => void): R | Promise<R> | Observable<R> {
+function getSelectorValueClearMemoOnError<R>(valueThunk: (...args: any[]) => R | Promise<R> | Observable<R>, clearMemo: () => void, ...args: any[]): R | Promise<R> | Observable<R> {
     let result: R | Promise<R> | Observable<R>;
     try {
-        result = valueThunk();
+        result = valueThunk(...args);
     } catch (error) {
         //Error sincrono;
         clearMemo();
@@ -419,7 +440,7 @@ function getSelectorValueClearMemoOnError<R>(valueThunk: () => R | Promise<R> | 
     }
 }
 
-function allSync<T>(x: (T | Promise<T> | Observable<T>)[]) : x is T[] {
+function allSync<T>(x: (T | Promise<T> | Observable<T>)[]): x is T[] {
     const anyAsync = any(x, x => isObservable(x) || isPromise(x));
     return !anyAsync;
 }
@@ -432,13 +453,17 @@ function createSelectorAsyncArrCreator(options: createSelectorAsyncCreatorOption
         selectors: (SelectorRxN<T, R> | SelectorN<T, R>)[],
         combiner: (...s: R[]) => O | Promise<O> | Observable<O>
     ): any {
-        const memoCombiner:  (typeof combiner) & { clear: () => void} = moize(combiner) as any;
+        type AsyncSArgs = (Observable<R> | Promise<R> | R)[];
 
-        const asyncCombiner = (...asyncS: (Observable<R> | Promise<R> | R)[]): Observable<O> | Promise<O> | O => {
-            const anyObservableInArgs = any(asyncS, x => isObservable(x));
-            const anyPromiseInArgs = any(asyncS, x => isPromise(x));
+        const clearMemos = () => {
+            memoCombiner.clear();
+            memoAsyncCombiner.clear();
+        }
 
-            const resultThunk: () => O | Observable<O> | Promise<O> = (() => {
+        const memoCombiner: (typeof combiner) & { clear: () => void } = moize(combiner) as any;
+
+        const asyncCombiner = (() => {
+            const resultThunk: (...asyncS: AsyncSArgs) => O | Observable<O> | Promise<O> = ((...asyncS: AsyncSArgs) => {
                 if (allSync(asyncS)) {
                     //Todos los argumentos son SINCRONOS
                     return memoCombiner(...asyncS);
@@ -457,15 +482,14 @@ function createSelectorAsyncArrCreator(options: createSelectorAsyncCreatorOption
                 }
             });
 
-            return getSelectorValueClearMemoOnError(resultThunk, () => memoCombiner.clear());
-        }
+            return (...asyncS: AsyncSArgs) => getSelectorValueClearMemoOnError(resultThunk, clearMemos, ...asyncS);
+        })();
 
         const memoAsyncCombiner: (typeof asyncCombiner) & { clear: () => void } = moize(asyncCombiner) as any;
 
         const ret = (...args: T[]): Observable<O> | Promise<O> | O => {
             const myArgs = selectors.map(x => x(...args));
-            const resultThunk = () => memoAsyncCombiner(...myArgs);
-            return getSelectorValueClearMemoOnError(resultThunk, () => memoAsyncCombiner.clear());
+            return memoAsyncCombiner(...myArgs);
         }
 
         return ret;

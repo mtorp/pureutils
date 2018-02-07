@@ -57,7 +57,7 @@ function combiner(digit: number, selectorCount: number) {
         "CombinerAsync",
         "Combiner"
     ][digit];
-    const args = [...range(1, selectorCount ).map(x => "R" + x), "O"].join(", ");
+    const args = [...range(1, selectorCount).map(x => "R" + x), "O"].join(", ");
     return `combiner: ${name}${selectorCount}<${args}>`;
 }
 
@@ -108,7 +108,7 @@ function types(selectorSize: number, selectorCount: number) {
         ret += `export type SelectorRx${i + 1}<${TSelector}> = (${args}) => Observable<R>;\r\n`;
         ret += `export type SelectorRxProm${i + 1}<${TSelector}> = (${args}) => Observable<R> | Promise<R>;\r\n`;
     }
-    for(let i = 0; i < selectorCount; i++ ) {
+    for (let i = 0; i < selectorCount; i++) {
         const TCombiner = [...range(1, i + 1).map(x => "R" + x), "O"].join(", ");
         const args = range(1, i + 1).map(x => `s${x}: R${x} `).join(", ");
         ret += `export type Combiner${i + 1}<${TCombiner}> = (${args}) => O;\r\n`;
@@ -136,11 +136,21 @@ for (let selectorSize = 1; selectorSize <= maxSelectorSize; selectorSize++) {
         const digitCount = selectorCount + 1;
         const combinations = powerCombine(2, digitCount);
 
+        let promAdded = false;
         for (const power of combinations) {
-            const powerMap = power.map(x => x== 0 ? x : 2 );
+            const powerMap = power.map(x => x == 0 ? x : 2);
+            
+            //Agregamos el selector de la promesa nates que todos los selectores que inician con argumento sincrono
+            if (power[0] == 1 && !promAdded) {
+                ret += "//prom\r\n";
+                ret += completeFuncDef(selectorSize, selectorCount, [...range(0, selectorCount).map(x => 2), 1]);
+                ret += "//\r\n";
+                promAdded = true;
+            }
+            
             ret += completeFuncDef(selectorSize, selectorCount, powerMap);
         }
-        ret += completeFuncDef(selectorSize, selectorCount, [...range(0, selectorCount).map(x => 2), 1]);
+
     }
 }
 
