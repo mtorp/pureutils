@@ -5,7 +5,7 @@ import {
     truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd, toObservable, isArray, isArrayLike, isPromise, isObservable,
     search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx, mapMany, runningTotal, mapPrevious, formatNumber, formatDate, formatDateExcel,
     cloneFunction, bindFunction, unbindFunction, createSelector, delay, createDeepSelector, uuid, allEqual, pick, zip, binarySearch, exclude,
-    isSubset, innerJoin, leftJoin
+    isSubset, innerJoin, leftJoin, unionKey
 } from "./index";
 
 import * as rx from "rxjs";
@@ -784,20 +784,20 @@ test("nullsafe types", () => {
             b: number,
             c: string | null | undefined,
             d: string | undefined
-        } ,
+        },
     };
 
     const test = null as any as TestType;
     //Simplemente comprobamos al compilar que los tipos que devuelve el nullsafe en cajan con los tipos del
     const a: {} | null = nullsafe(test, x => x.a);
-    const b : number | null = nullsafe(test, x => x.a, x => x.b);
-    const c : string | null | undefined = nullsafe(test, x => x.a, x => x.c);
-    const d : string | null | undefined = nullsafe(test, x => x.a, x => x.d);
-    const e : string | null= nullsafe(test, x => x.a, x => x.e);
-    const b2 : string | undefined = nullsafe(test, x => x.b);
+    const b: number | null = nullsafe(test, x => x.a, x => x.b);
+    const c: string | null | undefined = nullsafe(test, x => x.a, x => x.c);
+    const d: string | null | undefined = nullsafe(test, x => x.a, x => x.d);
+    const e: string | null = nullsafe(test, x => x.a, x => x.e);
+    const b2: string | undefined = nullsafe(test, x => x.b);
 
-    const d2 : string | undefined = nullsafe(test, x => x.c, x => x.d);
-    const d3 : string | undefined = nullsafe(test, x => x.d, x => x.d);
+    const d2: string | undefined = nullsafe(test, x => x.c, x => x.d);
+    const d3: string | undefined = nullsafe(test, x => x.d, x => x.d);
 })
 
 test("map prev rx", async () => {
@@ -1606,3 +1606,22 @@ test("join", () => {
         { nombre: "Usain Bolt", pais: "Moroco" },
     ]);
 })
+
+test("union key", () => {
+    const a = [
+        { id: 1, nombre: "Rafa" },
+        { id: 2, nombre: "Ale" }
+    ];
+
+    const b = [
+        { id: 1, nombre: "Rafaelito", x: 1 },
+        { id: 3, nombre: "Juanito", x: 2 }
+    ];
+
+    const ret = unionKey(a, b, x => x.id);
+    expect(ret).toEqual([
+        { id: 2, nombre: "Ale"},
+        { id: 1, nombre: "Rafaelito", x: 1},
+        { id: 3, nombre: "Juanito", x: 2 }
+    ]);
+});

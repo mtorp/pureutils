@@ -466,6 +466,32 @@ export function union<T>(...arr: T[][]) {
     return unique(concat(...arr));
 }
 
+/**
+ * Devuelve todos los elementos en A que su llave no se encuentre en B las llaves de B y todos los elementos en B, en ese orden
+ * esto equivale a unir los conjuntos A+B, pero dandole prioridad a los elementos en B si es que esa llave se encuentra en los dos conjuntos.
+ * Esto se puede ver como una operacion de INSERT OR UPDATE en A
+ * @param comparer Comparador de la llave. Es @see deepEquals por default
+ */
+export function unionKey<TA, TB, K>(a: TA[], b: TB[], getKey: (item: TA | TB) => K, comparer?: (a: K, b: K) => boolean): (TA | TB)[] {
+    const effComparer = comparer || deepEquals;
+    let result: (TA | TB)[] = [];
+
+    //Obtiene todas las claves en B
+    const bKeys = b.map(getKey);
+
+    //Todos los elementos en A que no esten en B
+    for (const aItem of a) {
+        const aKey = getKey(aItem);
+        if (!contains(bKeys, aKey, effComparer)) {
+            result.push(aItem);
+        }
+    }
+
+    //Todos los elementos en B
+    result.push(...b);
+    return result;
+}
+
 /**Devuelve todos los elementos en A que no esten en B. Es la operacion A-B de conjuntos. Conserva el orden y los elementos repetidos de A */
 export function exclude<T>(a: T[], b: T[], comparer?: (a: T, b: T) => boolean) {
     return a.filter(aItem => !contains(b, aItem, comparer));
