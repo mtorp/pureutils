@@ -788,7 +788,7 @@ test("nullsafe types", () => {
     };
 
     const test = null as any as TestType;
-    //Simplemente comprobamos al compilar que los tipos que devuelve el nullsafe en cajan con los tipos del const
+    //Simplemente comprobamos al compilar que los tipos que devuelve el nullsafe en cajan con los tipos del
     const a: {} | null = nullsafe(test, x => x.a);
     const b : number | null = nullsafe(test, x => x.a, x => x.b);
     const c : string | null | undefined = nullsafe(test, x => x.a, x => x.c);
