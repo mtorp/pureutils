@@ -995,3 +995,57 @@ export function leftJoin<TA, TB>(left: TA[], right: TB[], where: (left: TA, righ
     }
     return ret;
 }
+
+/**Combina dos rutas. Combina correctamente las rutas con ./ y ../
+ * @param ruta base
+ * @param path Ruta actual
+ * @param pathChar Caracter que divide a la ruta
+ * @param prefix True para iniciar la ruta con el caracter de ruta, false para no iniciar, indefinido para dejarlo tal cual. Por default is true
+ * @param postfix True para terminar la ruta con el caracter de ruta, false para quitarlo, indefinido para dejarlo tal cual
+ */
+export function combinePath(basePath: string, path: string, pathChar: string = "/", prefix: boolean | undefined = true, postfix: boolean | undefined = false) {
+    function trim(s: string) {
+        const start = s.startsWith(pathChar) ? 1 : 0;
+        const end = s.endsWith(pathChar) ? (s.length - 1) : s.length;
+        return s.substr(start, end - start);
+    }
+
+    const basePathTrim = trim(basePath);
+    const pathTrim = trim(path);
+
+    const basePathParts = basePathTrim.split(pathChar);
+    const pathParts = pathTrim.split(pathChar);
+
+    const relative = pathParts.length > 0 && pathParts[0].startsWith(".");
+
+    let current = relative ? basePathTrim : pathTrim;
+    let firstTextPart = false;
+    if (relative) {
+        for (const part of pathParts) {
+            if (part == "." || part == "..") {
+                if (firstTextPart) throw new Error("La ruta no puede contener partes con . o .. despues de una parte de texto");
+            }
+            if (part == ".") {
+                //No hay que hacer nada
+            } else if (part == "..") {
+                const currentParts = current.split("/");
+                current = currentParts.slice(0, currentParts.length - 1).join(pathChar)
+            } else {
+                firstTextPart = true;
+                current += current == "" ? part : (pathChar + part);
+            }
+        }
+    }
+
+    const originalStartPathChar = (relative ? basePath : path).startsWith(pathChar);
+    const originalEndsWithPathChar = path.endsWith(pathChar);
+
+    //Asignar el prefijo y postfijo
+    if (prefix == true || (prefix === undefined && originalStartPathChar)) {
+        current = pathChar + current;
+    }
+    if (postfix == true || (postfix === undefined && originalEndsWithPathChar)) {
+        current = current + pathChar;
+    }
+    return current;
+}

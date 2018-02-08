@@ -5,7 +5,7 @@ import {
     truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd, toObservable, isArray, isArrayLike, isPromise, isObservable,
     search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx, mapMany, runningTotal, mapPrevious, formatNumber, formatDate, formatDateExcel,
     cloneFunction, bindFunction, unbindFunction, createSelector, delay, createDeepSelector, uuid, allEqual, pick, zip, binarySearch, exclude,
-    isSubset, innerJoin, leftJoin, unionKey
+    isSubset, innerJoin, leftJoin, unionKey, combinePath
 } from "./index";
 
 import * as rx from "rxjs";
@@ -1624,4 +1624,41 @@ test("union key", () => {
         { id: 1, nombre: "Rafaelito", x: 1},
         { id: 3, nombre: "Juanito", x: 2 }
     ]);
+});
+
+test("combinePath", () => {
+    expect(combinePath("/", "hola")).toBe("/hola");
+    expect(combinePath("/", "hola/")).toBe("/hola");
+    expect(combinePath("", "hola")).toBe("/hola");
+    expect(combinePath("", "./hola")).toBe("/hola");
+    expect(combinePath("", "./hola/")).toBe("/hola");
+
+    expect(combinePath("mi/ruta/base", "./hola")).toBe("/mi/ruta/base/hola");
+    expect(combinePath("mi/ruta/base", "./hola/")).toBe("/mi/ruta/base/hola");
+    expect(combinePath("/mi/ruta/base", "./hola/")).toBe("/mi/ruta/base/hola");
+    expect(combinePath("/mi/ruta/base/", "./hola/")).toBe("/mi/ruta/base/hola");
+    expect(combinePath("mi/ruta/base/", "./hola/")).toBe("/mi/ruta/base/hola");
+
+    expect(combinePath("mi/ruta/base/", "../")).toBe("/mi/ruta");
+    expect(combinePath("/mi/ruta/base/", "../")).toBe("/mi/ruta");
+    expect(combinePath("/mi/ruta/base", "../")).toBe("/mi/ruta");
+    expect(combinePath("mi/ruta/base", "../")).toBe("/mi/ruta");
+    
+    expect(combinePath("mi/ruta/base/hey/", "../../")).toBe("/mi/ruta");
+    expect(combinePath("mi/ruta/base/hey/", "../../../")).toBe("/mi");
+    expect(combinePath("mi/ruta/base/hey/", "../../../hola")).toBe("/mi/hola");
+    expect(combinePath("mi/ruta/base/hey/", "../../../hola/")).toBe("/mi/hola");
+    expect(combinePath("mi/ruta/base/hey", "../../../hola/")).toBe("/mi/hola");
+    
+    expect(combinePath("mi/ruta/base/hey", "../../../../")).toBe("/");
+    expect(combinePath("/mi/ruta/base/hey", "../../../../")).toBe("/");
+    expect(combinePath("/mi/ruta/base/hey/", "../../../../")).toBe("/");
+    expect(combinePath("mi/ruta/base/hey/", "../../../../")).toBe("/");
+    
+    expect(combinePath("mi/ruta/base/hey/", "../../../../rollo")).toBe("/rollo");
+    expect(combinePath("mi/ruta/base/hey/", "../../../../rollo/hola")).toBe("/rollo/hola");
+    expect(combinePath("mi/ruta/base/hey/", "rollo/hola")).toBe("/rollo/hola");
+    expect(combinePath("mi/ruta/base/hey/", "/rollo/hola")).toBe("/rollo/hola");
+    
+    //TODO: Hacer pruebas con los parametros prefix y postfix
 });
