@@ -766,6 +766,39 @@ test("null safe", () => {
 
 });
 
+test("nullsafe types", () => {
+    interface TestType {
+        a: {
+            b: number,
+            c: string | null | undefined,
+            d: string | undefined,
+            e: string | null,
+        } | null,
+        b?: string,
+        c: {
+            b: number,
+            c: string | null | undefined,
+            d: string | undefined
+        } | undefined,
+        d: {
+            b: number,
+            c: string | null | undefined,
+            d: string | undefined
+        } ,
+    };
+
+    const test = null as any as TestType;
+    //Simplemente comprobamos al compilar que los tipos que devuelve el nullsafe en cajan con los tipos del const
+    const a: {} | null = nullsafe(test, x => x.a);
+    const b : number | null = nullsafe(test, x => x.a, x => x.b);
+    const c : string | null | undefined = nullsafe(test, x => x.a, x => x.c);
+    const d : string | null | undefined = nullsafe(test, x => x.a, x => x.d);
+    const e : string | null= nullsafe(test, x => x.a, x => x.e);
+    const b2 : string | undefined = nullsafe(test, x => x.b);
+
+    const d2 : string | undefined = nullsafe(test, x => x.c, x => x.d);
+    const d3 : string | undefined = nullsafe(test, x => x.d, x => x.d);
+})
 
 test("map prev rx", async () => {
     const arr = [1, 4, 7, 10, 20];
@@ -1559,17 +1592,17 @@ test("join", () => {
     expect(left).toEqual([
         { nombre: "James Bond", pais: undefined },
         { nombre: "Rafael", pais: "Mexico" },
-        { nombre: "Juan Perez", pais: "Mexico"  },
-        { nombre: "Ali Al Hazam", pais: "Moroco"  },
-        { nombre: "Hazim Ul Husein",  pais: "Moroco" },
-        { nombre: "Usain Bolt",  pais: "Moroco" },
+        { nombre: "Juan Perez", pais: "Mexico" },
+        { nombre: "Ali Al Hazam", pais: "Moroco" },
+        { nombre: "Hazim Ul Husein", pais: "Moroco" },
+        { nombre: "Usain Bolt", pais: "Moroco" },
     ]);
 
     expect(inner).toEqual([
         { nombre: "Rafael", pais: "Mexico" },
-        { nombre: "Juan Perez", pais: "Mexico"  },
-        { nombre: "Ali Al Hazam", pais: "Moroco"  },
-        { nombre: "Hazim Ul Husein",  pais: "Moroco" },
-        { nombre: "Usain Bolt",  pais: "Moroco" },
+        { nombre: "Juan Perez", pais: "Mexico" },
+        { nombre: "Ali Al Hazam", pais: "Moroco" },
+        { nombre: "Hazim Ul Husein", pais: "Moroco" },
+        { nombre: "Usain Bolt", pais: "Moroco" },
     ]);
 })
