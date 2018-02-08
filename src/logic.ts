@@ -503,9 +503,9 @@ export function intersect<T>(a: T[], b: T[], comparer?: (a: T, b: T) => boolean)
 /**Devuelve true si SET contiene todos los elementos en SUBSET. Si los conjuntos son iguales devuelve true.
  * Si los dos arreglos estan vacios devuelve true
  */
-export function isSubset<T>(set: T[], subset: T[], comparer?: (a: T, b: T) => boolean) : boolean {
+export function isSubset<T>(set: T[], subset: T[], comparer?: (a: T, b: T) => boolean): boolean {
     //Si por lo menos un elemento en subset no existe en set, ya no es un subset
-    return !any(subset,x => !contains(set, x ));
+    return !any(subset, x => !contains(set, x));
 }
 
 /**Devuelve todos los elementos en "items" tal que su key se encuentre una o mas veces en "keys". Conserva el orden original de "items".
@@ -923,4 +923,49 @@ export function binarySearch<T, TKey>(arr: T[], keySelector: (x: T) => TKey, val
     }
 
     return { index: minIndex - 1, match: false };
+}
+
+/**
+ * Para todos los pares de elemento en left y right que cumplen con el where, devuelve ese par de elementos
+ * Se respeta el orden del arreglo @see left
+ * Este algoritmo corre con complejidad O^2 o NM donde N es la cantidad de elementos en left y M la cantidad de elementos en right
+ * @param left Arreglo izquierdo
+ * @param right Arreglo derecho
+ * @param where Condicion para filtrar el producto cartesiano
+ */
+export function innerJoin<TA, TB>(left: TA[], right: TB[], where: (left: TA, right: TB) => boolean): { left: TA, right: TB }[] {
+    let ret: { left: TA, right: TB }[] = [];
+    for (const l of left) {
+        for (const r of right) {
+            if (where(l, r)) {
+                ret.push({ left: l, right: r });
+            }
+        }
+    }
+    return ret;
+}
+
+/**
+ * Para todos los elementos en left y right que cumplen con el where, devuelve ese par de elementos. Si para
+ * cierto elemento en left ningun par de elementos (left, right) cumple con la condicion, devuelve un par solo con el valor (left) asignado y el
+ * (right) en undefined. Esto hace que todos los elementos en left sean incluidos en el resultado final incondicionalmente por lo menos una vez * Este algoritmo corre con complejidad O^2 o NM donde N es la cantidad de elementos en left y M la cantidad de elementos en right
+ * @param left Arreglo izquierdo
+ * @param right Arreglo derecho
+ * @param where Condicion para filtrar el producto cartesiano
+ */
+export function leftJoin<TA, TB>(left: TA[], right: TB[], where: (left: TA, right: TB) => boolean): { left: TA, right?: TB }[] {
+    let ret: { left: TA, right?: TB }[] = [];
+    for (const l of left) {
+        let anyRight: boolean = false;
+        for (const r of right) {
+            if (where(l, r)) {
+                anyRight = true;
+                ret.push({ left: l, right: r });
+            }
+        }
+        if (!anyRight) {
+            ret.push({ left: l });
+        }
+    }
+    return ret;
 }

@@ -5,7 +5,7 @@ import {
     truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd, toObservable, isArray, isArrayLike, isPromise, isObservable,
     search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx, mapMany, runningTotal, mapPrevious, formatNumber, formatDate, formatDateExcel,
     cloneFunction, bindFunction, unbindFunction, createSelector, delay, createDeepSelector, uuid, allEqual, pick, zip, binarySearch, exclude,
-    isSubset
+    isSubset, innerJoin, leftJoin
 } from "./index";
 
 import * as rx from "rxjs";
@@ -1304,9 +1304,9 @@ test("selector debe de devolver la misma instancia de observable con argumento o
     interface State {
     }
 
-const idCliente = (state: State) => 10;
-    const idClienteObs =  createSelector(idCliente, id =>  new rx.BehaviorSubject<number>(id));
-    
+    const idCliente = (state: State) => 10;
+    const idClienteObs = createSelector(idCliente, id => new rx.BehaviorSubject<number>(id));
+
     let calls = 0;
     const cliente = createSelector(idClienteObs, id => {
         calls++;
@@ -1524,4 +1524,52 @@ test("isSubset", () => {
 
     expect(isSubset([], [1])).toBe(false);
 
+})
+
+test("join", () => {
+    interface Cliente {
+        nombre: string;
+        idPais?: number;
+    }
+    interface Pais {
+        nombre: string;
+        id: number;
+    }
+    const paises: Pais[] = [
+        { id: 1, nombre: "Mexico" },
+        { id: 2, nombre: "Moroco" }
+    ];
+    const clientes: Cliente[] = [
+        { nombre: "James Bond" },
+        { nombre: "Rafael", idPais: 1 },
+        { nombre: "Juan Perez", idPais: 1 },
+        { nombre: "Ali Al Hazam", idPais: 2 },
+        { nombre: "Hazim Ul Husein", idPais: 2 },
+        { nombre: "Usain Bolt", idPais: 2 },
+    ];
+
+    const left =
+        leftJoin(clientes, paises, (a, b) => a.idPais == b.id)
+            .map(x => ({ nombre: x.left.nombre, pais: nullsafe(x.right, x => x.nombre) }));
+
+    const inner =
+        innerJoin(clientes, paises, (a, b) => a.idPais == b.id)
+            .map(x => ({ nombre: x.left.nombre, pais: x.right.nombre }));
+
+    expect(left).toEqual([
+        { nombre: "James Bond", pais: undefined },
+        { nombre: "Rafael", pais: "Mexico" },
+        { nombre: "Juan Perez", pais: "Mexico"  },
+        { nombre: "Ali Al Hazam", pais: "Moroco"  },
+        { nombre: "Hazim Ul Husein",  pais: "Moroco" },
+        { nombre: "Usain Bolt",  pais: "Moroco" },
+    ]);
+
+    expect(inner).toEqual([
+        { nombre: "Rafael", pais: "Mexico" },
+        { nombre: "Juan Perez", pais: "Mexico"  },
+        { nombre: "Ali Al Hazam", pais: "Moroco"  },
+        { nombre: "Hazim Ul Husein",  pais: "Moroco" },
+        { nombre: "Usain Bolt",  pais: "Moroco" },
+    ]);
 })
