@@ -126,7 +126,7 @@ function types(selectorSize: number, selectorCount: number) {
 let ret = title("Codigo autogenerado por genselectors.ts");
 const maxSelectorSize = 2;
 ret += title("Types: ");
-const maxSelectorCount = 5;
+const maxSelectorCount = 6;
 ret += types(maxSelectorSize, maxSelectorCount);
 for (let selectorSize = 1; selectorSize <= maxSelectorSize; selectorSize++) {
     ret += title(`SelectorSize: ${selectorSize}`);

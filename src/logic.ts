@@ -823,7 +823,8 @@ export function formatNumber(number: number | null | undefined | string, integer
         return sign + prefix + intPart;
 
     const fracText = "" + Math.trunc(Math.round(frac * 1000 * Math.pow(10, decimals)) / 1000);
-    const fracZeroStr = fracText + zeroes;
+    const leftFracZeroes = zeroes.substr(0, decimals - fracText.length);
+    const fracZeroStr = leftFracZeroes + fracText + zeroes;
     const fracPart = fracZeroStr.substring(0, decimals);
 
     return sign + prefix + intPart + "." + fracPart;
