@@ -927,9 +927,11 @@ test("format number", () => {
     expect(formatNumber(-123450.546, 12, 5, true, "$")).toEqual("-$000,000,123,450.54600");
 
     expect(formatNumber(1000.0009, 1, 4, true)).toEqual("1,000.0009");
+    expect(formatNumber(-1000.0009, 1, 4, true)).toEqual("-1,000.0009");
     expect(formatNumber(1000.0004, 1, 4, true)).toEqual("1,000.0004");
     expect(formatNumber(1000.0005, 1, 4, true)).toEqual("1,000.0005");
     expect(formatNumber(1000.0006, 1, 4, true)).toEqual("1,000.0006");
+    expect(formatNumber(-1000.0006, 1, 4, true)).toEqual("-1,000.0006");
     expect(formatNumber(1000.0001, 1, 4, true)).toEqual("1,000.0001");
     expect(formatNumber(100.001, 1, 3, true)).toEqual("100.001");
     expect(formatNumber(1000.01, 1, 2, true)).toEqual("1,000.01");
@@ -950,6 +952,8 @@ test("format number", () => {
     expect(formatNumber(107.01, 1, 2, true)).toEqual("107.01");
     expect(formatNumber(187.05, 1, 2, true)).toEqual("187.05");
     expect(formatNumber(1007.01, 1, 2, true)).toEqual("1,007.01");
+    expect(formatNumber(2.599, 1, 1)).toEqual("2.5");
+    expect(formatNumber(-2.599, 1, 1)).toEqual("-2.5");
     
     
 });
