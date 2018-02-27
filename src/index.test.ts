@@ -5,7 +5,7 @@ import {
     truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd, toObservable, isArray, isArrayLike, isPromise, isObservable,
     search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx, mapMany, runningTotal, mapPrevious, formatNumber, formatDate, formatDateExcel,
     cloneFunction, bindFunction, unbindFunction, createSelector, delay, createDeepSelector, uuid, allEqual, pick, zip, binarySearch, exclude,
-    isSubset, innerJoin, leftJoin, unionKey, combinePath
+    isSubset, innerJoin, leftJoin, unionKey, combinePath, generatePushID
 } from "./index";
 
 import * as rx from "rxjs";
@@ -1693,3 +1693,14 @@ test("combinePath", () => {
     
     //TODO: Hacer pruebas con los parametros prefix y postfix
 });
+
+test("generate push", () => {
+    const a = generatePushID();
+    const b = generatePushID();
+    const c = generatePushID();
+    const d = generatePushID();
+
+    expect(d > c).toBeTruthy();
+    expect(c > b).toBeTruthy();
+    expect(b > a).toBeTruthy();
+})

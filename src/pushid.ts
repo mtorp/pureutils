@@ -1,3 +1,4 @@
+
 /**
  * Fancy ID generator that creates 20-character string identifiers with the following properties:
  *
