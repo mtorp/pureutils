@@ -5,7 +5,7 @@ import {
     truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd, toObservable, isArray, isArrayLike, isPromise, isObservable,
     search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx, mapMany, runningTotal, mapPrevious, formatNumber, formatDate, formatDateExcel,
     cloneFunction, bindFunction, unbindFunction, createSelector, delay, createDeepSelector, uuid, allEqual, pick, zip, binarySearch, exclude,
-    isSubset, innerJoin, leftJoin, unionKey, combinePath, generatePushID
+    isSubset, innerJoin, leftJoin, unionKey, combinePath, generatePushID, sum
 } from "./index";
 
 import * as rx from "rxjs";
@@ -1703,4 +1703,12 @@ test("generate push", () => {
     expect(d > c).toBeTruthy();
     expect(c > b).toBeTruthy();
     expect(b > a).toBeTruthy();
+})
+
+test("sum", () => {
+    expect(sum([])).toBe(0);
+    expect(sum([null, undefined])).toBe(0);
+    expect(sum([0, null, undefined])).toBe(0);
+    expect(sum([0, null, undefined, 4])).toBe(4);
+    expect(sum([0, null, undefined, 4, 3])).toBe(7);
 })

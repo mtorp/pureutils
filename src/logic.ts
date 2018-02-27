@@ -1050,3 +1050,10 @@ export function combinePath(basePath: string, path: string, pathChar: string = "
     }
     return current;
 }
+
+/**Suma un arreglo de numeros. Si el arreglo esta vacío devuelve 0.
+ * Los valores nulos o indefinidos son ignorados en la suma
+ */
+export function sum(arr: (number | null | undefined)[]) : number {
+    return arr.filter(x => x != null).map(x => x!).reduce((a,b) => a + b, 0);
+}
