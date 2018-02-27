@@ -6,3 +6,4 @@ export { removeDiacritics } from "./diacritics";
 export { interopRequireDefault } from "./interop";
 export * from "./logic";
 export { createSelector, createDeepSelector } from "./selectors";
+export { generatePushID } from "./pushid";
