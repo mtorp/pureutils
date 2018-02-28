@@ -48,7 +48,7 @@ export function any<T>(arr: T[], pred?: (x: T) => boolean): boolean {
 }
 
 /**Devuelve true si el valor existe en el arreglo */
-export function contains<T>(arr: T[], value: T, comparer?: (a: T, b: T) => boolean): boolean {
+export function contains<TA, TB>(arr: TA[], value: TB, comparer?: (a: TA, b: TB) => boolean): boolean {
     const effectiveComparer = comparer || referenceEquals;
     return any(arr, x => effectiveComparer(x, value));
 }
@@ -493,8 +493,18 @@ export function unionKey<TA, TB, K>(a: TA[], b: TB[], getKey: (item: TA | TB) =>
 }
 
 /**Devuelve todos los elementos en A que no esten en B. Es la operacion A-B de conjuntos. Conserva el orden y los elementos repetidos de A */
-export function exclude<T>(a: T[], b: T[], comparer?: (a: T, b: T) => boolean) {
-    return a.filter(aItem => !contains(b, aItem, comparer));
+export function exclude<TA, TB>(a: TA[], b: TB[], comparer?: (a: TA, b: TB) => boolean) {
+    const comparerEff = comparer && ((b: TB, a: TA) => comparer(a, b));
+    return a.filter(aItem => !contains(b, aItem, comparerEff));
+}
+
+/**Devuelve todos los elementos en "items" tal que su key no se encuentre una o mas veces en "keys". Conserva el orden original de "items".
+ * @param keySelector Obtiene la clave de un elemento
+ * @param comparer Comparedor de igualdad. Por default se usa el shallowEquals
+ */
+export function excludeKeys<T, TKey>(items: T[], keys: TKey[], keySelector: (item: T) => TKey, comparer?: (a: TKey, b: TKey) => boolean) {
+    const comparerEff = comparer || shallowEquals;
+    return exclude(items, keys, (a, b) => comparerEff(keySelector(a), b));
 }
 
 /**Pega todos los elementos de los arreglos */
@@ -1054,6 +1064,6 @@ export function combinePath(basePath: string, path: string, pathChar: string = "
 /**Suma un arreglo de numeros. Si el arreglo esta vacío devuelve 0.
  * Los valores nulos o indefinidos son ignorados en la suma
  */
-export function sum(arr: (number | null | undefined)[]) : number {
-    return arr.filter(x => x != null).map(x => x!).reduce((a,b) => a + b, 0);
+export function sum(arr: (number | null | undefined)[]): number {
+    return arr.filter(x => x != null).map(x => x!).reduce((a, b) => a + b, 0);
 }

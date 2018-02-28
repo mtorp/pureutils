@@ -5,7 +5,7 @@ import {
     truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd, toObservable, isArray, isArrayLike, isPromise, isObservable,
     search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx, mapMany, runningTotal, mapPrevious, formatNumber, formatDate, formatDateExcel,
     cloneFunction, bindFunction, unbindFunction, createSelector, delay, createDeepSelector, uuid, allEqual, pick, zip, binarySearch, exclude,
-    isSubset, innerJoin, leftJoin, unionKey, combinePath, generatePushID, sum
+    isSubset, innerJoin, leftJoin, unionKey, combinePath, generatePushID, sum, excludeKeys
 } from "./index";
 
 import * as rx from "rxjs";
@@ -948,14 +948,14 @@ test("format number", () => {
     expect(formatNumber(1000.001001, 1, 5, true)).toEqual("1,000.00100");
     expect(formatNumber(1000.001001, 1, 6, true)).toEqual("1,000.001001");
 
-    
+
     expect(formatNumber(107.01, 1, 2, true)).toEqual("107.01");
     expect(formatNumber(187.05, 1, 2, true)).toEqual("187.05");
     expect(formatNumber(1007.01, 1, 2, true)).toEqual("1,007.01");
     expect(formatNumber(2.599, 1, 1)).toEqual("2.5");
     expect(formatNumber(-2.599, 1, 1)).toEqual("-2.5");
-    
-    
+
+
 });
 
 test("format datetime", () => {
@@ -1574,7 +1574,36 @@ test("exclude", () => {
     expect(exclude(a, [1, 6, 7])).toEqual([2, 3, 4, 5]);
     expect(exclude(a, [7, 6, 1])).toEqual([2, 3, 4, 5]);
     expect(exclude(a, [1, 6, 7, 8, 9, 10])).toEqual([2, 3, 4, 5]);
-})
+});
+
+test("exclude 2", () => {
+    const items = [
+        { id: 10, nombre: "rafa" },
+        { id: 15, nombre: "ale" },
+        { id: 18, nombre: "juan" },
+        { id: 7, nombre: "carlos" },
+        { id: 5, nombre: "neto" },
+    ];
+    const ids = [15, 7];
+
+    const ret = exclude(items, ids, (a, b) => a.id == b);
+    const expected = [
+        { id: 10, nombre: "rafa" },
+        { id: 18, nombre: "juan" },
+        { id: 5, nombre: "neto" },
+    ];
+
+    expect(ret).toEqual(expected);
+
+    const ret2 = excludeKeys(items, [10, 7], x => x.id);
+
+    const expected2 = [
+        { id: 15, nombre: "ale" },
+        { id: 18, nombre: "juan" },
+        { id: 5, nombre: "neto" },
+    ]
+    expect(ret2).toEqual(expected2);
+});
 
 test("isSubset", () => {
     const a = [1, 2, 3, 4];
@@ -1651,8 +1680,8 @@ test("union key", () => {
 
     const ret = unionKey(a, b, x => x.id);
     expect(ret).toEqual([
-        { id: 2, nombre: "Ale"},
-        { id: 1, nombre: "Rafaelito", x: 1},
+        { id: 2, nombre: "Ale" },
+        { id: 1, nombre: "Rafaelito", x: 1 },
         { id: 3, nombre: "Juanito", x: 2 }
     ]);
 });
@@ -1674,23 +1703,23 @@ test("combinePath", () => {
     expect(combinePath("/mi/ruta/base/", "../")).toBe("/mi/ruta");
     expect(combinePath("/mi/ruta/base", "../")).toBe("/mi/ruta");
     expect(combinePath("mi/ruta/base", "../")).toBe("/mi/ruta");
-    
+
     expect(combinePath("mi/ruta/base/hey/", "../../")).toBe("/mi/ruta");
     expect(combinePath("mi/ruta/base/hey/", "../../../")).toBe("/mi");
     expect(combinePath("mi/ruta/base/hey/", "../../../hola")).toBe("/mi/hola");
     expect(combinePath("mi/ruta/base/hey/", "../../../hola/")).toBe("/mi/hola");
     expect(combinePath("mi/ruta/base/hey", "../../../hola/")).toBe("/mi/hola");
-    
+
     expect(combinePath("mi/ruta/base/hey", "../../../../")).toBe("/");
     expect(combinePath("/mi/ruta/base/hey", "../../../../")).toBe("/");
     expect(combinePath("/mi/ruta/base/hey/", "../../../../")).toBe("/");
     expect(combinePath("mi/ruta/base/hey/", "../../../../")).toBe("/");
-    
+
     expect(combinePath("mi/ruta/base/hey/", "../../../../rollo")).toBe("/rollo");
     expect(combinePath("mi/ruta/base/hey/", "../../../../rollo/hola")).toBe("/rollo/hola");
     expect(combinePath("mi/ruta/base/hey/", "rollo/hola")).toBe("/rollo/hola");
     expect(combinePath("mi/ruta/base/hey/", "/rollo/hola")).toBe("/rollo/hola");
-    
+
     //TODO: Hacer pruebas con los parametros prefix y postfix
 });
 
