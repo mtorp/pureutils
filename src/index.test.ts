@@ -5,7 +5,7 @@ import {
     truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd, toObservable, isArray, isArrayLike, isPromise, isObservable,
     search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx, mapMany, runningTotal, mapPrevious, formatNumber, formatDate, formatDateExcel,
     cloneFunction, bindFunction, unbindFunction, createSelector, delay, createDeepSelector, uuid, allEqual, pick, zip, binarySearch, exclude,
-    isSubset, innerJoin, leftJoin, unionKey, combinePath, generatePushID, sum, excludeKeys
+    isSubset, innerJoin, leftJoin, unionKey, combinePath, generatePushID, sum, excludeKeys, coalesce
 } from "./index";
 
 import * as rx from "rxjs";
@@ -1740,4 +1740,15 @@ test("sum", () => {
     expect(sum([0, null, undefined])).toBe(0);
     expect(sum([0, null, undefined, 4])).toBe(4);
     expect(sum([0, null, undefined, 4, 3])).toBe(7);
+});
+
+test("coalesce", () => {
+    expect(coalesce(false, "hola")).toBe(false);
+    expect(coalesce(null, "hola")).toBe("hola");
+    expect(coalesce(null, undefined, "rafa")).toBe("rafa");
+    expect(coalesce(null, "hey", "rafa")).toBe("hey");
+    expect(coalesce(true)).toBe(true);
+    expect(coalesce(null)).toBe(null);
+    expect(coalesce(undefined)).toBe(undefined);
+
 })

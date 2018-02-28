@@ -1067,3 +1067,4 @@ export function combinePath(basePath: string, path: string, pathChar: string = "
 export function sum(arr: (number | null | undefined)[]): number {
     return arr.filter(x => x != null).map(x => x!).reduce((a, b) => a + b, 0);
 }
+
