@@ -5,7 +5,7 @@ import {
     truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd, toObservable, isArray, isArrayLike, isPromise, isObservable,
     search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx, mapMany, runningTotal, mapPrevious, formatNumber, formatDate, formatDateExcel,
     cloneFunction, bindFunction, unbindFunction, createSelector, delay, createDeepSelector, uuid, allEqual, pick, zip, binarySearch, exclude,
-    isSubset, innerJoin, leftJoin, unionKey, combinePath, generatePushID, sum, excludeKeys, coalesce
+    isSubset, innerJoin, leftJoin, unionKey, combinePath, generatePushID, sum, excludeKeys, coalesce, nextToPromise
 } from "./index";
 
 import * as rx from "rxjs";
@@ -1751,4 +1751,16 @@ test("coalesce", () => {
     expect(coalesce(null)).toBe(null);
     expect(coalesce(undefined)).toBe(undefined);
 
+})
+
+test("nextToPromise", async () => {
+    const obs = new rx.BehaviorSubject(1);
+
+    const a = await nextToPromise(obs);
+    expect(a).toBe(1);
+
+    obs.next(2);
+    
+    const b = await nextToPromise(obs);
+    expect(b).toBe(2);
 })

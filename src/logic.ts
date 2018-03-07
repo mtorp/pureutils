@@ -1068,3 +1068,9 @@ export function sum(arr: (number | null | undefined)[]): number {
     return arr.filter(x => x != null).map(x => x!).reduce((a, b) => a + b, 0);
 }
 
+/**Convierte un observable a una promesa que se resuelve en el siguiente onNext del observable, esto es diferente a la función
+ * @see rx.Observable.toPromise() que se resueve hasta que el observable es completado
+*/
+export function nextToPromise<T>(obs:rx.Observable<T>) : Promise<T> {
+    return new Promise<T>((resolve, reject) => obs.subscribe(resolve, reject));
+}
