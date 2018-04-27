@@ -1760,7 +1760,30 @@ test("nextToPromise", async () => {
     expect(a).toBe(1);
 
     obs.next(2);
-    
+
     const b = await nextToPromise(obs);
     expect(b).toBe(2);
 })
+
+test("createSelector type", async () => {
+    interface Entity {
+        hola: string;
+    }
+
+    interface Props {
+        props: string;
+    }
+
+    interface State {
+        state: string;
+    }
+
+    const nuevoValue = (props: Props, state: State) => ({} as Entity);
+    const id = (props: Props, state: State) => "1";
+    const valueFromResource = createSelector(id, nuevoValue, (id, esNuevo) => null as any as rx.Observable<Entity | undefined>);
+    const valueFromState = (props: Props, state: State) => ({} as Entity | undefined);
+    const value = createSelector(valueFromState, valueFromResource, nuevoValue, (state, resource : (Entity | undefined), nuevo) => {
+
+    });
+
+});

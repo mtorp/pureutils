@@ -1,6 +1,6 @@
 {
   "name": "keautils",
-  "version": "1.5.29",
+  "version": "1.5.30",
   "description": "metodos de linq para javascript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -14,7 +14,7 @@
     "jest": "^19.0.2",
     "jest-cli": "^21.2.1",
     "ts-jest": "^19.0.14",
-    "typescript": "^2.5.3"
+    "typescript": "^2.8.3"
   },
   "scripts": {
     "test": "tsc && jest",

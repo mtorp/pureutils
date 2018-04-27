@@ -42,5 +42,5 @@ export function nullsafe<T1>(value: Nullify<T1>): Nullify<T1>
 
 export function nullsafe(value: any, ...maps: ((x: any) => any)[]) {
     const nullMaps = maps.map(func => value => value == null ? value : func(value));
-    return pipe(value, ...nullMaps);
+    return (pipe as any)(value, ...nullMaps);
 }
