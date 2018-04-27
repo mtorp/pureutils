@@ -333,13 +333,13 @@ export function arrayToMap<T, TValue>(array: T[], keySelector?: (item: T) => str
  * @param obj Objeto a mapear
  * @param map Función que toma el valor y el "key" y devuelve el nuevo valor
  */
-export function mapObject<T, TOut>(obj: T, map: <K extends keyof T>(value: T[K], key: K) => TOut): {[K in keyof T]: TOut} {
+export function mapObject<T, TOut>(obj: T, map: <K extends keyof T>(value: T[K], key: K) => TOut): { [K in keyof T]: TOut } {
     const ret = {};
     for (const key in obj) {
         const value = obj[key];
         ret[key as string] = map(value, key);
     }
-    return ret as {[K in keyof T]: TOut };
+    return ret as { [K in keyof T]: TOut };
 }
 
 /**
@@ -374,7 +374,7 @@ export function omitUndefined<T>(obj: T): Partial<T> {
 }
 
 /**Devuelve un objeto son solo ciertas propiedades del objeto incluidas. Si se escoge una propiedad que no existe en el objeto esta no estará incluida en el objeto devuelto */
-export function pick<T extends {}, Keys extends keyof T>(obj: T, ...props: Keys[]): {[K in Keys]: T[K]} {
+export function pick<T extends {}, Keys extends keyof T>(obj: T, ...props: Keys[]): { [K in Keys]: T[K] } {
     let ret: Partial<T> = {};
     for (const key of props) {
         if (key in obj) {
@@ -427,7 +427,7 @@ export function upDownItem<T>(array: T[], index: number, direction: "up" | "down
     }
 }
 
-export type Promisify<T> = {[K in keyof T]: PromiseLike<T[K]> };
+export type Promisify<T> = { [K in keyof T]: PromiseLike<T[K]> };
 
 /**Aplica una función Promise.all a un objeto,  */
 export function promiseAllObj<T>(obj: Promisify<T>): Promise<T>
@@ -439,10 +439,33 @@ export function promiseAllObj(obj: any) {
     return ret;
 }
 
+/**Convierte un objeto de observables a un observable de objetos, el primer elemento del observable resultante se da cuando todos los observables del objeto lanzan el primer valor */
+export function objRxToRxObj<T extends { [K in keyof T]: rx.Observable<any> }>(obj: T): rx.Observable<{
+    [K in keyof T]: T[K] extends rx.Observable<infer R> ? R : T
+}> {
+    const keys = Object.keys(obj) as (keyof T)[];
+
+    interface KeyValue {
+        value: any;
+        key: keyof T
+    };
+
+    const values = keys.map(key => obj[key].map(x => ({
+        value: x,
+        key: key
+    })));
+
+    
+
+    const combine = rx.Observable.combineLatest(values).map(x => arrayToMap(x) ) ;
+    return combine as rx.Observable<any>;
+}
+
+
 /**Convierte una promesa de un objeto a un objeto de promesas
  * @param include Nombres de las propiedades que se desean incluir en el objeto resultante
  */
-export function awaitObj<T, TKeys extends keyof T>(obj: PromiseLike<T>, include: {[K in TKeys]: true }): Promisify<Pick<T, TKeys>> {
+export function awaitObj<T, TKeys extends keyof T>(obj: PromiseLike<T>, include: { [K in TKeys]: true }): Promisify<Pick<T, TKeys>> {
     const ret = pipe(
         include,
         inc => filterObject(inc, x => !!x),
@@ -774,7 +797,7 @@ export function mapMany<T, TR>(items: T[], map: (x: T) => TR[]): TR[] {
 }
 
 /**Convierte un objeto de arreglos a un arreglo de objetos, si el objeto de arreglos esta vacio, devuelve un arreglo vacio*/
-export function zip<TData>(data: {[K in keyof TData]: TData[K][]}): TData[] {
+export function zip<TData>(data: { [K in keyof TData]: TData[K][] }): TData[] {
     //Checa que todo los arreglos tengan la misma longitud
     const lengths = enumObject(data).map(x => x.value.length);
     if (!allEqual(lengths)) {
@@ -1071,6 +1094,6 @@ export function sum(arr: (number | null | undefined)[]): number {
 /**Convierte un observable a una promesa que se resuelve en el siguiente onNext del observable, esto es diferente a la función
  * @see rx.Observable.toPromise() que se resueve hasta que el observable es completado
 */
-export function nextToPromise<T>(obs:rx.Observable<T>) : Promise<T> {
+export function nextToPromise<T>(obs: rx.Observable<T>): Promise<T> {
     return new Promise<T>((resolve, reject) => obs.subscribe(resolve, reject));
 }

@@ -5,7 +5,7 @@ import {
     truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd, toObservable, isArray, isArrayLike, isPromise, isObservable,
     search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx, mapMany, runningTotal, mapPrevious, formatNumber, formatDate, formatDateExcel,
     cloneFunction, bindFunction, unbindFunction, createSelector, delay, createDeepSelector, uuid, allEqual, pick, zip, binarySearch, exclude,
-    isSubset, innerJoin, leftJoin, unionKey, combinePath, generatePushID, sum, excludeKeys, coalesce, nextToPromise
+    isSubset, innerJoin, leftJoin, unionKey, combinePath, generatePushID, sum, excludeKeys, coalesce, nextToPromise, objRxToRxObj
 } from "./index";
 
 import * as rx from "rxjs";
@@ -729,7 +729,7 @@ test("contains any", () => {
 });
 
 test("null safe", () => {
-    type RecPartial<T> = {[K in keyof T]?: RecPartial<T[K]>};
+    type RecPartial<T> = { [K in keyof T]?: RecPartial<T[K]> };
 
     interface TestType {
         A: {
@@ -1782,8 +1782,93 @@ test("createSelector type", async () => {
     const id = (props: Props, state: State) => "1";
     const valueFromResource = createSelector(id, nuevoValue, (id, esNuevo) => null as any as rx.Observable<Entity | undefined>);
     const valueFromState = (props: Props, state: State) => ({} as Entity | undefined);
-    const value = createSelector(valueFromState, valueFromResource, nuevoValue, (state, resource : (Entity | undefined), nuevo) => {
+    const value = createSelector(valueFromState, valueFromResource, nuevoValue, (state, resource: (Entity | undefined), nuevo) => {
 
     });
 
+});
+
+test("rx Obj", () => {
+
+    const a = new rx.Subject<number>();
+    const b = new rx.Subject<number>();
+    const c = new rx.BehaviorSubject("hola");
+
+    const obj = { a, b, c };
+    const obsObj = objRxToRxObj(obj);
+
+    let ret: {
+        count: number,
+        obj: (typeof obsObj) extends rx.Observable<infer R> ? R : any
+    } = {
+            count: 0,
+            obj: null as any
+        };
+
+    obsObj.subscribe(next => ret = {
+        count: ret.count + 1,
+        obj: next
+    });
+
+    //Aún no hay valores
+    expect(ret).toEqual({ count: 0, obj: null });
+
+    //Asignar a = 2
+    a.next(2);
+    expect(ret).toEqual({ count: 0, obj: null }); //Falta b
+
+    //Asignar b = 3
+    b.next(3);
+    expect(ret).toEqual({
+        count: 1,
+        obj: {
+            a: 2,
+            b: 3,
+            c: "hola"
+        }
+    });
+
+    //Cambiar c a "rafa"
+    c.next("rafa");
+    expect(ret).toEqual({
+        count: 2,
+        obj: {
+            a: 2,
+            b: 3,
+            c: "rafa"
+        }
+    });
+
+    //Cambiar a = 4
+    a.next(4);
+    expect(ret).toEqual({
+        count: 3,
+        obj: {
+            a: 4,
+            b: 3,
+            c: "rafa"
+        }
+    });
+
+    //Cambiar a = 5
+    a.next(5);
+    expect(ret).toEqual({
+        count: 4,
+        obj: {
+            a: 5,
+            b: 3,
+            c: "rafa"
+        }
+    });
+
+    //Cambiar b = 8
+    b.next(8);
+    expect(ret).toEqual({
+        count: 5,
+        obj: {
+            a: 5,
+            b: 8,
+            c: "rafa"
+        }
+    });
 });
