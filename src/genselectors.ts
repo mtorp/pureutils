@@ -1,4 +1,4 @@
-import { range, all } from "./logic";
+import { range, all, sequenceEquals } from "./logic";
 
 /**Codigo para generar la definición de los tipos de createSelector */
 function powerCombine(digitSize: number, digitCount: number): number[][] {

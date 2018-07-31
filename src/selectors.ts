@@ -7,12 +7,15 @@ const moizeDefault = interopRequireDefault(_moize);
 
 
 export interface createSelectorAsyncCreatorOptions {
+    /**True para usar el deep equals */
     deepEquals: boolean;
+    /**True para usar el asíncrono */
+    async: boolean;
 }
 
-const defaultCreateSelectorAsync = createSelectorCreator({ deepEquals: false });
+const defaultCreateSelectorAsync = createSelectorCreator({ deepEquals: false, async: true });
 
-export const createDeepSelector = createSelectorCreator({ deepEquals: true });
+export const createDeepSelector = createSelectorCreator({ deepEquals: true, async: false });
 
 
         

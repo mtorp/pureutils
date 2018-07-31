@@ -18,6 +18,7 @@ export function all<T>(arr: T[], pred: (x: T) => boolean): boolean {
     return true;
 }
 
+
 /**Devuelve true si todos los elementos de un arreglo son iguales. Si el arreglo esta vacío devuelve true
  * @param comparer El comparador de igualdar, por default es @see referenceEquals
  */
@@ -1097,3 +1098,4 @@ export function sum(arr: (number | null | undefined)[]): number {
 export function nextToPromise<T>(obs: rx.Observable<T>): Promise<T> {
     return new Promise<T>((resolve, reject) => obs.subscribe(resolve, reject));
 }
+

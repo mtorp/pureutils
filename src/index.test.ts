@@ -1054,6 +1054,55 @@ test("unbind function", () => {
     expect(unbindFunc).toBeUndefined();
 });
 
+test("selector devolver el mismo observable", async () => {
+    const selId = (id: number) => id;
+    const selValue = (id: number) => id * 2;
+    const selB = createSelector(selId, x => new rx.Observable<number>(subs => {
+        subs.next(x * 3);
+    }));
+
+    const selResult = createSelector(selValue, selB, selValue || selB);
+
+    const obs1 = selResult(10);
+    const obs2 = selResult(10);
+    const obs3 = selResult(10);
+
+    expect(obs1).toBe(obs2);
+    expect(obs2).toBe(obs3);
+
+    obs1.subscribe(x => { });
+});
+
+test("selector devolver el mismo observable 2", async () => {
+    const id = (props: number, state: number | null) => props;
+    const valueFromState = (props: number, state: number | null) => state;
+    let subCount = 0;
+    const valueFromResource = createSelector(id, x => new rx.Observable<number>(subs => {
+        subs.next(x * 3);
+        subCount++;
+    }));
+
+    const value = (props: number, state: number | null) => {
+        const vfs = valueFromState(props, state);
+        return vfs ? rx.Observable.from([vfs]) : valueFromResource(props, state);
+    }
+
+    const obs0 = value(10, null);
+    const obs1A = value(10, 2);
+    const obs1B = value(10, 2);
+    const obs2 = value(10, 3);
+    const obs3 = value(10, 4);
+    //expect(subCount).toBe(1);
+
+    expect(obs0).not.toBe(obs1A);
+
+    expect(obs1A).toBe(obs1B);
+    expect(obs1A).not.toBe(obs2);
+    expect(obs2).not.toBe(obs3);
+
+});
+
+
 test("async create selector simple test", async () => {
     interface Props {
         value: number;
