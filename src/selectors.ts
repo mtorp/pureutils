@@ -424,8 +424,9 @@ function getSelectorValueClearMemoOnError<R>(valueThunk: (...args: any[]) => R |
     }
     if (isObservable(result)) {
         //Resultado observable
-        return result.do(x => { }, err => {
+        return result.catch<R, R>(err => {
             clearMemo();
+            throw err;
         });
     } else if (isPromise(result)) {
         //Resultado promesa
