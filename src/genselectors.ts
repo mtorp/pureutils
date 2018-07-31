@@ -1,6 +1,6 @@
 import { range, all, sequenceEquals } from "./logic";
 
-/**Codigo para generar la definición de los tipos de createSelector */
+/**Codigo para generar la definición de los tipos de createSelectorRx */
 function powerCombine(digitSize: number, digitCount: number): number[][] {
     let count = Math.pow(digitSize, digitCount);
     let ret: number[][] = [];
@@ -83,7 +83,7 @@ function functionDef(selectorSize: number, selectorCount: number) {
         ...range(1, selectorCount).map(x => "R" + x),
         "O"].join(", ");
 
-    return `export function createSelector<${T}>(`
+    return `export function createSelectorRx<${T}>(`
 }
 
 function completeFuncDef(selectorSize: number, selectorCount: number, power: number[]) {

@@ -34,6 +34,8 @@ export function allEqual<T>(arr: T[], comparer?: (a: T, b: T) => boolean): boole
     return true;
 }
 
+
+
 /**Devuelve true si por lo menos un elemento del arreglo encaja con el predicado, o si existe por lo menos un elemento en caso
  * de que el predicado este indefinido
  */
