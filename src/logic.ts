@@ -430,7 +430,7 @@ export function upDownItem<T>(array: T[], index: number, direction: "up" | "down
     }
 }
 
-export type Promisify<T> = { [K in keyof T]: PromiseLike<T[K]> };
+export type Promisify<T> = { [K in keyof T]: Promise<T[K]> };
 
 /**Aplica una función Promise.all a un objeto,  */
 export function promiseAllObj<T>(obj: Promisify<T>): Promise<T>
