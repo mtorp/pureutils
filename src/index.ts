@@ -8,3 +8,4 @@ export { interopRequireDefault } from "./interop";
 export * from "./logic";
 export { createSelectorRx, createDeepSelectorRx, createSelector, createDeepSelector } from "./selectors";
 export { generatePushID } from "./pushid";
+export * from "./url";
