@@ -6,9 +6,9 @@ interface TextSearchMatch {
 } 
 
 /**Realiza una busqueda de texto y devuelve las partes en donde encaja la cadena, el arreglo resultante tendrá por lo menos un elemento si el texto SI encaja */
-export function search(pattern: string | null | undefined, text: string | null | undefined) : TextSearchMatch[] {
-    if (!pattern) return [{index: 0, count: 0}];
-    if (!text) return [];
+export function search(pattern: string | null | undefined, text: string | null | undefined) : boolean {
+    if (!pattern) return true;
+    if (!text) return false;
 
     pattern = removeDiacritics(pattern.toLowerCase());
     text = removeDiacritics(text.toLowerCase());
