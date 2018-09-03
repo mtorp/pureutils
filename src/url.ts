@@ -52,3 +52,16 @@ export function appendEncodedUrlParameters(url: string, paramStr: string) {
 
     return paramStr ? (url + "?" + paramStr) : url;
 }
+
+/**Determina si una URL es absoluta */
+export function isUrlAbsolute(url) {
+    //Origen: https://stackoverflow.com/questions/10687099/how-to-test-if-a-url-string-is-absolute-or-relative
+    
+    if (url.indexOf('//') === 0) {return true;} // URL is protocol-relative (= absolute)
+    if (url.indexOf('://') === -1) {return false;} // URL has no protocol (= relative)
+    if (url.indexOf('.') === -1) {return false;} // URL does not contain a dot, i.e. no TLD (= relative, possibly REST)
+    if (url.indexOf('/') === -1) {return false;} // URL does not contain a single slash (= relative)
+    if (url.indexOf(':') > url.indexOf('/')) {return false;} // The first colon comes after the first slash (= relative)
+    if (url.indexOf('://') < url.indexOf('.')) {return true;} // Protocol is defined before first dot (= absolute)
+    return false; // Anything else must be relative
+}
