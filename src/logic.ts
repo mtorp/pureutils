@@ -458,9 +458,9 @@ export function objRxToRxObj<T extends { [K in keyof T]: rx.Observable<any> }>(o
         key: key
     })));
 
-    
 
-    const combine = rx.Observable.combineLatest(values).map(x => arrayToMap(x) ) ;
+
+    const combine = rx.Observable.combineLatest(values).map(x => arrayToMap(x));
     return combine as rx.Observable<any>;
 }
 
@@ -1111,4 +1111,29 @@ export function splitPromise<T>(): { promise: Promise<T>, resolve: (value?: T | 
     });
 
     return { promise, resolve, reject };
+}
+
+/**Tipo de un extremo del rango */
+export type RangeEndType = "in" | "ex";
+/**Un extremo de un rango de numeros */
+export interface FloatRangeType {
+    value: number;
+    type: RangeEndType;
+}
+/**Un rango de numeros */
+export interface FloatRange {
+    /**Minimo del rango */
+    min?: FloatRangeType,
+    /**Máximo del rango */
+    max?: FloatRangeType
+}
+
+export type RangeCheckResult = "min" | "max";
+/**Determina si un numero esta afuera del rango, y devuelve de que parte del rango esta afuera */
+export function outOfRange(value: number, range: FloatRange): RangeCheckResult | null {
+    if (range.min && ((range.min.type == "in" && value < range.min.value) || (range.min.type == "ex" && value <= range.min.value)))
+        return "min";
+    else if (range.max && ((range.max.type == "in" && value > range.max.value) || (range.max.type == "ex" && value >= range.max.value)))
+        return "max";
+    return null;
 }

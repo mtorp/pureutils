@@ -5,7 +5,7 @@ import {
     truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd, toObservable, isArray, isArrayLike, isPromise, isObservable,
     search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx, mapMany, runningTotal, mapPrevious, formatNumber, formatDate, formatDateExcel,
     cloneFunction, bindFunction, unbindFunction, createSelectorRx, delay, createDeepSelectorRx, uuid, allEqual, pick, zip, binarySearch, exclude,
-    isSubset, innerJoin, leftJoin, unionKey, combinePath, generatePushID, sum, excludeKeys, coalesce, nextToPromise, objRxToRxObj
+    isSubset, innerJoin, leftJoin, unionKey, combinePath, generatePushID, sum, excludeKeys, coalesce, nextToPromise, objRxToRxObj, outOfRange, FloatRange
 } from "./index";
 
 import * as rx from "rxjs";
@@ -1083,23 +1083,23 @@ test("selector devolver el mismo observable 2", async () => {
         subCount++;
     }));
 
-    const value =  createSelector(valueFromState, valueFromResource, (state, resource) => state ? rx.Observable.from([state]) : resource);
+    const value = createSelector(valueFromState, valueFromResource, (state, resource) => state ? rx.Observable.from([state]) : resource);
 
     const obs0 = value(10, null);
-    obs0.subscribe(x => {});
+    obs0.subscribe(x => { });
 
     const obs1A = value(10, 2);
-    obs1A.subscribe(x => {});
-    
+    obs1A.subscribe(x => { });
+
     const obs1B = value(10, 2);
-    obs1B.subscribe(x => {});
-    
+    obs1B.subscribe(x => { });
+
     const obs2 = value(10, 3);
-    obs2.subscribe(x => {});
+    obs2.subscribe(x => { });
 
     const obs3 = value(10, 4);
-    obs3.subscribe(x => {});
-    
+    obs3.subscribe(x => { });
+
     expect(subCount).toBe(1);
 
     expect(obs0).not.toBe(obs1A);
@@ -1928,4 +1928,83 @@ test("rx Obj", () => {
             c: "rafa"
         }
     });
+});
+
+
+test("check range", () => {
+
+    expect(outOfRange(10, {})).toBe(null);
+    expect(outOfRange(10, {
+        min: {
+            value: 10,
+            type: "in"
+        }
+    })).toBe(null);
+
+    expect(outOfRange(10, {
+        min: {
+            value: 10,
+            type: "ex"
+        }
+    })).toBe("min");
+
+    expect(outOfRange(7, {
+        min: {
+            value: 10,
+            type: "in"
+        }
+    })).toBe("min");
+
+    expect(outOfRange(7, {
+        min: {
+            value: 10,
+            type: "ex"
+        }
+    })).toBe("min");
+
+    //
+
+    expect(outOfRange(10, {
+        max: {
+            value: 10,
+            type: "in"
+        }
+    })).toBe(null);
+
+    expect(outOfRange(10, {
+        max: {
+            value: 10,
+            type: "ex"
+        }
+    })).toBe("max");
+
+    expect(outOfRange(11, {
+        max: {
+            value: 10,
+            type: "in"
+        }
+    })).toBe("max");
+
+    expect(outOfRange(34, {
+        max: {
+            value: 10,
+            type: "ex"
+        }
+    })).toBe("max");
+
+    const r: FloatRange = {
+        min: {
+            value: 6,
+            type: "in"
+        },
+        max: {
+            value: 10,
+            type: "ex"
+        }
+    };
+    expect(outOfRange(6,r )).toBe(null);
+    expect(outOfRange(5,r )).toBe("min");
+    expect(outOfRange(10,r )).toBe("max");
+    expect(outOfRange(13,r )).toBe("max");
+
 });
