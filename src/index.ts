@@ -9,3 +9,4 @@ export * from "./logic";
 export { createSelectorRx, createDeepSelectorRx, createSelector, createDeepSelector } from "./selectors";
 export { generatePushID } from "./pushid";
 export * from "./url";
+export * from "./base64";

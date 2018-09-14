@@ -5,7 +5,8 @@ import {
     truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd, toObservable, isArray, isArrayLike, isPromise, isObservable,
     search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx, mapMany, runningTotal, mapPrevious, formatNumber, formatDate, formatDateExcel,
     cloneFunction, bindFunction, unbindFunction, createSelectorRx, delay, createDeepSelectorRx, uuid, allEqual, pick, zip, binarySearch, exclude,
-    isSubset, innerJoin, leftJoin, unionKey, combinePath, generatePushID, sum, excludeKeys, coalesce, nextToPromise, objRxToRxObj, outOfRange, FloatRange
+    isSubset, innerJoin, leftJoin, unionKey, combinePath, generatePushID, sum, excludeKeys, coalesce, nextToPromise, objRxToRxObj, outOfRange, FloatRange,
+    base64ToString, stringToBase64
 } from "./index";
 
 import * as rx from "rxjs";
@@ -2008,3 +2009,13 @@ test("check range", () => {
     expect(outOfRange(13,r )).toBe("max");
 
 });
+
+
+
+test("check base64", () => {
+    const base64 = "aG9sYQ==";
+    const text = "hola";
+
+    expect(base64ToString(base64)).toBe(text);
+    expect(stringToBase64(text)).toBe(base64);
+})
