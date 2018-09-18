@@ -609,6 +609,11 @@ export function remove<T>(arr: T[], item: T) {
     return arr.filter(x => x != item);
 }
 
+/**Elimina un elemento del arreglo dado su indice */
+export function removeAt<T>(arr: T[], index: number) {
+    return arr.filter((x, i) => i != index);
+}
+
 /**
  * Combina varias funciones comparadores que pueden ser usadas para alimentar a la función sort. Se le da prioridad a los primeros comparadores,
  * si un comparador devuelve 0, entonces se evalue el segundo
