@@ -743,9 +743,14 @@ export function take<T>(arr: T[], count: number): T[] {
 }
 
 /**Obtiene le primer elemento mapeado de un arreglo o undefined */
-export function firstMap<T, R>(arr: T[], predicate: (x: T) => boolean, map: (x: T) => R): R | undefined {
-    const f = first(arr, predicate);
-    return f && map(f);
+export function firstMap<T, R>(arr: T[], predicate: (x: T) => boolean, map: (x: T, i: number) => R): R | undefined {
+    for(let i = 0; i < arr.length; i++) {
+        const x = arr[i];
+        if(predicate(x)) {
+            return map(x, i);
+        }
+    }
+    return undefined;
 }
 
 /**Devuelve true si existiran duplicados en caso de editar un elemento de un arreglo
