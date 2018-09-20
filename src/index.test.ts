@@ -6,7 +6,7 @@ import {
     search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx, mapMany, runningTotal, mapPrevious, formatNumber, formatDate, formatDateExcel,
     cloneFunction, bindFunction, unbindFunction, createSelectorRx, delay, createDeepSelectorRx, uuid, allEqual, pick, zip, binarySearch, exclude,
     isSubset, innerJoin, leftJoin, unionKey, combinePath, generatePushID, sum, excludeKeys, coalesce, nextToPromise, objRxToRxObj, outOfRange, FloatRange,
-    base64ToString, stringToBase64
+    base64ToString, stringToBase64, max, min
 } from "./index";
 
 import * as rx from "rxjs";
@@ -542,6 +542,11 @@ test("sort", () => {
     expect(objSort).toEqual([{ value: 1 }, { value: 2 }, { value: 3 }, { value: 4 }, { value: 5 }]);
 });
 
+test("order by number", () => {
+    const x = [1, 3, 2, 5, 4];
+    const y = orderBy(x);
+    expect(y).toEqual([1, 2, 3, 4, 5]);
+});
 test("order by", () => {
     const {
         x, y, z, w, a, b
@@ -2003,14 +2008,12 @@ test("check range", () => {
             type: "ex"
         }
     };
-    expect(outOfRange(6,r )).toBe(null);
-    expect(outOfRange(5,r )).toBe("min");
-    expect(outOfRange(10,r )).toBe("max");
-    expect(outOfRange(13,r )).toBe("max");
+    expect(outOfRange(6, r)).toBe(null);
+    expect(outOfRange(5, r)).toBe("min");
+    expect(outOfRange(10, r)).toBe("max");
+    expect(outOfRange(13, r)).toBe("max");
 
 });
-
-
 
 test("check base64", () => {
     const base64 = "aG9sYQ==";
@@ -2019,3 +2022,45 @@ test("check base64", () => {
     expect(base64ToString(base64)).toBe(text);
     expect(stringToBase64(text)).toBe(base64);
 })
+
+test("max", () => {
+    const x = [1, 3, 2, 5, 4];
+    const y = max(x);
+    expect(max(x)).toEqual(5);
+    expect(max(x, x => - x)).toEqual(1);
+});
+
+test("max key", () => {
+    const x = [
+        {a: 1, b: 1},
+        {a: 3, b: 1},
+        {a: 3, b: 2},
+        {a: 3, b: 1},
+        {a: 2, b: 5},
+    ];
+
+    const maxVal = max(x, x => x.a, x => x.b);
+    expect(maxVal).toEqual({a: 3, b: 2});
+});
+
+test("min", () => {
+    const x = [1, 3, 2, 5, 4];
+    expect(min(x)).toEqual(1);
+    expect(min(x, x => - x)).toEqual(5);
+});
+
+test("min key", () => {
+    const x = [
+        {a: 1, b: 1},
+        {a: 3, b: 1},
+        {a: 3, b: 2},
+        {a: 3, b: 1},
+        {a: 2, b: 5},
+        {a: 0, b: 2},
+        {a: 0, b: 5},
+        {a: 2, b: 5},
+    ];
+
+    const minVal = min(x, x => x.a, x => x.b);
+    expect(minVal).toEqual({a: 0, b: 2});
+});

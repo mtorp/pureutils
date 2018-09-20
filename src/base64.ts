@@ -1,4 +1,4 @@
-/**Convierte un Blobk a una cadena base64 */
+/**Convierte un Blob a una cadena base64 */
 export function blobToBase64(archivo: Blob): Promise<string> {
     return new Promise(resolve => {
         const reader = new FileReader();
@@ -56,4 +56,17 @@ export function stringToBlob(value: string, contentType?: string): Blob {
 
     var blob = new Blob(byteArrays, { type: contentType });
     return blob;
+}
+
+/**Convierte un blob a una cadena */
+export function blobToString(value: Blob) : Promise<string> {
+    const reader = new FileReader();
+
+    return new Promise(resolve => {
+        reader.onload = function() {
+            resolve(reader.result);
+        }
+        reader.readAsText(value);
+    })
+
 }

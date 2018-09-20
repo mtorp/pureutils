@@ -664,6 +664,8 @@ export function sort<T>(arr: T[], ...comparers: (ComparerFunction<T>)[]) {
     return ret;
 }
 
+
+
 /**
  * Ordena un arreglo de forma estable segun ciertas claves seleccionadas usando el comparador por default
  */
@@ -676,6 +678,40 @@ export function orderBy<T>(arr: T[], ...keySelectors: ((x: T) => any)[]) {
 export function orderByDesc<T>(arr: T[], ...keySelectors: ((x: T) => any)[]) {
     const comparers = keySelectors.map(selector => (a: T, b: T) => -defaultComparer(selector(a), selector(b)));
     return sort(arr, ...comparers);
+}
+
+function keysToComparer<T>(keySelectors: ((x: T) => any)[]): ComparerFunction<T> {
+    const comparers =
+        (keySelectors.length == 0) ? [defaultComparer] :
+            (keySelectors.map(selector => (a: T, b: T) => +defaultComparer(selector(a), selector(b))));
+    return combineComparers(...comparers);
+}
+
+/**Obtiene el máximo de un arreglo dado un selector de llave */
+export function max<T>(arr: T[], ...keySelectors: ((x: T) => any)[]) {
+    const comp = keysToComparer(keySelectors);
+    return maxComparer(arr, comp);
+}
+
+/**Obtiene el mínimo de un arreglo dado un selector de llave */
+export function min<T>(arr: T[], ...keySelectors: ((x: T) => any)[]) {
+    const comp = keysToComparer(keySelectors);
+    const inv = (a: T, b: T) => -comp(a, b);
+    return maxComparer(arr, inv);
+}
+
+/**Devuelve el valor máximo de un arreglo dado un comparador o undefined si el arreglo está vacío */
+function maxComparer<T>(arr: T[], comparer: ComparerFunction<T>): T | undefined {
+    let first = true;
+    let max: T | undefined = undefined;
+
+    for (const x of arr) {
+        if (first || (comparer(x, max!) > 0)) {
+            max = x;
+            first = false;
+        }
+    }
+    return max;
 }
 
 /**Convierte un observable de T, de Promise<T> o de Observable<T> a un observable de <T>, efectivamente aplanando un observable anidado en uno desanidado */
