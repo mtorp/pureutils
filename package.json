@@ -1,6 +1,6 @@
 {
   "name": "keautils",
-  "version": "2.0.9",
+  "version": "2.0.10",
   "description": "metodos de linq para javascript",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -19,7 +19,8 @@
   },
   "scripts": {
     "test": "tsc && jest",
-    "prepublishOnly": "tsc"
+    "prepublishOnly": "tsc",
+    "tsc": "tsc --noemit"
   },
   "keywords": [
     "linq"
