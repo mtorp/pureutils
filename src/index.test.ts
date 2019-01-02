@@ -6,7 +6,7 @@ import {
     search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx, mapMany, runningTotal, mapPrevious, formatNumber, formatDate, formatDateExcel,
     cloneFunction, bindFunction, unbindFunction, createSelectorRx, delay, createDeepSelectorRx, uuid, allEqual, pick, zip, binarySearch, exclude,
     isSubset, innerJoin, leftJoin, unionKey, combinePath, generatePushID, sum, excludeKeys, coalesce, nextToPromise, objRxToRxObj, outOfRange, FloatRange,
-    base64ToString, stringToBase64, max, min
+    base64ToString, stringToBase64, max, min, enumKeys
 } from "./index";
 
 import * as rx from "rxjs";
@@ -2063,4 +2063,20 @@ test("min key", () => {
 
     const minVal = min(x, x => x.a, x => x.b);
     expect(minVal).toEqual({a: 0, b: 2});
+});
+
+test("enum keys", () => {
+    enum MiEnum {
+        A = 3,
+        B = 4,
+        C = 5
+    };
+
+    const keys = enumKeys(MiEnum);
+    expect(keys).toEqual([
+        MiEnum.A,
+        MiEnum.B,
+        MiEnum.C
+    ]);
+
 });

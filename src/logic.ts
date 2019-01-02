@@ -331,6 +331,14 @@ export function arrayToMap<T, TValue>(array: T[], keySelector?: (item: T) => str
     }
     return ret;
 }
+
+
+/**Obtiene los valores numericos de un enum */
+export function enumKeys<T>(e: T) : T[keyof T][] {
+    return Object.keys(e).map(x => e[x]).filter(x => typeof(x) == "number") as any;
+}
+
+
 /**
  * Aplica una función a cada propiedad de un objeto, conservando los keys
  * @param obj Objeto a mapear
@@ -344,6 +352,7 @@ export function mapObject<T, TOut>(obj: T, map: <K extends keyof T>(value: T[K],
     }
     return ret as { [K in keyof T]: TOut };
 }
+
 
 /**
  * Filtra las propiedades de un objeto
@@ -862,6 +871,8 @@ export function zip<TData>(data: { [K in keyof TData]: TData[K][] }): TData[] {
     }
     return ret;
 }
+
+
 
 /**A una cadena que representa un numero entero, aplica el separador de miles */
 function aplicarSepMiles(intpart: string, sep: string = ","): string {
