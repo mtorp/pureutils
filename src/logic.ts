@@ -334,24 +334,10 @@ export function arrayToMap<T, TValue>(array: T[], keySelector?: (item: T) => str
 
 
 /**Obtiene los valores numericos de un enum */
-export function enumKeys<T>(e: T) : T[keyof T][] {
-    return Object.keys(e).map(x => e[x]).filter(x => typeof(x) == "number") as any;
+export function enumKeys<T>(e: T): T[keyof T][] {
+    return Object.keys(e).map(x => e[x]).filter(x => typeof (x) == "number") as any;
 }
 
-
-/**
- * Aplica una función a cada propiedad de un objeto, conservando los keys
- * @param obj Objeto a mapear
- * @param map Función que toma el valor y el "key" y devuelve el nuevo valor
- */
-export function mapObject<T, TOut>(obj: T, map: <K extends keyof T>(value: T[K], key: K) => TOut): { [K in keyof T]: TOut } {
-    const ret = {};
-    for (const key in obj) {
-        const value = obj[key];
-        ret[key as string] = map(value, key);
-    }
-    return ret as { [K in keyof T]: TOut };
-}
 
 
 /**
@@ -753,9 +739,9 @@ export function take<T>(arr: T[], count: number): T[] {
 
 /**Obtiene le primer elemento mapeado de un arreglo o undefined */
 export function firstMap<T, R>(arr: T[], predicate: (x: T) => boolean, map: (x: T, i: number) => R): R | undefined {
-    for(let i = 0; i < arr.length; i++) {
+    for (let i = 0; i < arr.length; i++) {
         const x = arr[i];
-        if(predicate(x)) {
+        if (predicate(x)) {
             return map(x, i);
         }
     }
@@ -960,6 +946,24 @@ export function formatDate(x: Date | null | undefined | string, fullDateTime?: b
     } else {
         return dateStr;
     }
+}
+
+/**Convierte una fecha al formato ISO 8601 respetando la zona horaria */
+export function toIsoDate(x: Date): string {
+    const year = formatNumber(x.getFullYear(), 4);
+    const month = formatNumber(x.getMonth() + 1, 2);
+    const day = formatNumber(x.getDate(), 2);
+
+    const hours = formatNumber(x.getHours(), 2);
+    const minutes = formatNumber(x.getMinutes(), 2);
+    const seconds = formatNumber(x.getSeconds(), 2);
+
+    const offsetMinVal = -x.getTimezoneOffset();
+    const offsetHours = formatNumber(Math.abs(offsetMinVal / 60), 2);
+    const offsetMin = formatNumber(Math.abs(offsetMinVal) % 60, 2);
+    const offsetSign = offsetMinVal < 0 ? "-" : "+";
+    const offset = offsetSign + offsetHours + ":" + offsetMin;
+    return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}${offset}`;
 }
 
 /**Formatea una fecha de tal manera que sea compatible con el excel */
@@ -1206,8 +1210,23 @@ export function shuffle<T>(arr: T[]): T[] {
             a[j] = x;
         }
     }
-    const ret = [... arr];
+    const ret = [...arr];
     shuffleInPlace(ret);
 
     return ret;
 }
+
+/**
+ * Aplica una función a cada propiedad de un objeto, conservando los keys
+ * @param obj Objeto a mapear
+ * @param map Función que toma el valor y el "key" y devuelve el nuevo valor
+ */
+export function mapObject<T, TOut>(obj: T, map: <K extends keyof T>(value: T[K], key: K) => TOut): ({ [K in keyof T]: TOut }) {
+    const ret = {};
+    for (const key in obj) {
+        const value = obj[key];
+        ret[key as string] = map(value, key);
+    }
+    return ret as { [K in keyof T]: TOut };
+}
+

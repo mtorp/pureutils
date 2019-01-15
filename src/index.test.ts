@@ -6,7 +6,7 @@ import {
     search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx, mapMany, runningTotal, mapPrevious, formatNumber, formatDate, formatDateExcel,
     cloneFunction, bindFunction, unbindFunction, createSelectorRx, delay, createDeepSelectorRx, uuid, allEqual, pick, zip, binarySearch, exclude,
     isSubset, innerJoin, leftJoin, unionKey, combinePath, generatePushID, sum, excludeKeys, coalesce, nextToPromise, objRxToRxObj, outOfRange, FloatRange,
-    base64ToString, stringToBase64, max, min, enumKeys
+    base64ToString, stringToBase64, max, min, enumKeys, toIsoDate
 } from "./index";
 
 import * as rx from "rxjs";
@@ -2079,4 +2079,10 @@ test("enum keys", () => {
         MiEnum.C
     ]);
 
+});
+
+test("iso date", () => {
+    const x = new Date(2018,0,26,18,5,5);
+    const ret = toIsoDate(x);
+    expect(ret).toBe("2018-01-26T18:05:05-07:00");
 });
