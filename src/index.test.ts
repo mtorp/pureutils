@@ -2,16 +2,18 @@ import {
     sequenceEquals, shallowEquals, flatten, groupBy, Grouping,
     deepEquals, pipe, enumObject, setEquals, all, any, arrayToMap, contains, filterObject, first, mapObject, omit, ObjMap, toMap, moveItem, swapItems, upDownItem, promiseAllObj,
     unique, filterIf, mapKeys, intersect, omitUndefined, single, awaitObj, shallowDiff, range, sort, defaultComparer, orderBy, orderByDesc,
-    truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd, toObservable, isArray, isArrayLike, isPromise, isObservable,
+    truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd, toObservable, isArray, isArrayLike, isPromiseLike, isObservable,
     search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx, mapMany, runningTotal, mapPrevious, formatNumber, formatDate, formatDateExcel,
     cloneFunction, bindFunction, unbindFunction, createSelectorRx, delay, createDeepSelectorRx, uuid, allEqual, pick, zip, binarySearch, exclude,
     isSubset, innerJoin, leftJoin, unionKey, combinePath, generatePushID, sum, excludeKeys, coalesce, nextToPromise, objRxToRxObj, outOfRange, FloatRange,
-    base64ToString, stringToBase64, max, min, enumKeys, toIsoDate
+    base64ToString, stringToBase64, max, min, enumKeys, toIsoDate, debounceSync, syncResolve
 } from "./index";
 
 import * as rx from "rxjs";
 import { createSelector } from "reselect";
+import { ignoreElements } from "rxjs/operator/ignoreElements";
 
+/*
 test("sequence equals", () => {
     expect(sequenceEquals<any>(null as any, [])).toBe(false);
     expect(sequenceEquals<any>(null as any, null as any)).toBe(true);
@@ -2085,4 +2087,129 @@ test("iso date", () => {
     const x = new Date(2018,0,26,18,5,5);
     const ret = toIsoDate(x);
     expect(ret).toBe("2018-01-26T18:05:05-07:00");
+});
+
+*/
+
+interface LogObservableItem<T> {
+    /**Valor del elememto */
+    x: T;
+    /**Tiempo en las unidades de tiempo */
+    time: number;
+    /**Si el item fue devuelto inmediatamente en la subscripción del observable */
+    imm: boolean;
+}
+async function logObservable<T>(rx: rx.Observable<T>, unitMs: number): Promise<LogObservableItem<T>[]> {
+    let ret: LogObservableItem<T>[] = [];
+    const start = new Date();
+
+    let inmediato = true;
+    const prom = rx
+        .do(x => {
+            const now = new Date();
+            const time = now.valueOf() - start.valueOf();
+
+            ret.push({
+                x: x,
+                time: Math.round(time / unitMs),
+                imm: inmediato
+            });
+        })
+        .toPromise();
+
+    inmediato = false;
+    await prom;
+
+    return ret;
+}
+
+test("syncResolve", async () => {
+    let inmediato = true;
+    let promIm;
+
+    let orden: string[] = [];
+    const prom = syncResolve(10).then(x => {
+        orden.push("then");
+        promIm = inmediato;
+        return x + 1;
+    });
+
+    orden.push("constructed");
+
+    inmediato = false;
+
+    const ret = await prom;
+    orden.push("after await");
+
+    expect(ret).toBe(11);
+    expect(promIm).toBe(true);
+
+    expect(orden).toEqual(["then", "constructed", "after await"]);
+});
+
+jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
+
+test("debounce", async () => {
+    const unit = 100;
+    const test = new rx.Observable(sub => {
+        (async () => {
+            sub.next(1); await delay(unit * 5);
+
+            sub.next(2); await delay(unit);
+            sub.next(3); await delay(unit);
+            sub.next(4); await delay(unit);
+            sub.next(5); await delay(unit * 5);
+
+            sub.next(6); await delay(unit * 2);
+            sub.next(7); await delay(unit);
+            sub.complete();
+        })();
+    });
+    const log = await logObservable(test, unit);
+    type Log = LogObservableItem<number>[];
+    expect(log).toEqual([
+        { x: 1, time: 0, imm: true },
+        { x: 2, time: 5, imm: false },
+        { x: 3, time: 6, imm: false },
+        { x: 4, time: 7, imm: false },
+        { x: 5, time: 8, imm: false },
+        { x: 6, time: 13, imm: false },
+        { x: 7, time: 15, imm: false },
+    ] as Log);
+
+    {
+
+        const testDebounce = test.debounceTime(unit * 3);
+        const testDebounceSync = debounceSync(test, x => delay(unit * 3));
+
+        const logDeb = await logObservable(testDebounce, unit);
+        const logDebSync = await logObservable(testDebounceSync, unit);
+
+        //Checar que el debounceSync se comporta igual que el debounceTime en el caso normal (cuando hay un tiempo diferente de 0 de debounce)
+        expect(logDeb).toEqual(logDebSync);
+    }
+
+    {
+        const testDebounce = test.debounce(x => rx.Observable.interval((x == 1 ? 0 : 3) * unit));
+        const testDebSync = debounceSync(test, x => x == 1 ? syncResolve() : delay(3 * unit));
+        const logDeb = await logObservable(testDebounce, unit);
+        const logDebSync = await logObservable(testDebSync, unit);
+
+        console.log(JSON.stringify(log));
+        expect(logDeb).toEqual([
+            { x: 1, time: 0, imm: false },
+            { x: 5, time: 11, imm: false },
+            { x: 7, time: 16, imm: false },
+        ] as Log);
+
+        //Note que el logDebSync el primer elemento es síncrono, a diferencia del primer elemento del logDeb
+        expect(logDebSync).toEqual([
+            { x: 1, time: 0, imm: true },
+            { x: 5, time: 11, imm: false },
+            { x: 7, time: 16, imm: false },
+        ] as Log);
+
+        console.log(JSON.stringify(logDeb));
+        console.log(JSON.stringify(logDebSync));
+    }
 });

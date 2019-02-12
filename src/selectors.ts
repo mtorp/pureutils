@@ -1,6 +1,6 @@
 import * as _moize from "moize";
 import { interopRequireDefault } from "./interop";
-import { shallowEquals, deepEquals, all, isPromise, any, isObservable, toObservable } from "./logic";
+import { shallowEquals, deepEquals, all, isPromiseLike, any, isObservable, toObservable } from "./logic";
 import { Observable } from "rxjs";
 import * as reselect from "reselect";
 
@@ -439,7 +439,7 @@ function getSelectorValueClearMemoOnError<R>(valueThunk: (...args: any[]) => R |
             obs.subscribe(subs);
         });
 
-    } else if (isPromise(result)) {
+    } else if (isPromiseLike(result)) {
         //Resultado promesa
         return result
             .then(x => x, error => {
@@ -453,7 +453,7 @@ function getSelectorValueClearMemoOnError<R>(valueThunk: (...args: any[]) => R |
 }
 
 function allSync<T>(x: (T | Promise<T> | Observable<T>)[]): x is T[] {
-    const anyAsync = any(x, x => isObservable(x) || isPromise(x));
+    const anyAsync = any(x, x => isObservable(x) || isPromiseLike(x));
     return !anyAsync;
 }
 

@@ -104,7 +104,7 @@ export function setEquals<T>(a: T[], b: T[], comparer?: (a: T, b: T) => boolean)
 function shallowEqualsCompareByRef(x: any) {
     const type = typeof x;
     const primTypeByRef = type == "string" || type == "boolean" || type == "number" || type == "symbol" || type == "function";
-    return primTypeByRef || isPromise(x) || isObservable(x);
+    return primTypeByRef || isPromiseLike(x) || isObservable(x);
 }
 
 /**Compara dos objetos propiedad por propiedad */
@@ -781,7 +781,7 @@ export function duplicatesOnAdd<T, TKey>(arr: T[], newValue: T, keySelector: (x:
 }
 
 /**Devuelve true si x tiene el metodo then, lo que indica que es una promesa */
-export function isPromise(x: any): x is PromiseLike<any> {
+export function isPromiseLike(x: any): x is PromiseLike<any> {
     return x != null && (typeof (x as PromiseLike<any>).then) == "function";
 }
 
@@ -1010,8 +1010,27 @@ export function unbindFunction<T extends (...args: any[]) => any>(func: T): T | 
     return arr[arr.length - 1];
 }
 
-/**Devuelve una promesa que se resuelve en cierto tiempo*/
-export function delay(ms: number) {
+/**Devuelve una promesa que se resuelve síncronamente con el valor especificado, esto es diferente a Promise.resolve(x) ya que el metodo then del Promise.resolve() no se resuleve inmediatamente después de construir la promesa */
+export function syncResolve<T>(x: T): PromiseLike<T>
+export function syncResolve(): PromiseLike<void>
+export function syncResolve<T = void>(x?: T): PromiseLike<T> {
+    return {
+        then: <TResult1 = T>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null): PromiseLike<TResult1> => {
+            if (onfulfilled) {
+                const ret = onfulfilled(x as T);
+                if(isPromiseLike(ret)) 
+                    return ret;
+                else 
+                    return syncResolve(ret);
+            } 
+
+            return syncResolve(x as any as TResult1);
+        }
+    };
+}
+
+/**Devuelve una promesa que se resuelve en cierto tiempo. Note que si ms == 0 la promesa devuelta no se resuelve síncronamente, ya que un setTimeout(..., 0) no es síncrono*/
+export function delay(ms: number): Promise<void> {
     return new Promise<void>(resolve => setTimeout(resolve, ms));
 }
 

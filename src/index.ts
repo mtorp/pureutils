@@ -10,3 +10,4 @@ export { createSelectorRx, createDeepSelectorRx, createSelector, createDeepSelec
 export { generatePushID } from "./pushid";
 export * from "./url";
 export * from "./base64";
+export * from "./debounce";
