@@ -20,6 +20,7 @@ export const createDeepSelectorRx = createSelectorRxCreator({ deepEquals: true, 
 export const createSelector = reselect.createSelector;
 export const createDeepSelector = reselect.createSelectorCreator(reselect.defaultMemoize, deepEquals);
 
+
         
 //**********************************
 //Codigo autogenerado por genselectors.ts

@@ -1269,3 +1269,33 @@ export function mapObject<T, TOut>(obj: T, map: <K extends keyof T>(value: T[K],
     return ret as { [K in keyof T]: TOut };
 }
 
+/**Ejecuta un OR sobre un conjunto de valores ya sea síncronos o asíncronos */
+export function orRx<T>(...arg: (T)[]): T
+/**Ejecuta un OR sobre un conjunto de valores ya sea síncronos o asíncronos */
+export function orRx<T>(...arg: (rx.Observable<T>)[]): rx.Observable<T>
+/**Ejecuta un OR sobre un conjunto de valores ya sea síncronos o asíncronos */
+export function orRx<T>(...arg: (T | rx.Observable<T>)[]): T | rx.Observable<T>
+export function orRx<T>(...arg: (T | rx.Observable<T>)[]): T | rx.Observable<T> {
+    //Busca los valores síncronos:
+    for (const x of arg) {
+        if (isPromiseLike(x) || isObservable(x))
+            break;
+        else if(x)
+            return x;
+    }
+
+    const unknown = {};
+    type Unknown = typeof unknown;
+    const or = (a: T | Unknown, b: T | Unknown) => {
+        if (a && a != unknown) return a;
+        return b;
+    };
+
+    const orArr = (arr: (T | Unknown)[]) => arr.reduce((prev, curr) => or(prev, curr));
+
+    const allObs = arg.map(x => isObservable(x) ? x : rx.Observable.from([x]));
+    const obsUnk = allObs.map(x => x.startWith(unknown).map(x => x as (T | Unknown)));
+
+    const combine = rx.Observable.combineLatest(...obsUnk).map(orArr);
+    return combine.filter(x => x != unknown).map(x => x as T);
+}

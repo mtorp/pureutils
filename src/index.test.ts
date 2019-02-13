@@ -6,13 +6,70 @@ import {
     search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx, mapMany, runningTotal, mapPrevious, formatNumber, formatDate, formatDateExcel,
     cloneFunction, bindFunction, unbindFunction, createSelectorRx, delay, createDeepSelectorRx, uuid, allEqual, pick, zip, binarySearch, exclude,
     isSubset, innerJoin, leftJoin, unionKey, combinePath, generatePushID, sum, excludeKeys, coalesce, nextToPromise, objRxToRxObj, outOfRange, FloatRange,
-    base64ToString, stringToBase64, max, min, enumKeys, toIsoDate, debounceSync, syncResolve, mergeObj
+    base64ToString, stringToBase64, max, min, enumKeys, toIsoDate, debounceSync, syncResolve, mergeObj, orRx
 } from "./index";
 
 import * as rx from "rxjs";
 import { createSelector } from "reselect";
 import { ignoreElements } from "rxjs/operator/ignoreElements";
 
+
+test("orRx", async () => {
+    const a = 10;
+    const b = rx.Observable.fromPromise(delay(100)).map(x => 20);
+    const c = rx.Observable.fromPromise(delay(100)).map(x => null)
+    {
+        //Se ejecuta de forma síncrona:
+        const ret = orRx(a, b, c);
+        expect(ret).toEqual(a);
+    }
+    {
+        const ret = orRx(null, b);
+        //ret es observable
+        expect(isObservable(ret)).toBeTruthy();
+        const retRx = ret as rx.Observable<number>;
+        expect(await retRx.toPromise()).toEqual(20);
+    }
+
+    {
+        const ret = orRx(null, c);
+        //ret es observable
+        expect(isObservable(ret)).toBeTruthy();
+        const retRx = ret as rx.Observable<null>;
+        expect(await retRx.toPromise()).toEqual(null);
+    }
+
+    {
+        const ret = orRx(null, c, b);
+        //ret es observable
+        expect(isObservable(ret)).toBeTruthy();
+        const retRx = ret as rx.Observable<null>;
+        expect(await retRx.toPromise()).toEqual(20);
+    }
+
+    {
+        const ret = orRx(null, b, c);
+        //ret es observable
+        expect(isObservable(ret)).toBeTruthy();
+        const retRx = ret as rx.Observable<null>;
+        expect(await retRx.toPromise()).toEqual(20);
+    }
+
+    {
+        const ret = orRx(null as any, b, 30);
+        //ret es observable
+        expect(isObservable(ret)).toBeTruthy();
+        const retRx = ret as rx.Observable<null>;
+        expect(await retRx.toPromise()).toEqual(20);
+    }
+
+    {
+        const ret = orRx(a, b, c);
+        //ret es observable
+        expect(isObservable(ret)).toBeFalsy();
+        expect(ret).toEqual(10);
+    }
+});
 
 test("sequence equals", () => {
     expect(sequenceEquals<any>(null as any, [])).toBe(false);
