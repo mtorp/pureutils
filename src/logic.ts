@@ -109,6 +109,11 @@ function shallowEqualsCompareByRef(x: any) {
 
 /**Compara dos objetos propiedad por propiedad */
 export function shallowEquals<T>(a: T, b: T, comparer?: (a: T[keyof T], b: T[keyof T]) => boolean) {
+    if(typeof(a) == "function" || typeof(b) == "function") {
+        //Las funciones se comparan por igualdad estricta:
+        return a === b;
+    }
+    
     if ((typeof a) != (typeof b))
         return false;
 

@@ -13,7 +13,7 @@ import * as rx from "rxjs";
 import { createSelector } from "reselect";
 import { ignoreElements } from "rxjs/operator/ignoreElements";
 
-/*
+
 test("sequence equals", () => {
     expect(sequenceEquals<any>(null as any, [])).toBe(false);
     expect(sequenceEquals<any>(null as any, null as any)).toBe(true);
@@ -71,7 +71,6 @@ test("shallow equals", () => {
     expect(eq(funcA, funcA)).toBe(true);
     expect(eq(funcA, funcB)).toBe(false);
     expect(eq(funcA, funcC)).toBe(false);
-
 
 });
 
@@ -688,11 +687,11 @@ test("is x type", () => {
     expect(isArrayLike(d)).toBe(true);
     expect(isArrayLike(e)).toBe(false);
 
-    expect(isPromise(a)).toBe(false);
-    expect(isPromise(b)).toBe(true);
-    expect(isPromise(c)).toBe(false);
-    expect(isPromise(d)).toBe(false);
-    expect(isPromise(e)).toBe(false);
+    expect(isPromiseLike(a)).toBe(false);
+    expect(isPromiseLike(b)).toBe(true);
+    expect(isPromiseLike(c)).toBe(false);
+    expect(isPromiseLike(d)).toBe(false);
+    expect(isPromiseLike(e)).toBe(false);
 
     expect(isObservable(a)).toBe(false);
     expect(isObservable(b)).toBe(false);
@@ -2089,7 +2088,7 @@ test("iso date", () => {
     expect(ret).toBe("2018-01-26T18:05:05-07:00");
 });
 
-*/
+
 
 interface LogObservableItem<T> {
     /**Valor del elememto */
