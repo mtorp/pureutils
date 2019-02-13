@@ -17,7 +17,7 @@ export function debounceSync<T>(obs: rx.Observable<T>, timeFunc: (x: T) => Promi
             }
         };
 
-        obs.subscribe(next => {
+        const ret = obs.subscribe(next => {
             if (cancelar)
                 return;
 
@@ -48,6 +48,7 @@ export function debounceSync<T>(obs: rx.Observable<T>, timeFunc: (x: T) => Promi
             subs.complete();
             cancelar = true;
         });
-
+        
+        return ret;
     });
 }
