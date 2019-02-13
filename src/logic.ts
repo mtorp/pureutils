@@ -1270,11 +1270,6 @@ export function mapObject<T, TOut>(obj: T, map: <K extends keyof T>(value: T[K],
 }
 
 /**Ejecuta un OR sobre un conjunto de valores ya sea síncronos o asíncronos, si los primeros valores son síncronos devuelve inmediatamente ese resultado sin esperar a los otros observables */
-export function orRx<T>(...arg: (T)[]): T
-/**Ejecuta un OR sobre un conjunto de valores ya sea síncronos o asíncronos, si los primeros valores son síncronos devuelve inmediatamente ese resultado sin esperar a los otros observables */
-export function orRx<T>(...arg: (rx.Observable<T>)[]): rx.Observable<T>
-/**Ejecuta un OR sobre un conjunto de valores ya sea síncronos o asíncronos, si los primeros valores son síncronos devuelve inmediatamente ese resultado sin esperar a los otros observables */
-export function orRx<T>(...arg: (T | rx.Observable<T>)[]): T | rx.Observable<T>
 export function orRx<T>(...arg: (T | rx.Observable<T>)[]): T | rx.Observable<T> {
     //Busca los valores síncronos:
     for (const x of arg) {
