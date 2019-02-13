@@ -109,11 +109,11 @@ function shallowEqualsCompareByRef(x: any) {
 
 /**Compara dos objetos propiedad por propiedad */
 export function shallowEquals<T>(a: T, b: T, comparer?: (a: T[keyof T], b: T[keyof T]) => boolean) {
-    if(typeof(a) == "function" || typeof(b) == "function") {
+    if (typeof (a) == "function" || typeof (b) == "function") {
         //Las funciones se comparan por igualdad estricta:
         return a === b;
     }
-    
+
     if ((typeof a) != (typeof b))
         return false;
 
@@ -560,6 +560,21 @@ export function mapKeys<T, TKey>(keys: TKey[], values: T[], keySelector: (item: 
  */
 export function intersect<T>(a: T[], b: T[], comparer?: (a: T, b: T) => boolean) {
     return intersectKeys(a, b, x => x, comparer || referenceEquals);
+}
+
+/**Mapea cada una de las propiedades en A que encajen en B y viceversa */
+export function mergeObj<TA, TB, TR>(
+    a: TA,
+    b: TB,
+    merge: <TKey extends keyof (TA & TB) >(a: (TA[keyof TA] | undefined), b: (TB[keyof TB] | undefined), key: TKey) => TR):
+    { [K in keyof (TA & TB)]: TR } {
+    const keys = union(Object.keys(a), Object.keys(b));
+    const values = keys.map(key => ({
+        key: key,
+        value: merge(a[key], b[key], key as any)
+    }));
+
+    return arrayToMap(values) as any;
 }
 
 /**Devuelve true si SET contiene todos los elementos en SUBSET. Si los conjuntos son iguales devuelve true.
@@ -1023,11 +1038,11 @@ export function syncResolve<T = void>(x?: T): PromiseLike<T> {
         then: <TResult1 = T>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null): PromiseLike<TResult1> => {
             if (onfulfilled) {
                 const ret = onfulfilled(x as T);
-                if(isPromiseLike(ret)) 
+                if (isPromiseLike(ret))
                     return ret;
-                else 
+                else
                     return syncResolve(ret);
-            } 
+            }
 
             return syncResolve(x as any as TResult1);
         }

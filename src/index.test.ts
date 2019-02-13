@@ -6,7 +6,7 @@ import {
     search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx, mapMany, runningTotal, mapPrevious, formatNumber, formatDate, formatDateExcel,
     cloneFunction, bindFunction, unbindFunction, createSelectorRx, delay, createDeepSelectorRx, uuid, allEqual, pick, zip, binarySearch, exclude,
     isSubset, innerJoin, leftJoin, unionKey, combinePath, generatePushID, sum, excludeKeys, coalesce, nextToPromise, objRxToRxObj, outOfRange, FloatRange,
-    base64ToString, stringToBase64, max, min, enumKeys, toIsoDate, debounceSync, syncResolve
+    base64ToString, stringToBase64, max, min, enumKeys, toIsoDate, debounceSync, syncResolve, mergeObj
 } from "./index";
 
 import * as rx from "rxjs";
@@ -2026,15 +2026,15 @@ test("max", () => {
 
 test("max key", () => {
     const x = [
-        {a: 1, b: 1},
-        {a: 3, b: 1},
-        {a: 3, b: 2},
-        {a: 3, b: 1},
-        {a: 2, b: 5},
+        { a: 1, b: 1 },
+        { a: 3, b: 1 },
+        { a: 3, b: 2 },
+        { a: 3, b: 1 },
+        { a: 2, b: 5 },
     ];
 
     const maxVal = max(x, x => x.a, x => x.b);
-    expect(maxVal).toEqual({a: 3, b: 2});
+    expect(maxVal).toEqual({ a: 3, b: 2 });
 });
 
 test("min", () => {
@@ -2045,18 +2045,18 @@ test("min", () => {
 
 test("min key", () => {
     const x = [
-        {a: 1, b: 1},
-        {a: 3, b: 1},
-        {a: 3, b: 2},
-        {a: 3, b: 1},
-        {a: 2, b: 5},
-        {a: 0, b: 2},
-        {a: 0, b: 5},
-        {a: 2, b: 5},
+        { a: 1, b: 1 },
+        { a: 3, b: 1 },
+        { a: 3, b: 2 },
+        { a: 3, b: 1 },
+        { a: 2, b: 5 },
+        { a: 0, b: 2 },
+        { a: 0, b: 5 },
+        { a: 2, b: 5 },
     ];
 
     const minVal = min(x, x => x.a, x => x.b);
-    expect(minVal).toEqual({a: 0, b: 2});
+    expect(minVal).toEqual({ a: 0, b: 2 });
 });
 
 test("enum keys", () => {
@@ -2076,7 +2076,7 @@ test("enum keys", () => {
 });
 
 test("iso date", () => {
-    const x = new Date(2018,0,26,18,5,5);
+    const x = new Date(2018, 0, 26, 18, 5, 5);
     const ret = toIsoDate(x);
     expect(ret).toBe("2018-01-26T18:05:05-07:00");
 });
@@ -2201,4 +2201,28 @@ test("debounce", async () => {
         ] as Log);
 
     }
+});
+
+test("mergeObj", () => {
+    const a = {
+        a: 10,
+        b: 4,
+        c: 7
+    };
+
+    const b = {
+        b: 4,
+        c: 5,
+        d: 3
+    };
+
+    type A = keyof ((typeof a) & (typeof b));
+
+    const c = mergeObj(a, b, (x, y) => (x || 0) + (y || 0));
+    expect(c).toEqual({
+        a: 10,
+        b: 8,
+        c: 12,
+        d: 3
+    })
 });
