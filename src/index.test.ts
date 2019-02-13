@@ -1378,7 +1378,6 @@ test("is observable", () => {
 });
 
 test("selecotr con observable problema TEST", async () => {
-    console.log("hello");
     interface State {
     }
 
@@ -1491,7 +1490,6 @@ test("selecotr con observable problema COMPLETA", async () => {
     const idClienteDireccion = (state: State, props: Props) => props.value;
     const clienteDireccion = createSelectorRx(idClienteDireccion, id => {
         //Hello
-        console.log("id: " + id);
         var b = new rx.BehaviorSubject<{ Cliente: number, IdCliente: number }>({ Cliente: 10, IdCliente: 1 } as any);
         const ret = id != null ? b : rx.Observable.from([id]);
         return ret as rx.Observable<{ Cliente: number, IdCliente: number } | null | undefined>;
@@ -1513,11 +1511,6 @@ test("selecotr con observable problema COMPLETA", async () => {
     expect(clienteResult).toEqual([{ Direcciones: [1, 2, 3] }]);
 
     const direcciones = createSelectorRx(cliente, cli => {
-        console.log("Llamando a direcciones");
-        if (isObservable(cli)) {
-            console.log("cli en direcciones es observable");
-        }
-
         return (cli && cli.Direcciones) || []
     });
 
@@ -2194,7 +2187,6 @@ test("debounce", async () => {
         const logDeb = await logObservable(testDebounce, unit);
         const logDebSync = await logObservable(testDebSync, unit);
 
-        console.log(JSON.stringify(log));
         expect(logDeb).toEqual([
             { x: 1, time: 0, imm: false },
             { x: 5, time: 11, imm: false },
@@ -2208,7 +2200,5 @@ test("debounce", async () => {
             { x: 7, time: 16, imm: false },
         ] as Log);
 
-        console.log(JSON.stringify(logDeb));
-        console.log(JSON.stringify(logDebSync));
     }
 });
