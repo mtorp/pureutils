@@ -24,7 +24,7 @@ test("orRx", async () => {
         expect(ret).toEqual(a);
     }
     {
-        const ret = orRx(null, b);
+        const ret = orRx(null as any, b);
         //ret es observable
         expect(isObservable(ret)).toBeTruthy();
         const retRx = ret as rx.Observable<number>;
@@ -59,7 +59,7 @@ test("orRx", async () => {
         const ret = orRx(null as any, b, 30);
         //ret es observable
         expect(isObservable(ret)).toBeTruthy();
-        const retRx = ret as rx.Observable<null>;
+        const retRx = ret as any;
         expect(await retRx.toPromise()).toEqual(20);
     }
 
