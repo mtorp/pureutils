@@ -6,7 +6,7 @@ import {
     search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx, mapMany, runningTotal, mapPrevious, formatNumber, formatDate, formatDateExcel,
     cloneFunction, bindFunction, unbindFunction, createSelectorRx, delay, createDeepSelectorRx, uuid, allEqual, pick, zip, binarySearch, exclude,
     isSubset, innerJoin, leftJoin, unionKey, combinePath, generatePushID, sum, excludeKeys, coalesce, nextToPromise, objRxToRxObj, outOfRange, FloatRange,
-    base64ToString, stringToBase64, max, min, enumKeys, toIsoDate, debounceSync, syncResolve, mergeObj, orRx
+    base64ToString, stringToBase64, max, min, enumKeys, toIsoDate, debounceSync, syncResolve, mergeObj, orRx, treeTraversal
 } from "./index";
 
 import * as rx from "rxjs";
@@ -2283,3 +2283,42 @@ test("mergeObj", () => {
         d: 3
     })
 });
+
+test("treeTrav", () => {
+    interface Tree {
+        val: string,
+        child: Tree[]
+    }
+    const tree: Tree = {
+        val: "root",
+        child: [
+            { 
+                val: "a", 
+                child: [] },
+            {
+                val: "b", 
+                child: [
+                    {
+                        val: "c",
+                        child: []
+                    }, {
+                        val: "d", 
+                        child: [
+                            {
+                                val: "e",
+                                child: []
+                            }, {
+                                val: "f",
+                                child: []
+                            }
+                        ]
+                    }
+                ]
+            }            
+        ]
+    };
+
+    const items = treeTraversal(tree, x => x.child).map(x => x.val);
+    
+    expect(items).toEqual(["root", "a", "b", "c", "d", "e", "f"]);
+})

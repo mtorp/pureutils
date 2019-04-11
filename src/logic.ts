@@ -1275,7 +1275,7 @@ export function orRx<T>(...arg: (T | rx.Observable<T>)[]): T | rx.Observable<T> 
     for (const x of arg) {
         if (isPromiseLike(x) || isObservable(x))
             break;
-        else if(x)
+        else if (x)
             return x;
     }
 
@@ -1293,4 +1293,12 @@ export function orRx<T>(...arg: (T | rx.Observable<T>)[]): T | rx.Observable<T> 
 
     const combine = rx.Observable.combineLatest(...obsUnk).map(orArr);
     return combine.filter(x => x != unknown).map(x => x as T);
+}
+
+/**Recorre una estructura de arbol y la devuelve en forma de arreglo */
+export function treeTraversal<T>(tree: T, getNodes: (x: T) => T[]): T[] {
+    const nodes = getNodes(tree);
+    const child = mapMany(nodes, x => treeTraversal(x, getNodes));
+
+    return [tree, ...child];
 }
