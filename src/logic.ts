@@ -1296,9 +1296,11 @@ export function orRx<T>(...arg: (T | rx.Observable<T>)[]): T | rx.Observable<T> 
 }
 
 /**Recorre una estructura de arbol y la devuelve en forma de arreglo */
-export function treeTraversal<T>(tree: T, getNodes: (x: T) => T[]): T[] {
-    const nodes = getNodes(tree);
-    const child = mapMany(nodes, x => treeTraversal(x, getNodes));
+export function treeTraversal<T>(tree: T[], getNodes: (x: T) => T[]): T[] {
+    if(tree.length == 0) return [];
+    
+    const nodes = mapMany(tree, getNodes) ;
+    const child = treeTraversal(nodes, getNodes);
 
-    return [tree, ...child];
+    return [...tree, ...child];
 }

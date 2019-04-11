@@ -1846,7 +1846,7 @@ test("generate push", () => {
     expect(d > c).toBeTruthy();
     expect(c > b).toBeTruthy();
     expect(b > a).toBeTruthy();
-})
+});
 
 test("sum", () => {
     expect(sum([])).toBe(0);
@@ -2318,7 +2318,7 @@ test("treeTrav", () => {
         ]
     };
 
-    const items = treeTraversal(tree, x => x.child).map(x => x.val);
+    const items = treeTraversal([tree], x => x.child).map(x => x.val);
     
     expect(items).toEqual(["root", "a", "b", "c", "d", "e", "f"]);
 })
