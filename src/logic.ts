@@ -1297,10 +1297,37 @@ export function orRx<T>(...arg: (T | rx.Observable<T>)[]): T | rx.Observable<T> 
 
 /**Recorre una estructura de arbol y la devuelve en forma de arreglo */
 export function treeTraversal<T>(tree: T[], getNodes: (x: T) => T[]): T[] {
-    if(tree.length == 0) return [];
-    
-    const nodes = mapMany(tree, getNodes) ;
+    if (tree.length == 0) return [];
+
+    const nodes = mapMany(tree, getNodes);
     const child = treeTraversal(nodes, getNodes);
 
     return [...tree, ...child];
+}
+
+
+/**Convierte una función para obtener un valor y otra que notifica el cambio del valor en un observable
+ * @param getValue Función que obtiene el valor actual
+ * @param listen Una función que se suscribe a los cambios del valor, toma como parámetro una función que se va a llamar cada vez que el valor que cambie y devuelve
+ * una función que al ser llamada se desuscribe de la escucha de los cambios del valor
+ */
+export function getListenToRx<T>(getValue: () => T, listen: (onChange: () => void) => (() => void)): rx.Observable<T> {
+    return new rx.Observable(subscriber => {
+        const dispose = listen(() => subscriber.next(getValue()));
+        subscriber.next(getValue());
+        return dispose;
+    })
+}
+
+/**Un store de redux */
+export interface ReduxStore<TState> {
+    subscribe: (onChange: () => void) => (() => void);
+    getState: () => TState;
+}
+
+/**Convierte un store de redux en un observable, el observable emite el valor actual en la subscripción y los siguientes valores son emitidos
+ * cuando el store indica que ha cambiado su valor
+ */
+export function reduxStoreToRx<TState>(store: ReduxStore<TState>): rx.Observable<TState> {
+    return getListenToRx(() => store.getState(), x => store.subscribe(x));
 }

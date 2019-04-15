@@ -2321,4 +2321,4 @@ test("treeTrav", () => {
     const items = treeTraversal([tree], x => x.child).map(x => x.val);
     
     expect(items).toEqual(["root", "a", "b", "c", "d", "e", "f"]);
-})
+});
