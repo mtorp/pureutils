@@ -1,7 +1,8 @@
 import * as _moize from "moize";
 import { interopRequireDefault } from "./interop";
 import { shallowEquals, deepEquals, all, isPromiseLike, any, isObservable, toObservable } from "./logic";
-import { Observable } from "rxjs";
+import { Observable, combineLatest as combineLatestRx } from "rxjs";
+import { catchError, switchAll as switchAllRx, map as mapRx } from "rxjs/operators";
 import * as reselect from "reselect";
 
 const moizeDefault = interopRequireDefault(_moize);
@@ -432,10 +433,10 @@ function getSelectorValueClearMemoOnError<R>(valueThunk: (...args: any[]) => R |
         const r = result;
         //Resultado observable
         return new Observable<R>(subs => {
-            const obs = r.catch<R, R>(err => {
+            const obs = r.pipe(catchError(err => {
                 clearMemo();
                 throw err;
-            });
+            }));
 
             obs.subscribe(subs);
         });
@@ -484,12 +485,14 @@ function createSelectorRxAsyncArrCreator(options: createSelectorRxAsyncCreatorOp
                     //Algunos argumentos son OBSERVABLE o PROMISE
                     const argsRx = asyncS.map(x => toObservable(x));
                     //Observable de los argumentos
-                    const argRxLatest = Observable.combineLatest(...argsRx);
+                    const argRxLatest = combineLatestRx(...argsRx);
 
                     //Por cada cambio de argumento observamos el resultado del memoCombiner
-                    const ret = argRxLatest.map(x => {
+                    const ret = argRxLatest.pipe(mapRx(x => {
                         return toObservable(memoCombiner(...x));
-                    }).switch(); //Si llega un nuevo argumento ignoramos los resultados de los observables anteriores con el switch
+                    }), 
+                    switchAllRx()
+                    ); //Si llega un nuevo argumento ignoramos los resultados de los observables anteriores con el switch
 
                     return ret;
                 }

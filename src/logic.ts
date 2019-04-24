@@ -1,5 +1,7 @@
 import { pipe } from "./pipe";
-import * as rx from "rxjs";
+import { Observable, pipe as pipeRx, combineLatest as combineLatestRx, from as fromRx } from "rxjs";
+import { map as mapRx, concatAll as concatAllRx, scan as scanRx, startWith as startWithRx, filter as filterRx } from "rxjs/operators";
+
 import * as _uuidRandom from "uuid-random";
 
 import { interopRequireDefault } from "./interop";
@@ -444,8 +446,8 @@ export function promiseAllObj(obj: any) {
 }
 
 /**Convierte un objeto de observables a un observable de objetos, el primer elemento del observable resultante se da cuando todos los observables del objeto lanzan el primer valor */
-export function objRxToRxObj<T extends { [K in keyof T]: rx.Observable<any> }>(obj: T): rx.Observable<{
-    [K in keyof T]: T[K] extends rx.Observable<infer R> ? R : T
+export function objRxToRxObj<T extends { [K in keyof T]: Observable<any> }>(obj: T): Observable<{
+    [K in keyof T]: T[K] extends Observable<infer R> ? R : T
 }> {
     const keys = Object.keys(obj) as (keyof T)[];
 
@@ -454,15 +456,19 @@ export function objRxToRxObj<T extends { [K in keyof T]: rx.Observable<any> }>(o
         key: keyof T
     };
 
-    const values = keys.map(key => obj[key].map(x => ({
-        value: x,
-        key: key
-    })));
+    const values = keys.map(key =>
+        obj[key].pipe(
+                mapRx(x => ({
+                    value: x,
+                    key: key
+                }))    
+            )
+        );
 
 
 
-    const combine = rx.Observable.combineLatest(values).map(x => arrayToMap(x));
-    return combine as rx.Observable<any>;
+    const combine = combineLatestRx(values).pipe(mapRx(x => arrayToMap(x)));
+    return combine as Observable<any>;
 }
 
 
@@ -731,21 +737,21 @@ function maxComparer<T>(arr: T[], comparer: ComparerFunction<T>): T | undefined 
 }
 
 /**Convierte un observable de T, de Promise<T> o de Observable<T> a un observable de <T>, efectivamente aplanando un observable anidado en uno desanidado */
-export function rxFlatten<T>(observable: rx.Observable<T | PromiseLike<T> | rx.Observable<T>>): rx.Observable<T> {
-    const obsOfObs = observable.map(x => toObservable(x));
-    return obsOfObs.concatAll();
+export function rxFlatten<T>(observable: Observable<T | PromiseLike<T> | Observable<T>>): Observable<T> {
+    const obsOfObs = observable.pipe(mapRx(x => toObservable(x)));
+    return obsOfObs.pipe(concatAllRx());
 }
 
 /**Convierte un valor o una promesa a un observable, si el valor ya es un observable lo devuelve tal cual */
-export function toObservable<T1>(value: rx.Observable<T1> | null): rx.Observable<T1 | null>
-export function toObservable<T1>(value: rx.Observable<T1> | undefined): rx.Observable<T1 | undefined>
-export function toObservable<T1, T2 extends null | undefined>(value: rx.Observable<T1> | T2): rx.Observable<T1 | T2>
-export function toObservable<T>(value: T | PromiseLike<T> | rx.Observable<T>): rx.Observable<T>
-export function toObservable<T>(value: T | PromiseLike<T> | rx.Observable<T>): rx.Observable<T> {
-    if (value instanceof rx.Observable) {
+export function toObservable<T1>(value: Observable<T1> | null): Observable<T1 | null>
+export function toObservable<T1>(value: Observable<T1> | undefined): Observable<T1 | undefined>
+export function toObservable<T1, T2 extends null | undefined>(value: Observable<T1> | T2): Observable<T1 | T2>
+export function toObservable<T>(value: T | PromiseLike<T> | Observable<T>): Observable<T>
+export function toObservable<T>(value: T | PromiseLike<T> | Observable<T>): Observable<T> {
+    if (value instanceof Observable) {
         return value;
     } else {
-        return rx.Observable.fromPromise(Promise.resolve(value));
+        return fromRx(Promise.resolve(value));
     }
 }
 
@@ -807,8 +813,8 @@ export function isPromiseLike(x: any): x is PromiseLike<any> {
 }
 
 /**Devuelve true si x es un observable */
-export function isObservable(x: any): x is rx.Observable<any> {
-    return x instanceof rx.Observable;
+export function isObservable(x: any): x is Observable<any> {
+    return x instanceof Observable;
 }
 
 /**Devuelve true si x es un array */
@@ -817,11 +823,12 @@ export function isArray(x: any): x is any[] {
 }
 
 /**Mapea el valor actual y el anterior de un observable */
-export function mapPreviousRx<T>(obs: rx.Observable<T>, startWith: T): rx.Observable<{ prev: T, curr: T }> {
+export function mapPreviousRx<T>(obs: Observable<T>, startWith: T): Observable<{ prev: T, curr: T }> {
     const ret =
-        obs
-            .map(x => ({ prev: startWith, curr: x }))
-            .scan((acc, val) => ({ prev: acc.curr, curr: val.curr }));
+        obs.pipe(
+            mapRx(x => ({ prev: startWith, curr: x })),
+            scanRx((acc, val) => ({ prev: acc.curr, curr: val.curr }))
+        );
     return ret;
 }
 
@@ -1196,9 +1203,9 @@ export function sum(arr: (number | null | undefined)[]): number {
 }
 
 /**Convierte un observable a una promesa que se resuelve en el siguiente onNext del observable, esto es diferente a la función
- * @see rx.Observable.toPromise() que se resueve hasta que el observable es completado
+ * @see Observable.toPromise() que se resueve hasta que el observable es completado
 */
-export function nextToPromise<T>(obs: rx.Observable<T>): Promise<T> {
+export function nextToPromise<T>(obs: Observable<T>): Promise<T> {
     return new Promise<T>((resolve, reject) => obs.subscribe(resolve, reject));
 }
 
@@ -1271,7 +1278,7 @@ export function mapObject<T, TOut>(obj: T, map: <K extends keyof T>(value: T[K],
 }
 
 /**Ejecuta un OR sobre un conjunto de valores ya sea síncronos o asíncronos, si los primeros valores son síncronos devuelve inmediatamente ese resultado sin esperar a los otros observables */
-export function orRx<T>(...arg: (T | rx.Observable<T>)[]): T | rx.Observable<T> {
+export function orRx<T>(...arg: (T | Observable<T>)[]): T | Observable<T> {
     //Busca los valores síncronos:
     for (const x of arg) {
         if (isPromiseLike(x) || isObservable(x))
@@ -1289,11 +1296,17 @@ export function orRx<T>(...arg: (T | rx.Observable<T>)[]): T | rx.Observable<T> 
 
     const orArr = (arr: (T | Unknown)[]) => arr.reduce((prev, curr) => or(prev, curr));
 
-    const allObs = arg.map(x => isObservable(x) ? x : rx.Observable.from([x]));
-    const obsUnk = allObs.map(x => x.startWith(unknown).map(x => x as (T | Unknown)));
+    const allObs = arg.map(x => isObservable(x) ? x : fromRx([x]));
+    const obsUnk = allObs.map(x => x.pipe(
+        startWithRx(unknown),
+        mapRx(x => x as (T | Unknown))
+    ));
 
-    const combine = rx.Observable.combineLatest(...obsUnk).map(orArr);
-    return combine.filter(x => x != unknown).map(x => x as T);
+    const combine = combineLatestRx(...obsUnk).pipe(mapRx(orArr));
+    return combine.pipe(
+        filterRx(x => x != unknown),
+        mapRx(x => x as T)
+    );
 }
 
 /**Recorre una estructura de arbol y la devuelve en forma de arreglo */
@@ -1312,8 +1325,8 @@ export function treeTraversal<T>(tree: T[], getNodes: (x: T) => T[]): T[] {
  * @param listen Una función que se suscribe a los cambios del valor, toma como parámetro una función que se va a llamar cada vez que el valor que cambie y devuelve
  * una función que al ser llamada se desuscribe de la escucha de los cambios del valor
  */
-export function getListenToRx<T>(getValue: () => T, listen: (onChange: () => void) => (() => void)): rx.Observable<T> {
-    return new rx.Observable(subscriber => {
+export function getListenToRx<T>(getValue: () => T, listen: (onChange: () => void) => (() => void)): Observable<T> {
+    return new Observable(subscriber => {
         const dispose = listen(() => subscriber.next(getValue()));
         subscriber.next(getValue());
         return dispose;
@@ -1329,7 +1342,7 @@ export interface ReduxStore<TState> {
 /**Convierte un store de redux en un observable, el observable emite el valor actual en la subscripción y los siguientes valores son emitidos
  * cuando el store indica que ha cambiado su valor
  */
-export function reduxStoreToRx<TState>(store: ReduxStore<TState>): rx.Observable<TState> {
+export function reduxStoreToRx<TState>(store: ReduxStore<TState>): Observable<TState> {
     return getListenToRx(() => store.getState(), x => store.subscribe(x));
 }
 
@@ -1339,8 +1352,8 @@ from([1, 2, 3])
     .pipe(doOnSubscribe(() => console.log('subscribed to stream')))
     .subscribe(x => console.log(x), null, () => console.log('completed'));
 */
-export function doOnSubscribe<T>(onSubscribe: () => void): (source: rx.Observable<T>) =>  rx.Observable<T> {
-    return function inner(source: rx.Observable<T>): rx.Observable<T> {
+export function doOnSubscribe<T>(onSubscribe: () => void): (source: Observable<T>) =>  Observable<T> {
+    return function inner(source: Observable<T>): Observable<T> {
         return defer(() => {
           onSubscribe();
 

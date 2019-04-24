@@ -10,14 +10,14 @@ import {
 } from "./index";
 
 import * as rx from "rxjs";
+import * as rxOps from "rxjs/operators";
 import { createSelector } from "reselect";
-import { ignoreElements } from "rxjs/operator/ignoreElements";
 
 
 test("orRx", async () => {
     const a = 10;
-    const b = rx.Observable.fromPromise(delay(100)).map(x => 20);
-    const c = rx.Observable.fromPromise(delay(100)).map(x => null)
+    const b = rx.from(delay(100)).pipe(rxOps.map(x => 20));
+    const c = rx.from(delay(100)).pipe(rxOps.map(x => null));
     {
         //Se ejecuta de forma síncrona:
         const ret = orRx(a, b, c);
@@ -112,9 +112,9 @@ test("shallow equals", () => {
     expect(eq(promA, promB)).toBe(false);
     expect(eq(promA, promC)).toBe(false);
 
-    const obsA = rx.Observable.fromPromise(promA);
-    const obsB = rx.Observable.fromPromise(promA);
-    const obsC = rx.Observable.fromPromise(promC);
+    const obsA = rx.from(promA);
+    const obsB = rx.from(promA);
+    const obsC = rx.from(promC);
 
     expect(eq(obsA, obsA)).toBe(true);
     expect(eq(obsA, obsB)).toBe(false);
@@ -194,9 +194,9 @@ test("deep equals", () => {
     expect(eq(promA, promB)).toBe(false);
     expect(eq(promA, promC)).toBe(false);
 
-    const obsA = rx.Observable.fromPromise(promA);
-    const obsB = rx.Observable.fromPromise(promA);
-    const obsC = rx.Observable.fromPromise(promC);
+    const obsA = rx.from(promA);
+    const obsB = rx.from(promA);
+    const obsC = rx.from(promC);
 
     expect(eq(obsA, obsA)).toBe(true);
     expect(eq(obsA, obsB)).toBe(false);
@@ -671,25 +671,25 @@ test("add to date", () => {
 });
 
 test("rx flatten", async () => {
-    const arr = rx.Observable.from([1, 2,
+    const arr = rx.from([1, 2,
         Promise.resolve(3),
         Promise.resolve(4),
-        rx.Observable.from([5, 6, 7]),
-        rx.Observable.from([8, 9]),
+        rx.from([5, 6, 7]),
+        rx.from([8, 9]),
     ]);
 
-    const flat = await rxFlatten(arr).toArray().toPromise();
+    const flat = await rxFlatten(arr).pipe(rxOps.toArray()).toPromise();
     expect(flat).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]);
 });
 
 test("to observable", async () => {
     const value = 10;
     const prom = Promise.resolve(30);
-    const obs = rx.Observable.from([1, 2, 3]);
+    const obs = rx.from([1, 2, 3]);
 
-    expect(await toObservable(value).toArray().toPromise()).toEqual([10]);
-    expect(await toObservable(prom).toArray().toPromise()).toEqual([30]);
-    expect(await toObservable(obs).toArray().toPromise()).toEqual([1, 2, 3]);
+    expect(await toObservable(value).pipe(rxOps.toArray()).toPromise()).toEqual([10]);
+    expect(await toObservable(prom).pipe(rxOps.toArray()).toPromise()).toEqual([30]);
+    expect(await toObservable(obs).pipe(rxOps.toArray()).toPromise()).toEqual([1, 2, 3]);
 });
 
 test("take firstMap", async () => {
@@ -867,8 +867,8 @@ test("nullsafe types", () => {
 
 test("map prev rx", async () => {
     const arr = [1, 4, 7, 10, 20];
-    const obs = rx.Observable.from(arr);
-    const ret = await mapPreviousRx(obs, 0).toArray().toPromise();
+    const obs = rx.from(arr);
+    const ret = await mapPreviousRx(obs, 0).pipe(rxOps.toArray()).toPromise();
 
     expect(ret).toEqual([
         { prev: 0, curr: 1 },
@@ -1147,7 +1147,7 @@ test("selector devolver el mismo observable 2", async () => {
         subCount++;
     }));
 
-    const value = createSelector(valueFromState, valueFromResource, (state, resource) => state ? rx.Observable.from([state]) : resource);
+    const value = createSelector(valueFromState, valueFromResource, (state, resource) => state ? rx.from([state]) : resource);
 
     const obs0 = value(10, null);
     obs0.subscribe(x => { });
@@ -1367,21 +1367,21 @@ test("selector con observable", async () => {
     let count = 0;
     const contarA = createSelectorRx(a, a => {
         count++;
-        return rx.Observable.timer(0, 100).takeWhile(x => x < a);
+        return rx.timer(0, 100).pipe(rxOps.takeWhile(x => x < a));
     });
     const conteoPor2 = createSelectorRx(contarA, a => a * 2);
 
-    let obs2 = await conteoPor2({ a: 2 }).toArray().toPromise();
+    let obs2 = await conteoPor2({ a: 2 }).pipe(rxOps.toArray()).toPromise();
     expect(obs2).toEqual([0, 2]);
 
-    obs2 = await conteoPor2({ a: 2 }).toArray().toPromise();
+    obs2 = await conteoPor2({ a: 2 }).pipe(rxOps.toArray()).toPromise();
     expect(obs2).toEqual([0, 2]);
     expect(count).toBe(1);
 
-    let obs4 = await conteoPor2({ a: 4 }).toArray().toPromise();
+    let obs4 = await conteoPor2({ a: 4 }).pipe(rxOps.toArray()).toPromise();
     expect(obs4).toEqual([0, 2, 4, 6]);
 
-    obs4 = await conteoPor2({ a: 4 }).toArray().toPromise();
+    obs4 = await conteoPor2({ a: 4 }).pipe(rxOps.toArray()).toPromise();
     expect(obs4).toEqual([0, 2, 4, 6]);
 
     expect(count).toBe(2);
@@ -1399,22 +1399,22 @@ test("selector con observable que lanza error", async () => {
         if (count == 2) {
             return rx.Observable.throw("Error de prueba");
         }
-        return rx.Observable.timer(0, 100).takeWhile(x => x < a);
+        return rx.timer(0, 100).pipe(rxOps.takeWhile(x => x < a));
     });
     const conteoPor2 = createSelectorRx(contarA, a => a * 2);
 
     const conteoPor2Obs = conteoPor2({ a: 2 });
-    let obs2 = await conteoPor2Obs.toArray().toPromise();
+    let obs2 = await conteoPor2Obs.pipe(rxOps.toArray()).toPromise();
     expect(obs2).toEqual([0, 2]);
 
-    obs2 = await conteoPor2({ a: 2 }).toArray().toPromise();
+    obs2 = await conteoPor2({ a: 2 }).pipe(rxOps.toArray()).toPromise();
     expect(obs2).toEqual([0, 2]);
     expect(count).toBe(1);
 
     let errCount = 0;
     try {
         const obs = conteoPor2({ a: 3 });
-        let obs3 = await obs.toArray().toPromise();
+        let obs3 = await obs.pipe(rxOps.toArray()).toPromise();
     } catch (error) {
         errCount++;
     }
@@ -1424,14 +1424,14 @@ test("selector con observable que lanza error", async () => {
 
     //Una segunda llamada con los mismos argumentos SI ocasiona llamada, ya que la llamada anterior lanzó una excepción
     const obs = conteoPor2({ a: 3 });
-    let obs3 = await obs.toArray().toPromise();
+    let obs3 = await obs.pipe(rxOps.toArray()).toPromise();
     expect(obs3).toEqual([0, 2, 4]);
     expect(errCount).toBe(1);
     expect(count).toBe(3);
 });
 
 test("is observable", () => {
-    expect(isObservable(rx.Observable.from([undefined]))).toBe(true);
+    expect(isObservable(rx.from([undefined]))).toBe(true);
 });
 
 test("selecotr con observable problema TEST", async () => {
@@ -1441,7 +1441,7 @@ test("selecotr con observable problema TEST", async () => {
     const idCliente = (state: State) => new rx.BehaviorSubject<number>(10);
 
     const idClienteObs = idCliente({});
-    const idClienteValue = await idClienteObs.first().toArray().toPromise();
+    const idClienteValue = await idClienteObs.pipe(rxOps.first(), rxOps.toArray()).toPromise();
     expect(isObservable(idClienteObs)).toBe(true);
     expect(idClienteValue).toEqual([10]);
 
@@ -1454,7 +1454,7 @@ test("selecotr con observable problema TEST", async () => {
 
 
     const clienteObs = cliente({});
-    const clienteResult = await clienteObs.first().toArray().toPromise();
+    const clienteResult = await clienteObs.pipe(rxOps.first(), rxOps.toArray()).toPromise();
 
     expect(clienteResult).toEqual([{ Direcciones: [1, 2, 3] }]);
 
@@ -1469,7 +1469,7 @@ test("selector debe de devolver la misma instancia de observable argumento sincr
     const cliente = createSelectorRx(idCliente, id => {
         calls++;
         const instance = { id: id };
-        return rx.Observable.from([instance]);
+        return rx.from([instance]);
     });
 
     const state: State = {};
@@ -1479,8 +1479,8 @@ test("selector debe de devolver la misma instancia de observable argumento sincr
     expect(calls).toBe(1);
     expect(miCliente1).toBe(miCliente2);
 
-    const miClienteResult1 = await miCliente1.first().toArray().toPromise();
-    const miClienteResult2 = await miCliente2.first().toArray().toPromise();
+    const miClienteResult1 = await miCliente1.pipe(rxOps.first(), rxOps.toArray()).toPromise();
+    const miClienteResult2 = await miCliente2.pipe(rxOps.first(), rxOps.toArray()).toPromise();
     expect(miClienteResult1[0]).toBe(miClienteResult2[0]);
 });
 
@@ -1495,7 +1495,7 @@ test("selector debe de devolver la misma instancia de observable con argumento o
     const cliente = createSelectorRx(idClienteObs, id => {
         calls++;
         const instance = { id: id };
-        return rx.Observable.from([instance]);
+        return rx.from([instance]);
     });
 
 
@@ -1503,8 +1503,8 @@ test("selector debe de devolver la misma instancia de observable con argumento o
     const miCliente1 = cliente(state);
     const miCliente2 = cliente(state);
 
-    const miClienteResult1 = await miCliente1.first().toArray().toPromise();
-    const miClienteResult2 = await miCliente2.first().toArray().toPromise();
+    const miClienteResult1 = await miCliente1.pipe(rxOps.first(), rxOps.toArray()).toPromise();
+    const miClienteResult2 = await miCliente2.pipe(rxOps.first(), rxOps.toArray()).toPromise();
 
     expect(calls).toBe(1);
     expect(miClienteResult1[0]).toBe(miClienteResult2[0]);
@@ -1548,7 +1548,7 @@ test("selecotr con observable problema COMPLETA", async () => {
     const clienteDireccion = createSelectorRx(idClienteDireccion, id => {
         //Hello
         var b = new rx.BehaviorSubject<{ Cliente: number, IdCliente: number }>({ Cliente: 10, IdCliente: 1 } as any);
-        const ret = id != null ? b : rx.Observable.from([id]);
+        const ret = id != null ? b : rx.from([id]);
         return ret as rx.Observable<{ Cliente: number, IdCliente: number } | null | undefined>;
     });
     const clienteFromValue = createSelectorRx(clienteDireccion, x => x && x.Cliente);
@@ -1563,7 +1563,7 @@ test("selecotr con observable problema COMPLETA", async () => {
     });
 
 
-    const clienteResult = await cliente({}, {}).first().toArray().toPromise();
+    const clienteResult = await cliente({}, {}).pipe(rxOps.first(), rxOps.toArray()).toPromise();
 
     expect(clienteResult).toEqual([{ Direcciones: [1, 2, 3] }]);
 
@@ -1576,7 +1576,7 @@ test("selecotr con observable problema COMPLETA", async () => {
     });
 
     const obs = direcciones({}, { value: null, loading: false, });
-    const ret = await obs.first().toArray().toPromise();
+    const ret = await obs.pipe(rxOps.first(), rxOps.toArray()).toPromise();
 
     expect(ret).toEqual([[1, 2, 3]]);
 });
@@ -1590,12 +1590,12 @@ test("selector con observable de observables", async () => {
     let count = 0;
     const contarA = createSelectorRx(a, a => {
         count++;
-        return rx.Observable.timer(0, 50).takeWhile(x => x < a);
+        return rx.timer(0, 50).pipe(rxOps.takeWhile(x => x < a));
     });
-    const conteoPor2 = createSelectorRx(contarA, a => rx.Observable.timer(0, 10).takeWhile(x => x < 20).map(x => x + a * 100));
+    const conteoPor2 = createSelectorRx(contarA, a => rx.timer(0, 10).pipe(rxOps.takeWhile(x => x < 20), rxOps.map(x => x + a * 100)));
 
     const conteoPor2Obs = conteoPor2({ a: 3 });
-    const result = await conteoPor2Obs.toArray().toPromise();
+    const result = await conteoPor2Obs.pipe(rxOps.toArray()).toPromise();
     expect(result).toEqual([0, 1, 2, 3, 4, 100, 101, 102, 103, 104, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219]);
 });
 
@@ -2154,16 +2154,18 @@ async function logObservable<T>(rx: rx.Observable<T>, unitMs: number): Promise<L
 
     let inmediato = true;
     const prom = rx
-        .do(x => {
-            const now = new Date();
-            const time = now.valueOf() - start.valueOf();
+        .pipe(
+            rxOps.tap(x => {
+                const now = new Date();
+                const time = now.valueOf() - start.valueOf();
 
-            ret.push({
-                x: x,
-                time: Math.round(time / unitMs),
-                imm: inmediato
-            });
-        })
+                ret.push({
+                    x: x,
+                    time: Math.round(time / unitMs),
+                    imm: inmediato
+                });
+            })
+        )
         .toPromise();
 
     inmediato = false;
@@ -2228,7 +2230,7 @@ test("debounce", async () => {
 
     {
 
-        const testDebounce = test.debounceTime(unit * 3);
+        const testDebounce = test.pipe(rxOps.debounceTime(unit * 3));
         const testDebounceSync = debounceSync(test, x => delay(unit * 3));
 
         const logDeb = await logObservable(testDebounce, unit);
@@ -2239,7 +2241,7 @@ test("debounce", async () => {
     }
 
     {
-        const testDebounce = test.debounce(x => rx.Observable.interval((x == 1 ? 0 : 3) * unit));
+        const testDebounce = test.pipe(rxOps.debounce(x => rx.interval((x == 1 ? 0 : 3) * unit)));
         const testDebSync = debounceSync(test, x => x == 1 ? syncResolve() : delay(3 * unit));
         const logDeb = await logObservable(testDebounce, unit);
         const logDebSync = await logObservable(testDebSync, unit);
@@ -2292,17 +2294,18 @@ test("treeTrav", () => {
     const tree: Tree = {
         val: "root",
         child: [
-            { 
-                val: "a", 
-                child: [] },
             {
-                val: "b", 
+                val: "a",
+                child: []
+            },
+            {
+                val: "b",
                 child: [
                     {
                         val: "c",
                         child: []
                     }, {
-                        val: "d", 
+                        val: "d",
                         child: [
                             {
                                 val: "e",
@@ -2314,11 +2317,11 @@ test("treeTrav", () => {
                         ]
                     }
                 ]
-            }            
+            }
         ]
     };
 
     const items = treeTraversal([tree], x => x.child).map(x => x.val);
-    
+
     expect(items).toEqual(["root", "a", "b", "c", "d", "e", "f"]);
 });
