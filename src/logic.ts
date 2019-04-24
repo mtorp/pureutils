@@ -3,6 +3,7 @@ import * as rx from "rxjs";
 import * as _uuidRandom from "uuid-random";
 
 import { interopRequireDefault } from "./interop";
+import { defer } from "rxjs";
 const uuidRandom = interopRequireDefault(_uuidRandom) as any;
 /**Devuelve un nuevo UUID */
 export function uuid(): string {
@@ -1330,4 +1331,20 @@ export interface ReduxStore<TState> {
  */
 export function reduxStoreToRx<TState>(store: ReduxStore<TState>): rx.Observable<TState> {
     return getListenToRx(() => store.getState(), x => store.subscribe(x));
+}
+
+/** Example
+import {from} from 'rxjs/observable/from';
+from([1, 2, 3])
+    .pipe(doOnSubscribe(() => console.log('subscribed to stream')))
+    .subscribe(x => console.log(x), null, () => console.log('completed'));
+*/
+export function doOnSubscribe<T>(onSubscribe: () => void): (source: rx.Observable<T>) =>  rx.Observable<T> {
+    return function inner(source: rx.Observable<T>): rx.Observable<T> {
+        return defer(() => {
+          onSubscribe();
+
+          return source;
+        });
+    };
 }
