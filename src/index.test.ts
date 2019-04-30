@@ -2231,7 +2231,7 @@ test("debounce", async () => {
     {
 
         const testDebounce = test.pipe(rxOps.debounceTime(unit * 3));
-        const testDebounceSync = debounceSync(test, x => delay(unit * 3));
+        const testDebounceSync = test.pipe( debounceSync( x => delay(unit * 3)));
 
         const logDeb = await logObservable(testDebounce, unit);
         const logDebSync = await logObservable(testDebounceSync, unit);
@@ -2242,7 +2242,7 @@ test("debounce", async () => {
 
     {
         const testDebounce = test.pipe(rxOps.debounce(x => rx.interval((x == 1 ? 0 : 3) * unit)));
-        const testDebSync = debounceSync(test, x => x == 1 ? syncResolve() : delay(3 * unit));
+        const testDebSync = test.pipe(debounceSync( x => x == 1 ? syncResolve() : delay(3 * unit)));
         const logDeb = await logObservable(testDebounce, unit);
         const logDebSync = await logObservable(testDebSync, unit);
 
