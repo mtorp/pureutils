@@ -1,5 +1,5 @@
 import { pipe } from "./pipe";
-import { Observable, pipe as pipeRx, combineLatest as combineLatestRx, from as fromRx } from "rxjs";
+import { Observable, pipe as pipeRx, combineLatest as combineLatestRx, from as fromRx, isObservable as isObservableRx } from "rxjs";
 import { map as mapRx, concatAll as concatAllRx, scan as scanRx, startWith as startWithRx, filter as filterRx } from "rxjs/operators";
 
 import * as _uuidRandom from "uuid-random";
@@ -814,7 +814,7 @@ export function isPromiseLike(x: any): x is PromiseLike<any> {
 
 /**Devuelve true si x es un observable */
 export function isObservable(x: any): x is Observable<any> {
-    return x instanceof Observable;
+    return isObservableRx(x);
 }
 
 /**Devuelve true si x es un array */
