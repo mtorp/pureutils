@@ -3,8 +3,8 @@ import * as rx from "rxjs";
 /**El mismo comportamiento que el debounce, pero cuando la promesa se resuelve inmediatamente, devuelve el valor de forma síncrona,
  * este comportamiento no lo tiene el debounce de RxJS, ya que si devuelves una promesa ya resuelta aún así el valor se pospone hasta el siguiente evento de JS
  *  */
-export function debounceSync<T>(obs: rx.Observable<T>, timeFunc: (x: T) => PromiseLike<void>): rx.Observable<T> {
-    return new rx.Observable(subs => {
+export function debounceSync<T>(timeFunc: (x: T) => PromiseLike<void>):  (obs: rx.Observable<T>) => rx.Observable<T> {
+    return (obs) => new rx.Observable(subs => {
         let cancelar: boolean = false;
         /**Si hay un valor pendiente de reportar */
         let pendiente: { x: T } | undefined = undefined;
