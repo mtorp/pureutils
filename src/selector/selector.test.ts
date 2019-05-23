@@ -1,12 +1,12 @@
-import { createSelector } from "./selector"
+import { createSelector, toSelector } from "./selector"
 test("selector simple test", () => {
     interface Props {
         a: number;
         b: number;
     }
 
-    const a = (x: Props) => x.a;
-    const b = (x: Props) => x.b;
+    const a = toSelector((x: Props) => x.a);
+    const b = toSelector((x: Props) => x.b);
 
     let a1Calls = 0;
     const a1 = createSelector({
@@ -34,7 +34,7 @@ test("selector simple test", () => {
     });
 
     {
-        const r1 = ab({
+        const r1 = ab.func({
             a: 2,
             b: 3
         });
@@ -47,7 +47,7 @@ test("selector simple test", () => {
 
     {
         //Llamar de nuevo, con los mismos props:
-        ab({
+        ab.func({
             a: 2,
             b: 3
         });
@@ -59,7 +59,7 @@ test("selector simple test", () => {
 
     {
         //Cambiar sólo un prop:
-       const r2 = ab({
+       const r2 = ab.func({
             a: 1,
             b: 3
         });

@@ -4,10 +4,14 @@ export function blobToBase64(archivo: Blob): Promise<string> {
         const reader = new FileReader();
         reader.onload = function () {
             const dataUrl = reader.result;
+            if (typeof dataUrl != "string") {
+                throw new Error("No se pudo convertir a base64 ya que el FileReader devolvio un dataUrl que no es string");
+            }
+
             //Caso especial, si el blob viene vacio esto devuelve "data:"
             if (dataUrl == "data:")
                 resolve("");
-                
+
             const base64Prefix = "base64,"
             const base64 = dataUrl.substring(dataUrl.indexOf(base64Prefix) + base64Prefix.length)
             resolve(base64);
@@ -17,12 +21,12 @@ export function blobToBase64(archivo: Blob): Promise<string> {
 }
 
 /**Decodifica una cadena a base64 */
-export function base64ToString(base64: string) : string {
+export function base64ToString(base64: string): string {
     return atob(base64);
 }
 
 /**Codifica una cadena a base64 */
-export function stringToBase64(str: string) : string {
+export function stringToBase64(str: string): string {
     return btoa(str);
 }
 
@@ -59,12 +63,17 @@ export function stringToBlob(value: string, contentType?: string): Blob {
 }
 
 /**Convierte un blob a una cadena */
-export function blobToString(value: Blob) : Promise<string> {
+export function blobToString(value: Blob): Promise<string> {
     const reader = new FileReader();
 
-    return new Promise(resolve => {
-        reader.onload = function() {
-            resolve(reader.result);
+    return new Promise((resolve, reject) => {
+        reader.onload = function () {
+            if (typeof reader.result == "string") {
+                resolve(reader.result);
+            }
+            else {
+                reject(new Error("No se pudo convertir a base64 ya que el FileReader devolvio un dataUrl que no es string"));
+            }
         }
         reader.readAsText(value);
     })

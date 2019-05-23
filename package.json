@@ -15,7 +15,7 @@
     "jest": "^19.0.2",
     "jest-cli": "^21.2.1",
     "ts-jest": "^19.0.14",
-    "typescript": "^2.8.4"
+    "typescript": "^3.4.5"
   },
   "scripts": {
     "test": "jest",

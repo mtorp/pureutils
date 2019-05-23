@@ -1,6 +1,7 @@
-import { selectorCacheRequest , SelectorCache, SelectorCacheResponse } from "./cache";
+import { selectorCacheRequest, SelectorCache, SelectorCacheResponse } from "./cache";
 import { mapObject, enumObject, any, isObservable, isPromiseLike } from "../logic";
 import { Observable } from "rxjs";
+import { TimeInterval } from "rxjs/internal/operators/timeInterval";
 
 
 /**
@@ -17,18 +18,18 @@ export interface Selector<TIn extends {}, TOut> {
 
 
 
-export type SelectorOutType<T> = T extends (input: any) => infer R ? R : never;
-export type SelectorInType<T> = T extends (input: infer R) => any ? R : never;
-export type SelectorMap = {
-    [K in string]: Selector<any, any>
+export type SelectorOutType<T> = T extends Selector<any, infer R> ? R : never;
+export type SelectorInType<T> = T extends  Selector<infer R, any> ? R : never;
+export type SelectorMap<TIn> = {
+    [K in string]: Selector<TIn, any>
 }
 
-export type SelectorMapOuts<T extends SelectorMap> = {
+export type SelectorMapOuts<T extends SelectorMap<any>> = {
     [K in keyof T]: SelectorOutType<T[K]>
 };
 
 
-export type SelectorMapIn<T extends SelectorMap> = SelectorInType<T[keyof T]>;
+export type SelectorMapIn<T extends SelectorMap<any>> = SelectorInType<T[keyof T]>;
 
 /**Una función que mapea un objeto resultante de multiples selectores a una salida */
 export interface SelectorMapFunc<TIn, TOut> {
@@ -43,7 +44,7 @@ export interface SelectorMapFunc<TIn, TOut> {
  * @param map La función que dado el resultado de dependsOn obtiene la salida del selector
  */
 export function runSelector<TOut, TDeps extends {}>(
-    cache: SelectorCache<TDeps, TOut> | undefined, 
+    cache: SelectorCache<TDeps, TOut> | undefined,
     deps: TDeps,
     map: SelectorMapFunc<TDeps, TOut>): SelectorCacheResponse<TDeps, TOut> {
     //Checar el cache:
@@ -62,9 +63,9 @@ export function runSelector<TOut, TDeps extends {}>(
  * @param input La entrada actual
  * @param map La función que dado el resultado de dependsOn obtiene la salida del selector
  */
-export function runSelectorDeps<TOut, TDeps extends SelectorMap>(
-    cache: SelectorCache<SelectorMapOuts<TDeps>, TOut> | undefined, 
-    dependsOn: TDeps, 
+export function runSelectorDeps<TOut, TDeps extends SelectorMap<any>>(
+    cache: SelectorCache<SelectorMapOuts<TDeps>, TOut> | undefined,
+    dependsOn: TDeps,
     input: SelectorMapIn<TDeps>,
     map: SelectorMapFunc<SelectorMapOuts<TDeps>, TOut>): SelectorCacheResponse<SelectorMapOuts<TDeps>, TOut> {
     //Llama a todos los selectores con el input:
@@ -79,13 +80,21 @@ export function runSelectorDeps<TOut, TDeps extends SelectorMap>(
     return req;
 }
 
+/**Convierte una función pura a un selector */
+export function toSelector<TIn, TOut>(func: (input: TIn) => TOut): Selector<TIn, TOut> {
+    return {
+        func: func,
+        clear: () => { }
+    };
+}
+
 /**
  * Crea una selector, el cual es una funcíón que depende de otros selectores y que tiene un cache de tamaño 1.
  * Si todas sus dependencias devuelven la misma salida el selector devuelve exactamente la misma salida sin evaluar la función map
  * @param dependsOn Las dependencias del selector, es un objeto de selectores
  * @param map Evalua el selector en caso de que alguna de las dependencias haya cambiado de resultado
  */
-export function createSelector<TOut, TDeps extends SelectorMap>(dependsOn: TDeps, map: SelectorMapFunc<SelectorMapOuts<TDeps>, TOut>): Selector<SelectorMapIn<TDeps>, TOut> {
+export function createSelector<TOut, TDeps extends SelectorMap<any>>(dependsOn: TDeps, map: SelectorMapFunc<SelectorMapOuts<TDeps>, TOut>): Selector<SelectorMapIn<TDeps>, TOut> {
     type SelOuts = SelectorMapOuts<TDeps>;
     let cache: SelectorCache<SelOuts, TOut> | undefined = undefined;
 

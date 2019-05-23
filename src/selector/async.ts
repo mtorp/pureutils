@@ -15,14 +15,14 @@ type RemoveAsync<T> =
     T extends Observable<(infer R) | (typeof LoadingSym)> ? R :
     T;
 
-type SelectorRxMapOuts<T extends SelectorMap> = {
+type SelectorRxMapOuts<T extends SelectorMap<any>> = {
     [K in keyof T]: RemoveAsync<SelectorOutType<T[K]>>
 };
 
 
 
 /**Una función que mapea un objeto resultante de multiples selectores a una salida */
-export interface SelectorRxMapFunc<TDeps extends SelectorMap, TOut> {
+export interface SelectorRxMapFunc<TDeps extends SelectorMap<any>, TOut> {
     (curr: SelectorRxMapOuts<TDeps>, prev: SelectorRxMapOuts<TDeps> | undefined): TOut;
 }
 
@@ -94,7 +94,12 @@ function mapToRx<T extends {}>(map: T): {
 
 export type Rxfy<T> = T | PromiseLike<T> | Observable<T | typeof LoadingSym>;
 
-export function createSelectorRx<TOut, TDeps extends SelectorMap>(dependsOn: TDeps, map: SelectorRxMapFunc<TDeps, Rxfy< TOut>>): Selector<SelectorMapIn<TDeps>, Observable<TOut | typeof LoadingSym>> {
+/**
+ * 
+ * @param dependsOn 
+ * @param map 
+ */
+export function createSelectorRx<TOut, TDeps extends SelectorMap<any>>(dependsOn: TDeps, map: SelectorRxMapFunc<TDeps, Rxfy< TOut>>): Selector<SelectorMapIn<TDeps>, Observable<TOut | typeof LoadingSym>> {
     type SelOuts = SelectorMapOuts<TDeps>;
     let cacheRx: SelectorCache<SelOuts, ObsSelectorResult<TOut>> | undefined = undefined;
 
