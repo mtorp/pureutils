@@ -433,7 +433,7 @@ export function upDownItem<T>(array: T[], index: number, direction: "up" | "down
     }
 }
 
-export type Promisify<T> = { [K in keyof T]: Promise<T[K]> };
+export type Promisify<T> = { [K in keyof T]: PromiseLike<T[K]> };
 
 /**Aplica una función Promise.all a un objeto,  */
 export function promiseAllObj<T>(obj: Promisify<T>): Promise<T>
@@ -453,6 +453,10 @@ export type ObservableMapToSyncMap<T> = {
     [K in keyof T]: T[K] extends Observable<infer R> ? R : never;
 }
 
+export type PromiseMapToSyncMap<T> = {
+    [K in keyof T]: T[K] extends PromiseLike<infer R> ? R : never;
+}
+
 /**Convierte un objeto de observables a un observable de objetos, el primer elemento del observable resultante se da cuando todos los observables del objeto lanzan el primer valor.
  * Es muy similar al @see combineLatest pero en lugar de funcionar con un arreglo funciona con un objeto
  */
@@ -466,12 +470,12 @@ export function objRxToRxObj<T extends ObservableMap>(obj: T): Observable<Observ
 
     const values = keys.map(key =>
         obj[key].pipe(
-                mapRx(x => ({
-                    value: x,
-                    key: key
-                }))    
-            )
-        );
+            mapRx(x => ({
+                value: x,
+                key: key
+            }))
+        )
+    );
 
 
 
@@ -748,6 +752,14 @@ function maxComparer<T>(arr: T[], comparer: ComparerFunction<T>): T | undefined 
 export function rxFlatten<T>(observable: Observable<T | PromiseLike<T> | Observable<T>>): Observable<T> {
     const obsOfObs = observable.pipe(mapRx(x => toObservable(x)));
     return obsOfObs.pipe(concatAllRx());
+}
+
+/**Convierte un valor o una promesa a una promesa */
+export function toPromise<T>(value: T | PromiseLike<T>): PromiseLike<T> {
+    if (isPromiseLike(value))
+        return value;
+
+    return syncResolve(value);
 }
 
 /**Convierte un valor o una promesa a un observable, si el valor ya es un observable lo devuelve tal cual */
@@ -1358,12 +1370,12 @@ from([1, 2, 3])
     .pipe(doOnSubscribe(() => console.log('subscribed to stream')))
     .subscribe(x => console.log(x), null, () => console.log('completed'));
 */
-export function doOnSubscribe<T>(onSubscribe: () => void): (source: Observable<T>) =>  Observable<T> {
+export function doOnSubscribe<T>(onSubscribe: () => void): (source: Observable<T>) => Observable<T> {
     return function inner(source: Observable<T>): Observable<T> {
         return defer(() => {
-          onSubscribe();
+            onSubscribe();
 
-          return source;
+            return source;
         });
     };
 }

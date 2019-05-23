@@ -34,7 +34,7 @@ test("selector simple test", () => {
     });
 
     {
-        const r1 = ab.func({
+        const r1 = ab.call({
             a: 2,
             b: 3
         });
@@ -47,7 +47,7 @@ test("selector simple test", () => {
 
     {
         //Llamar de nuevo, con los mismos props:
-        ab.func({
+        ab.call({
             a: 2,
             b: 3
         });
@@ -59,7 +59,7 @@ test("selector simple test", () => {
 
     {
         //Cambiar sólo un prop:
-       const r2 = ab.func({
+       const r2 = ab.call({
             a: 1,
             b: 3
         });
@@ -69,4 +69,18 @@ test("selector simple test", () => {
         expect(b1Calls).toBe(1);
         expect(abCalls).toBe(2);
     }
+});
+
+test("selector multiple", async () => {
+    interface Props {
+        a: number;
+        b: number;
+    }
+    const a = toSelector((x: {x: Props, state: number}) => x.x.a);
+    const b = toSelector((x: {x: Props, state: number}) => x.x.b);
+    const c = toSelector((x: {x: Props, state: number}) => x.x.b + x.state);
+
+    const sum = createSelector({a, b, c}, x => x.a + x.b + x.c);
+
+    expect(sum.call({x: { a: 1, b: 2 }, state: 5})).toBe(10);
 });

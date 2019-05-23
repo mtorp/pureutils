@@ -1,4 +1,5 @@
-import { shallowEquals } from "../logic";
+import { shallowEquals, deepEquals } from "../logic";
+import { SelectorOptions } from "./selector";
 
 export interface SelectorCache<TArgs extends {}, TResult> {
     args: TArgs;
@@ -19,8 +20,10 @@ export interface SelectorCacheResponse<TArgs, TResult> {
 /**
  * Realiza una petición a un cache de un selector y devuelve el nuevo cache y el resultado de la petición
  */
-export function selectorCacheRequest<TArgs extends {}, TResult>(cache: SelectorCache<TArgs, TResult> | undefined, request: SelectorCacheRequest<TArgs, TResult>): SelectorCacheResponse<TArgs, TResult>{
-    const item = cache && shallowEquals(cache.args, request.args) ? cache : undefined;
+export function selectorCacheRequest<TArgs extends {}, TResult>(cache: SelectorCache<TArgs, TResult> | undefined, request: SelectorCacheRequest<TArgs, TResult>, options: SelectorOptions): SelectorCacheResponse<TArgs, TResult>{
+    const deep = !!options.deep;
+    const equals = deep ? deepEquals : shallowEquals;
+    const item = cache && equals(cache.args, request.args) ? cache : undefined;
     if (cache == undefined || item == undefined) {
         const result = request.func(request.args, cache && cache.args);
         const newCache: SelectorCache<TArgs, TResult> = {

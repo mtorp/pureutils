@@ -1266,7 +1266,6 @@ test("async create selector async memoize", async () => {
 
     expect(samePromiseCalls).toBe(3);
     expect(sumCalls).toBe(1);
-
 });
 
 test("async same promise ", async () => {

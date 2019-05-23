@@ -11,7 +11,7 @@ import { TimeInterval } from "rxjs/internal/operators/timeInterval";
  */
 export interface Selector<TIn extends {}, TOut> {
     /**Obtiene el valor del selector */
-    func(input: TIn): TOut;
+    call(input: TIn): TOut;
     /**Limpia el cache del selector */
     clear(): void;
 }
@@ -45,13 +45,15 @@ export interface SelectorMapFunc<TIn, TOut> {
  */
 export function runSelector<TOut, TDeps extends {}>(
     cache: SelectorCache<TDeps, TOut> | undefined,
-    deps: TDeps,
-    map: SelectorMapFunc<TDeps, TOut>): SelectorCacheResponse<TDeps, TOut> {
+    selectorResults: TDeps,
+    map: SelectorMapFunc<TDeps, TOut>,
+    options: SelectorOptions
+    ): SelectorCacheResponse<TDeps, TOut> {
     //Checar el cache:
     const req = selectorCacheRequest(cache, {
         func: map,
-        args: deps
-    });
+        args: selectorResults
+    }, options);
 
     return req;
 }
@@ -67,45 +69,46 @@ export function runSelectorDeps<TOut, TDeps extends SelectorMap<any>>(
     cache: SelectorCache<SelectorMapOuts<TDeps>, TOut> | undefined,
     dependsOn: TDeps,
     input: SelectorMapIn<TDeps>,
-    map: SelectorMapFunc<SelectorMapOuts<TDeps>, TOut>): SelectorCacheResponse<SelectorMapOuts<TDeps>, TOut> {
+    map: SelectorMapFunc<SelectorMapOuts<TDeps>, TOut>,
+    options: SelectorOptions
+    ): SelectorCacheResponse<SelectorMapOuts<TDeps>, TOut> {
     //Llama a todos los selectores con el input:
-    const selectorResults = mapObject(dependsOn, val => val.func(input)) as SelectorMapOuts<TDeps>;
+    const selectorResults = mapObject(dependsOn, val => val.call(input)) as SelectorMapOuts<TDeps>;
 
-    //Checar el cache:
-    const req = selectorCacheRequest(cache, {
-        func: map,
-        args: selectorResults
-    });
-
-    return req;
+    return runSelector(cache, selectorResults, map, options);
 }
 
 /**Convierte una función pura a un selector */
 export function toSelector<TIn, TOut>(func: (input: TIn) => TOut): Selector<TIn, TOut> {
     return {
-        func: func,
+        call: func,
         clear: () => { }
     };
 }
 
+export interface SelectorOptions {
+   /**Si la comparación de los argumentos debe de hacerse recursivamente */ 
+    deep?: boolean;
+}
+
 /**
- * Crea una selector, el cual es una funcíón que depende de otros selectores y que tiene un cache de tamaño 1.
+ * Crea una selector, el cual es tiene una funcíón que depende de otros selectores.
  * Si todas sus dependencias devuelven la misma salida el selector devuelve exactamente la misma salida sin evaluar la función map
  * @param dependsOn Las dependencias del selector, es un objeto de selectores
  * @param map Evalua el selector en caso de que alguna de las dependencias haya cambiado de resultado
  */
-export function createSelector<TOut, TDeps extends SelectorMap<any>>(dependsOn: TDeps, map: SelectorMapFunc<SelectorMapOuts<TDeps>, TOut>): Selector<SelectorMapIn<TDeps>, TOut> {
+export function createSelector<TOut, TDeps extends SelectorMap<any>>(dependsOn: TDeps, map: SelectorMapFunc<SelectorMapOuts<TDeps>, TOut>, options? : SelectorOptions ): Selector<SelectorMapIn<TDeps>, TOut> {
     type SelOuts = SelectorMapOuts<TDeps>;
     let cache: SelectorCache<SelOuts, TOut> | undefined = undefined;
 
     const ret = (input: SelectorMapIn<TDeps>) => {
-        const response = runSelectorDeps(cache, dependsOn, input, map);
+        const response = runSelectorDeps(cache, dependsOn, input, map, options || {});
         cache = response.cache;
         return response.result;
     };
 
     return {
-        func: ret,
+        call: ret,
         clear: () => cache = undefined
     };
 }
