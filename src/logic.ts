@@ -56,7 +56,7 @@ export function any<T>(arr: T[], pred?: (x: T) => boolean): boolean {
 /**Devuelve true si el valor existe en el arreglo */
 export function contains<TA, TB>(arr: TA[], value: TB, comparer?: (a: TA, b: TB) => boolean): boolean {
     const effectiveComparer = comparer || referenceEquals;
-    return any(arr, x => effectiveComparer(x, value));
+    return any(arr, x => effectiveComparer(x, value as any));
 }
 
 /**Devuelve true si todos los valores en @see values existen en el arreglo @see arr . Si @see values esta vacío devuelve true */

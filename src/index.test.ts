@@ -815,6 +815,10 @@ test("null safe", () => {
 
 
     nullsafe(b);
+    expect(nullsafe(0)).toBe(0);
+    expect(nullsafe(1)).toBe(1);
+    expect(nullsafe(null)).toBe(null);
+    expect(nullsafe(undefined)).toBe(undefined);
 
     expect(nullsafe(a, x => x.A, x => x.B)).toBe(undefined);
     expect(nullsafe(b, x => x.A, x => x.B)).toBe(null);
@@ -832,13 +836,15 @@ test("null safe", () => {
 });
 
 test("nullsafe types", () => {
-    interface TestType {
-        a: {
+    interface A {
             b: number,
             c: string | null | undefined,
             d: string | undefined,
             e: string | null,
-        } | null,
+    };
+
+    interface TestType {
+        a: A | null,
         b?: string,
         c: {
             b: number,
@@ -854,7 +860,8 @@ test("nullsafe types", () => {
 
     const test = null as any as TestType;
     //Simplemente comprobamos al compilar que los tipos que devuelve el nullsafe en cajan con los tipos del
-    const a: {} | null = nullsafe(test, x => x.a);
+    const ar = nullsafe(test, x => x.a);
+    const a: {} | null = ar;
     const b: number | null = nullsafe(test, x => x.a, x => x.b);
     const c: string | null | undefined = nullsafe(test, x => x.a, x => x.c);
     const d: string | null | undefined = nullsafe(test, x => x.a, x => x.d);
@@ -1609,7 +1616,7 @@ test("selecotr con observable y nulo", async () => {
     const clienteDireccion = createSelectorRx(idClienteDireccion, id => {
         var b = new rx.BehaviorSubject<{ Cliente: number, IdCliente: number }>({ Cliente: 10, IdCliente: 1 } as any);
         const ret = id != null ? b : null;
-        const ret2 = toObservable(ret);
+        const ret2 = toObservable(ret as any);
         return ret2;
     });
 
