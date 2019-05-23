@@ -1,11 +1,11 @@
 import * as rx from "rxjs";
 import { toSelector, createSelector } from "../selector";
 import { createSelectorRx, createSelectorAsync } from "./async";
-import { toArray } from "rxjs/operators";
-import { delay } from "../../logic";
+import * as rxOps from "rxjs/operators";
+import { delay, isObservable, toObservable } from "../../logic";
 
 async function expectObs<T>(actual: rx.Observable<T>, expected: T[]) {
-    const arr = await actual.pipe(toArray()).toPromise();
+    const arr = await actual.pipe(rxOps.toArray()).toPromise();
     expect(arr).toEqual(expected);
 }
 
@@ -38,9 +38,9 @@ test("selector mismo observable", async () => {
 
 test("selector devolver el mismo observable 2", async () => {
     type In = { props: number, state: number | null };
-    const id = toSelector( (x: In) => x.props);
+    const id = toSelector((x: In) => x.props);
 
-    
+
     const valueFromState = toSelector((x: In) => x.state);
     let subCount = 0;
     const valueFromResource = createSelectorRx({ id }, x => new rx.Observable<number>(subs => {
@@ -53,19 +53,19 @@ test("selector devolver el mismo observable 2", async () => {
         resource: valueFromResource
     }, x => x.state ? rx.from([x.state]) : x.resource);
 
-    const obs0 = value.call({props: 10, state: null});
+    const obs0 = value.call({ props: 10, state: null });
     obs0.subscribe(x => { });
 
-    const obs1A = value.call({props: 10, state: 2});
+    const obs1A = value.call({ props: 10, state: 2 });
     obs1A.subscribe(x => { });
 
-    const obs1B = value.call({props: 10, state: 2});
+    const obs1B = value.call({ props: 10, state: 2 });
     obs1B.subscribe(x => { });
 
-    const obs2 = value.call({props: 10, state: 3});
+    const obs2 = value.call({ props: 10, state: 3 });
     obs2.subscribe(x => { });
 
-    const obs3 = value.call({props: 10, state: 4});
+    const obs3 = value.call({ props: 10, state: 4 });
     obs3.subscribe(x => { });
 
     expect(subCount).toBe(1);
@@ -84,10 +84,10 @@ test("async create selector simple test", async () => {
     }
     const value = toSelector((x: Props) => x.value);
 
-    const incrementAsync = createSelectorRx({value}, x => delay(100).then(() => x.value + 1));
+    const incrementAsync = createSelectorRx({ value }, x => delay(100).then(() => x.value + 1));
 
-    const dup = createSelectorRx({value}, x => x.value * 2);
-    const sum = createSelectorRx({incrementAsync, dup}, x => x.incrementAsync + x.dup);
+    const dup = createSelectorRx({ value }, x => x.value * 2);
+    const sum = createSelectorRx({ incrementAsync, dup }, x => x.incrementAsync + x.dup);
 
     const func = (x: number) => (x + 1) + (x * 2);
     //(value + 1) + (value * 2)
@@ -101,15 +101,15 @@ test("async create selector async memoize", async () => {
         b: number;
     }
     const a = toSelector((x: Props) => x.a);
-    const increment = createSelectorAsync({a}, x => delay(100).then(() => x.a + 1));
+    const increment = createSelectorAsync({ a }, x => delay(100).then(() => x.a + 1));
     let samePromiseCalls = 0;
-    const samePromise = createSelectorAsync({increment}, x => {
+    const samePromise = createSelectorAsync({ increment }, x => {
         samePromiseCalls++;
         return Promise.resolve(10);
     }); //Este selector cada vez devuelve una promesa diferente, pero con el mismo valor
 
     let sumCalls = 0;
-    const sumObs = createSelectorAsync({samePromise}, x => {
+    const sumObs = createSelectorAsync({ samePromise }, x => {
         sumCalls++;
         return x.samePromise + 1;
     });
@@ -155,16 +155,16 @@ test("async same promise ", async () => {
     }
     const props = toSelector((x: Props) => x);
     let samePromiseCalls = 0;
-    const samePromise = createSelectorRx({props}, x => {
+    const samePromise = createSelectorRx({ props }, x => {
         samePromiseCalls++;
         return Promise.resolve({ a: 10, b: 30 });
     }); //Este selector cada vez devuelve una promesa diferente, pero con el mismo valor
 
     let sumCalls = 0;
-    const sum = createSelectorRx({samePromise}, x => {
+    const sum = createSelectorRx({ samePromise }, x => {
         sumCalls++;
         return x.samePromise.a + 1;
-    }, { deep: true});
+    }, { deep: true });
 
     expect(samePromiseCalls).toBe(0);
     expect(sumCalls).toBe(0);
@@ -184,7 +184,7 @@ test("async same promise ", async () => {
 test("selector al tener error no debe de memoizar SYNC", async () => {
     const a = toSelector(() => 10);
     let count = 0;
-    const sum = createSelector({a}, x => {
+    const sum = createSelector({ a }, x => {
         count++;
         if (count >= 3) return x.a;
         else
@@ -207,3 +207,232 @@ test("selector al tener error no debe de memoizar SYNC", async () => {
 });
 
 
+
+test("selector con observable", async () => {
+    interface Props {
+        a: number;
+    };
+    const a = toSelector((x: Props) => x.a);
+    let count = 0;
+    const contarA = createSelectorRx({ a }, a => {
+        count++;
+        return rx.timer(0, 100).pipe(rxOps.takeWhile(x => x < a.a));
+    });
+    const conteoPor2 = createSelectorRx({ contarA }, a => a.contarA * 2);
+
+    let obs2 = await conteoPor2.call({ a: 2 }).pipe(rxOps.toArray()).toPromise();
+    expect(obs2).toEqual([0, 2]);
+
+    obs2 = await conteoPor2.call({ a: 2 }).pipe(rxOps.toArray()).toPromise();
+    expect(obs2).toEqual([0, 2]);
+    expect(count).toBe(1);
+
+    let obs4 = await conteoPor2.call({ a: 4 }).pipe(rxOps.toArray()).toPromise();
+    expect(obs4).toEqual([0, 2, 4, 6]);
+
+    obs4 = await conteoPor2.call({ a: 4 }).pipe(rxOps.toArray()).toPromise();
+    expect(obs4).toEqual([0, 2, 4, 6]);
+
+    expect(count).toBe(2);
+
+});
+
+
+test("selecotr con observable problema TEST", async () => {
+    interface State {
+    }
+
+    const idCliente = toSelector((state: State) => new rx.BehaviorSubject<number>(10));
+
+    const idClienteObs = idCliente.call({});
+    const idClienteValue = await idClienteObs.pipe(rxOps.first(), rxOps.toArray()).toPromise();
+    expect(isObservable(idClienteObs)).toBe(true);
+    expect(idClienteValue).toEqual([10]);
+
+    const cliente = createSelectorRx({ idCliente }, id => {
+        expect(id.idCliente).toBe(10);
+        var b = new rx.BehaviorSubject<{ Direcciones: any[] }>({ Direcciones: [1, 2, 3] } as any);
+        const isObs = isObservable(b);
+        return b;
+    });
+
+
+    const clienteObs = cliente.call({});
+    const clienteResult = await clienteObs.pipe(rxOps.first(), rxOps.toArray()).toPromise();
+
+    expect(clienteResult).toEqual([{ Direcciones: [1, 2, 3] }]);
+
+}, 10000);
+
+
+test("selector debe de devolver la misma instancia de observable argumento sincrono", async () => {
+    interface State {
+    }
+
+    const idCliente = toSelector((state: State) => 10);
+    let calls = 0;
+    const cliente = createSelectorRx({ idCliente }, id => {
+        calls++;
+        const instance = { id: id.idCliente };
+        return rx.from([instance]);
+    });
+
+    const state: State = {};
+    const miCliente1 = cliente.call(state);
+    const miCliente2 = cliente.call(state);
+
+    //No hay ninguna llamada por que no hay subscripciones:
+    expect(calls).toBe(0);
+
+    //Es el mismo observable:
+    expect(miCliente1).toBe(miCliente2);
+
+    const miClienteResult1 = await miCliente1.pipe(rxOps.first(), rxOps.toArray()).toPromise();
+    const miClienteResult2 = await miCliente2.pipe(rxOps.first(), rxOps.toArray()).toPromise();
+
+    //Después de las subscripciones sólo hay 1 llamada, no 2:
+    expect(calls).toBe(1);
+
+
+    expect(miClienteResult1[0]).toBe(miClienteResult2[0]);
+});
+
+
+test("selector debe de devolver la misma instancia de observable con argumento observable", async () => {
+    interface State {
+    }
+
+    const idCliente = toSelector((state: State) => 10);
+    const idClienteObs = createSelectorRx({ idCliente }, id => new rx.BehaviorSubject<number>(id.idCliente));
+
+    let calls = 0;
+    const cliente = createSelectorRx({ idClienteObs }, id => {
+        calls++;
+        const instance = { id: id.idClienteObs };
+        return rx.from([instance]);
+    });
+
+
+    const state: State = {};
+    const miCliente1 = cliente.call(state);
+    const miCliente2 = cliente.call(state);
+
+    const miClienteResult1 = await miCliente1.pipe(rxOps.first(), rxOps.toArray()).toPromise();
+    const miClienteResult2 = await miCliente2.pipe(rxOps.first(), rxOps.toArray()).toPromise();
+
+    expect(calls).toBe(1);
+    expect(miClienteResult1[0]).toBe(miClienteResult2[0]);
+    expect(miCliente1).toBe(miCliente2);
+});
+
+
+
+test("selector debe de devolver la misma instancia de promesa argumento sincrono", async () => {
+    interface State {
+    }
+
+    const idCliente = toSelector((state: State) => 10);
+    let calls = 0;
+    const cliente = createSelectorAsync({ idCliente }, id => {
+        calls++;
+        const instance = { id: id };
+        return Promise.resolve(instance);
+    });
+
+    const state: State = {};
+    const miCliente1 = cliente.call(state);
+    const miCliente2 = cliente.call(state);
+
+    expect(calls).toBe(1);
+    expect(miCliente1).toBe(miCliente2);
+
+    const miClienteResult1 = await miCliente1;
+    const miClienteResult2 = await miCliente2;
+    expect(miClienteResult1).toBe(miClienteResult2);
+});
+
+
+test("selecotr con observable problema COMPLETA", async () => {
+
+    interface State {
+        idCliente?: number;
+    }
+    interface Props {
+        value?: number | null;
+        loading?: boolean;
+    }
+    interface In {
+        state: State;
+        props: Props;
+    }
+    const idClienteDireccion = toSelector((x: In) => x.props.value);
+    const clienteDireccion = createSelectorRx({ idClienteDireccion }, id => {
+        //Hello
+        var b = new rx.BehaviorSubject<{ Cliente: number, IdCliente: number }>({ Cliente: 10, IdCliente: 1 } as any);
+        const ret = id != null ? b : rx.from([id]);
+        return ret as rx.Observable<{ Cliente: number, IdCliente: number } | null | undefined>;
+    });
+    const clienteFromValue = createSelectorRx({ clienteDireccion }, x => x.clienteDireccion && x.clienteDireccion.Cliente);
+    const idClienteFromValue = createSelectorRx({ clienteDireccion }, x => x.clienteDireccion && x.clienteDireccion.IdCliente);
+    const idClienteFromState = toSelector((x: In) => x.state.idCliente);
+    //NOTA: Le damos prioridad al NULL sobre el UNDEFINED, esto por que un NULL indica una limpieza por parte del usuario, en cambio un undefined indica que el valor no se conoce
+    const idCliente = createSelectorRx({ val: idClienteFromValue, state: idClienteFromState }, x => x.val === null ? null : (x.state || x.val));;
+    const cliente = createSelectorRx({ id: idCliente }, x => {
+        var b = new rx.BehaviorSubject<{ Direcciones: any[] }>({ Direcciones: [1, 2, 3] } as any);
+        const isObs = isObservable(b);
+        return b;
+    });
+
+
+    const clienteResult = await cliente.call({ props: {}, state: {} }).pipe(rxOps.first(), rxOps.toArray()).toPromise();
+
+    expect(clienteResult).toEqual([{ Direcciones: [1, 2, 3] }]);
+
+    const direcciones = createSelectorRx({ cli: cliente }, x => {
+        return (x.cli && x.cli.Direcciones) || []
+    });
+
+    const direccionesSelect = createSelectorRx({ direcciones }, x => {
+        return x.direcciones.map<{}>(x => ({ id: x, view: x }));
+    });
+
+    const obs = direcciones.call({ state: {}, props: { value: null, loading: false, } });
+    const ret = await obs.pipe(rxOps.first(), rxOps.toArray()).toPromise();
+
+    expect(ret).toEqual([[1, 2, 3]]);
+});
+
+test("selector con observable de observables", async () => {
+    interface Props {
+        a: number;
+    };
+    const a = toSelector((x: Props) => x.a);
+    let count = 0;
+    const contarA = createSelectorRx({a}, s => {
+        count++;
+        return rx.timer(0, 50).pipe(rxOps.takeWhile(x => x < s.a));
+    });
+    const conteoPor2 = createSelectorRx({a: contarA}, s => rx.timer(0, 10).pipe(rxOps.takeWhile(x => x < 20), rxOps.map(x => x + s.a * 100)));
+
+    const conteoPor2Obs = conteoPor2.call({ a: 3 });
+    const result = await conteoPor2Obs.pipe(rxOps.toArray()).toPromise();
+    expect(result).toEqual([0, 1, 2, 3, 4, 100, 101, 102, 103, 104, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219]);
+});
+
+test("selecotr con observable y nulo", async () => {
+    interface Props {
+        value?: number | null;
+        loading?: boolean;
+    }
+    const idClienteDireccion = toSelector( (props: Props) => props.value);
+    const clienteDireccion = createSelectorRx({id: idClienteDireccion}, s => {
+        var b = new rx.BehaviorSubject<{ Cliente: number, IdCliente: number }>({ Cliente: 10, IdCliente: 1 } as any);
+        const ret = s.id != null ? b : null;
+        const ret2 = toObservable(ret as any);
+        return ret2;
+    });
+
+    createSelectorRx({a: idClienteDireccion, b: clienteDireccion}, s => s.b)
+
+    const clienteFromValue = createSelectorRx({x: clienteDireccion}, s => s.x && s.x.Cliente);
+});

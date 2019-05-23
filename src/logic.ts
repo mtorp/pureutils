@@ -755,7 +755,7 @@ export function rxFlatten<T>(observable: Observable<T | PromiseLike<T> | Observa
 }
 
 /**Convierte un valor o una promesa a una promesa */
-export function toPromise<T>(value: T | PromiseLike<T>): PromiseLike<T> {
+export function valToPromise<T>(value: T | PromiseLike<T>): PromiseLike<T> {
     if (isPromiseLike(value))
         return value;
 
@@ -1057,7 +1057,7 @@ export function unbindFunction<T extends (...args: any[]) => any>(func: T): T | 
 }
 
 /**Devuelve una promesa que se resuelve síncronamente con el valor especificado, esto es diferente a Promise.resolve(x) ya que el metodo then del Promise.resolve() no se resuleve inmediatamente después de construir la promesa */
-export function syncResolve<T>(x: T): PromiseLike<T>
+export function syncResolve<T>(x: T | PromiseLike<T>): PromiseLike<T>
 export function syncResolve(): PromiseLike<void>
 export function syncResolve<T = void>(x?: T): PromiseLike<T> {
     return {
@@ -1074,6 +1074,23 @@ export function syncResolve<T = void>(x?: T): PromiseLike<T> {
         }
     };
 }
+
+
+/**Devuelve una promesa que se rechaza síncronamente con el valor especificado, esto es diferente a Promise.reject(x) ya que el metodo then del Promise.resolve() no se resuleve inmediatamente después de construir la promesa */
+export function syncReject(err: any): PromiseLike<any> {
+    return {
+        then: <TResult1 = any, TResult2 = never>(
+            onfulfilled?: ((value: any) => TResult1 | PromiseLike<TResult1>) | undefined | null,
+            onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null
+            ): PromiseLike<TResult1> => {
+            if (onrejected) {
+                const ret = onrejected(err);
+            }
+            return syncReject(err);
+        }
+    };
+}
+
 
 /**Devuelve una promesa que se resuelve en cierto tiempo. Note que si ms == 0 la promesa devuelta no se resuelve síncronamente, ya que un setTimeout(..., 0) no es síncrono*/
 export function delay(ms: number): Promise<void> {
@@ -1379,3 +1396,38 @@ export function doOnSubscribe<T>(onSubscribe: () => void): (source: Observable<T
         });
     };
 }
+
+/**Convierte una observable a una promesa, donde la promesa tiene el ultimo valor devuelto por el observable y se resuelve una vez que el observable es completado.
+ * La diferencia entre este y el rxjs.toPromise es que si el observable se resuelve de manera sincrona la promesa devuelta también se resuelve de forma síncrona,
+ * ya que el resultado de rxjs.toPromise es siempre una promesa asíncrona
+ */
+export function obsToPromise<T>(obs: Observable<T>): PromiseLike<T> {
+
+    type Result = {
+        value?: T,
+        err?: any,
+    };
+    let curr: Result | undefined = undefined;
+    let complete: boolean = false;
+
+    const ret = splitPromise<T>();
+
+    obs.subscribe(x => {
+        curr = { value: x };
+    }, err => {
+        curr = { err: err };
+        ret.reject(err);
+    }, () => {
+        complete = true
+        ret.resolve(curr!.value!);
+    });
+
+    if (complete) {
+        //Se completó síncronamente
+        return syncResolve(curr!.value!);
+    } else {
+        return ret.promise;
+    }
+}
+
+

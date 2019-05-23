@@ -1,4 +1,4 @@
-import { enumObject, any, isObservable, isPromiseLike, mapObject, objRxToRxObj, ObservableMap, ObservableMapToSyncMap, toObservable, syncResolve, PromiseMapToSyncMap, promiseAllObj, toPromise } from "../../logic";
+import { enumObject, any, isObservable, isPromiseLike, mapObject, objRxToRxObj, ObservableMap, ObservableMapToSyncMap, toObservable, syncResolve, PromiseMapToSyncMap, promiseAllObj, valToPromise, obsToPromise } from "../../logic";
 import { Observable, combineLatest as combineLatestRx } from "rxjs";
 import { SelectorMap, SelectorOutType, SelectorMapOuts, SelectorMapIn, Selector, SelectorMapFunc, runSelectorDeps, createSelector, SelectorOptions } from "../selector";
 import { SelectorCache, selectorCacheRequest } from "../cache";
@@ -96,7 +96,7 @@ function promiseMapSelector<TResult extends PromiseMap, TOut>(
 ): PromSelectorResult<TOut> {
     const obs = observableMapSelector(cacheState, mapToRx(results), map, options);
     //TODO: Verificar que las promesas que devuelven de forma sincrona generan selectores que devuelven de forma sincrona:
-    const outProm = obs.result.toPromise() as Promise<TOut>;
+    const outProm = obsToPromise(obs.result) as Promise<TOut>;
 
     return {
         result: outProm,
@@ -168,7 +168,7 @@ type RemovePromise<T> =
 function mapToPromise<T extends {}>(map: T): {
     [K in keyof T]: PromiseLike<RemovePromise<T[K]>>
 } {
-    const r = mapObject(map, x => toPromise(x as any));
+    const r = mapObject(map, x => valToPromise(x as any));
     return r;
 }
 
