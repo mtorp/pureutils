@@ -1,4 +1,6 @@
 import { createSelector, toSelector } from "./selector"
+import { syncResolve } from "../logic";
+import { createSelectorAsync } from "./async";
 test("selector simple test", () => {
     interface Props {
         a: number;
@@ -59,7 +61,7 @@ test("selector simple test", () => {
 
     {
         //Cambiar sólo un prop:
-       const r2 = ab.call({
+        const r2 = ab.call({
             a: 1,
             b: 3
         });
@@ -76,11 +78,94 @@ test("selector multiple", async () => {
         a: number;
         b: number;
     }
-    const a = toSelector((x: {x: Props, state: number}) => x.x.a);
-    const b = toSelector((x: {x: Props, state: number}) => x.x.b);
-    const c = toSelector((x: {x: Props, state: number}) => x.x.b + x.state);
+    const a = toSelector((x: { x: Props, state: number }) => x.x.a);
+    const b = toSelector((x: { x: Props, state: number }) => x.x.b);
+    const c = toSelector((x: { x: Props, state: number }) => x.x.b + x.state);
 
-    const sum = createSelector({a, b, c}, x => x.a + x.b + x.c);
+    const sum = createSelector({ a, b, c }, x => x.a + x.b + x.c);
 
-    expect(sum.call({x: { a: 1, b: 2 }, state: 5})).toBe(10);
+    expect(sum.call({ x: { a: 1, b: 2 }, state: 5 })).toBe(10);
+});
+
+test("curr y prev values", async () => {
+    interface Props {
+        a: number;
+        b: number;
+    }
+
+    const a = toSelector((x: Props) => x.a);
+    const b = toSelector((x: Props) => x.b);
+
+    let values: { curr: Props, prev: Props | undefined }[] = [];
+    const ab = createSelector({ a, b }, (curr, prev) => {
+        values.push({ curr, prev });;
+
+        return curr.a * curr.b;
+    });
+
+    expect(values).toEqual([]);
+
+    ab.call({ a: 2, b: 3 });
+    expect(values).toEqual([
+        {
+            curr: { a: 2, b: 3 },
+            prev: undefined
+        }
+    ]);
+
+    ab.call({ a: 2, b: 3 });
+    expect(values.length).toBe(1);
+
+    ab.call({ a: 2, b: 4 });
+    expect(values).toEqual([
+        {
+            curr: { a: 2, b: 3 },
+            prev: undefined
+        }, {
+            curr: { a: 2, b: 4 },
+            prev: { a: 2, b: 3 }
+        }
+    ]);
+
+});
+
+test("curr y prev values async", async () => {
+    interface Props {
+        a: number;
+        b: number;
+    }
+
+    const a = toSelector((x: Props) => syncResolve(x.a));
+    const b = toSelector((x: Props) => syncResolve (x.b));
+
+    let values: { curr: Props, prev: Props | undefined }[] = [];
+    const ab = createSelectorAsync({ a, b }, (curr, prev) => {
+        values.push({ curr, prev });;
+        return curr.a * curr.b;
+    });
+
+    expect(values).toEqual([]);
+
+    ab.call({ a: 2, b: 3 });
+    expect(values).toEqual([
+        {
+            curr: { a: 2, b: 3 },
+            prev: undefined
+        }
+    ]);
+
+    ab.call({ a: 2, b: 3 });
+    expect(values.length).toBe(1);
+
+    ab.call({ a: 2, b: 4 });
+    expect(values).toEqual([
+        {
+            curr: { a: 2, b: 3 },
+            prev: undefined
+        }, {
+            curr: { a: 2, b: 4 },
+            prev: { a: 2, b: 3 }
+        }
+    ]);
+
 });
