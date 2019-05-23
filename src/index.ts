@@ -6,7 +6,7 @@ export { search } from "./search";
 export { removeDiacritics } from "./diacritics";
 export { interopRequireDefault } from "./interop";
 export * from "./logic";
-export { createSelectorRx, createDeepSelectorRx, createSelector, createDeepSelector } from "./selectors";
+export { createSelectorRx, createDeepSelectorRx, createSelector, createDeepSelector } from "./old_selectors";
 export { generatePushID } from "./pushid";
 export * from "./url";
 export * from "./base64";

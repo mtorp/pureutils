@@ -318,7 +318,7 @@ export function enumObject<T, TR>(obj: T, selector?: (key: keyof T, value: T[key
  * Convierte un arreglo en un objeto
  * @param array Arreglo donde se toma la propiedad "key" de cada elemento como key del objeto
  */
-export function arrayToMap<TKey extends string, TValue>(array: { key: TKey, value: TValue }[]): ObjMap<TValue>
+export function arrayToMap<TKey, TValue>(array: { key: TKey, value: TValue }[]): ObjMap<TValue>
 /**
  * Convierte un arreglo a un objeto
  * @param array Arreglo de valores
@@ -445,10 +445,18 @@ export function promiseAllObj(obj: any) {
     return ret;
 }
 
-/**Convierte un objeto de observables a un observable de objetos, el primer elemento del observable resultante se da cuando todos los observables del objeto lanzan el primer valor */
-export function objRxToRxObj<T extends { [K in keyof T]: Observable<any> }>(obj: T): Observable<{
-    [K in keyof T]: T[K] extends Observable<infer R> ? R : T
-}> {
+export type ObservableMap = {
+    [K in string]: Observable<any>
+};
+
+export type ObservableMapToSyncMap<T> = {
+    [K in keyof T]: T[K] extends Observable<infer R> ? R : never;
+}
+
+/**Convierte un objeto de observables a un observable de objetos, el primer elemento del observable resultante se da cuando todos los observables del objeto lanzan el primer valor.
+ * Es muy similar al @see combineLatest pero en lugar de funcionar con un arreglo funciona con un objeto
+ */
+export function objRxToRxObj<T extends ObservableMap>(obj: T): Observable<ObservableMapToSyncMap<T>> {
     const keys = Object.keys(obj) as (keyof T)[];
 
     interface KeyValue {
@@ -743,16 +751,14 @@ export function rxFlatten<T>(observable: Observable<T | PromiseLike<T> | Observa
 }
 
 /**Convierte un valor o una promesa a un observable, si el valor ya es un observable lo devuelve tal cual */
-export function toObservable<T1>(value: Observable<T1> | null): Observable<T1 | null>
-export function toObservable<T1>(value: Observable<T1> | undefined): Observable<T1 | undefined>
-export function toObservable<T1, T2 extends null | undefined>(value: Observable<T1> | T2): Observable<T1 | T2>
-export function toObservable<T>(value: T | PromiseLike<T> | Observable<T>): Observable<T>
 export function toObservable<T>(value: T | PromiseLike<T> | Observable<T>): Observable<T> {
     if (value instanceof Observable) {
         return value;
-    } else {
-        return fromRx(Promise.resolve(value));
+    } else if (isPromiseLike(value)) {
+        return fromRx(value);
     }
+
+    return fromRx(syncResolve(value));
 }
 
 /**Toma los primeros N elementos del arreglo */
