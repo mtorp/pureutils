@@ -1,2 +1,2 @@
-export { createSelector } from "./selector";
+export { createSelector, toSelector } from "./selector";
 export * from "./async";
