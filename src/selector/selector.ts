@@ -98,7 +98,7 @@ export function toSelector<TIn, TOut>(func: (input: TIn) => TOut): Selector<TIn,
 
 export interface SelectorOptions {
    /**Si la comparación de los argumentos debe de hacerse recursivamente */ 
-    deep?: boolean;
+    comparer?: (a: any, b: any) => boolean;
 }
 
 

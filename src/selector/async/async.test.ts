@@ -2,7 +2,7 @@ import * as rx from "rxjs";
 import { toSelector, createSelector } from "../selector";
 import { createSelectorRx, createSelectorAsync } from "./async";
 import * as rxOps from "rxjs/operators";
-import { delay, isObservable, toObservable } from "../../logic";
+import { delay, isObservable, toObservable, deepEquals } from "../../logic";
 
 async function expectObs<T>(actual: rx.Observable<T>, expected: T[]) {
     const arr = await actual.pipe(rxOps.toArray()).toPromise();
@@ -164,7 +164,7 @@ test("async same promise ", async () => {
     const sum = createSelectorRx({ samePromise }, x => {
         sumCalls++;
         return x.samePromise.a + 1;
-    }, { deep: true });
+    }, { comparer: deepEquals });
 
     expect(samePromiseCalls).toBe(0);
     expect(sumCalls).toBe(0);
