@@ -408,15 +408,56 @@ test("selector con observable de observables", async () => {
     };
     const a = toSelector((x: Props) => x.a);
     let count = 0;
-    const contarA = createSelectorRx({a}, s => {
+    const contarA = createSelectorRx({ a }, s => {
         count++;
-        return rx.timer(0, 50).pipe(rxOps.takeWhile(x => x < s.a));
+        return rx.timer(0, 350).pipe(rxOps.takeWhile(x => x < s.a));
     });
-    const conteoPor2 = createSelectorRx({a: contarA}, s => rx.timer(0, 10).pipe(rxOps.takeWhile(x => x < 20), rxOps.map(x => x + s.a * 100)));
 
-    const conteoPor2Obs = conteoPor2.call({ a: 3 });
+    const contarATest = async () => {
+        const contarAObs = contarA.call({ a: 4 });
+        const contarAArray = await contarAObs.pipe(rxOps.toArray()).toPromise();
+        expect(contarAArray).toEqual([0, 1, 2, 3]);
+    };
+
+    await contarATest();
+    await contarATest();
+
+    const contarB = toSelector(() => rx.timer(0, 150).pipe(rxOps.takeWhile(x => x <= 5)));
+
+    //Diagrama de los tiempos:
+
+    /*
+    T * 50ms  | a | b
+    00        | 0 | 0
+    03        | 0 | 1
+    06        | 0 | 2
+    07        | 1 | 2
+    09        | 1 | 3
+    12        | 1 | 4
+    14        | 2 | 4
+    15        | 2 | 5
+    21        | 3 | 5 
+
+    */
+    const conteoPor2 = createSelectorRx({ a: contarA, b: contarB }, s => ({
+        a: s.a,
+        b: s.b
+    }));
+
+    const conteoPor2Obs = conteoPor2.call({ a: 4 });
     const result = await conteoPor2Obs.pipe(rxOps.toArray()).toPromise();
-    expect(result).toEqual([0, 1, 2, 3, 4, 100, 101, 102, 103, 104, 200, 201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219]);
+    const expected = [
+        {a: 0, b: 0},
+        {a: 0, b: 1},
+        {a: 0, b: 2},
+        {a: 1, b: 2},
+        {a: 1, b: 3},
+        {a: 1, b: 4},
+        {a: 2, b: 4},
+        {a: 2, b: 5},
+        {a: 3, b: 5},
+    ]
+    expect(result).toEqual(expected);
 });
 
 test("selecotr con observable y nulo", async () => {
@@ -424,15 +465,15 @@ test("selecotr con observable y nulo", async () => {
         value?: number | null;
         loading?: boolean;
     }
-    const idClienteDireccion = toSelector( (props: Props) => props.value);
-    const clienteDireccion = createSelectorRx({id: idClienteDireccion}, s => {
+    const idClienteDireccion = toSelector((props: Props) => props.value);
+    const clienteDireccion = createSelectorRx({ id: idClienteDireccion }, s => {
         var b = new rx.BehaviorSubject<{ Cliente: number, IdCliente: number }>({ Cliente: 10, IdCliente: 1 } as any);
         const ret = s.id != null ? b : null;
         const ret2 = toObservable(ret as any);
         return ret2;
     });
 
-    createSelectorRx({a: idClienteDireccion, b: clienteDireccion}, s => s.b)
+    createSelectorRx({ a: idClienteDireccion, b: clienteDireccion }, s => s.b)
 
-    const clienteFromValue = createSelectorRx({x: clienteDireccion}, s => s.x && s.x.Cliente);
+    const clienteFromValue = createSelectorRx({ x: clienteDireccion }, s => s.x && s.x.Cliente);
 });

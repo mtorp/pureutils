@@ -12,6 +12,8 @@ import { TimeInterval } from "rxjs/internal/operators/timeInterval";
 export interface Selector<TIn extends {}, TOut> {
     /**Obtiene el valor del selector */
     call(input: TIn): TOut;
+    /**Obtiene el valor del selector sin usar el cache */
+    raw(input: TIn): TOut;
     /**Limpia el cache del selector */
     clear(): void;
 }
@@ -78,10 +80,18 @@ export function runSelectorDeps<TOut, TDeps extends SelectorMap<any>>(
     return runSelector(cache, selectorResults, map, options);
 }
 
+/**Ejecuta la función del selector directamente sin ningún tipo de cache */
+export function runSelectorRaw<TOut, TDeps extends SelectorMap<any>>( dependsOn: TDeps, map: SelectorMapFunc<SelectorMapOuts<TDeps>, TOut>, input: SelectorMapOuts<TDeps>) {
+    const selectorResults = mapObject(dependsOn, val => val.call(input)) as SelectorMapOuts<TDeps>;
+    return map(selectorResults, undefined);
+}
+
+
 /**Convierte una función pura a un selector */
 export function toSelector<TIn, TOut>(func: (input: TIn) => TOut): Selector<TIn, TOut> {
     return {
         call: func,
+        raw: func,
         clear: () => { }
     };
 }
@@ -90,6 +100,7 @@ export interface SelectorOptions {
    /**Si la comparación de los argumentos debe de hacerse recursivamente */ 
     deep?: boolean;
 }
+
 
 /**
  * Crea una selector, el cual es tiene una funcíón que depende de otros selectores.
@@ -109,6 +120,7 @@ export function createSelector<TOut, TDeps extends SelectorMap<any>>(dependsOn: 
 
     return {
         call: ret,
+        raw: (input) => runSelectorRaw(dependsOn, map, input),
         clear: () => cache = undefined
     };
 }

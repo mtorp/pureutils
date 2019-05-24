@@ -1,6 +1,6 @@
 import { enumObject, any, isObservable, isPromiseLike, mapObject, objRxToRxObj, ObservableMap, ObservableMapToSyncMap, toObservable, syncResolve, PromiseMapToSyncMap, promiseAllObj, valToPromise, obsToPromise } from "../../logic";
 import { Observable, combineLatest as combineLatestRx } from "rxjs";
-import { SelectorMap, SelectorOutType, SelectorMapOuts, SelectorMapIn, Selector, SelectorMapFunc, runSelectorDeps, createSelector, SelectorOptions } from "../selector";
+import { SelectorMap, SelectorOutType, SelectorMapOuts, SelectorMapIn, Selector, SelectorMapFunc, runSelectorDeps, createSelector, SelectorOptions, runSelectorRaw } from "../selector";
 import { SelectorCache, selectorCacheRequest } from "../cache";
 import { map as mapRx, map, switchAll as switchAllRx, catchError } from "rxjs/operators";
 
@@ -203,6 +203,9 @@ function createSelectorRxAsync<TDeps extends SelectorMap<any>, TCache extends As
 
     return {
         call: func,
+        raw: (input) => {
+            throw new Error("Ejecutar de forma directa un selector asíncrono aún no esta implementado");
+        },
         clear: clear
     };
 }
