@@ -11,3 +11,4 @@ export * from "./url";
 export * from "./base64";
 export * from "./debounce";
 export * from "./selector";
+export * from "./types";

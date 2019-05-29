@@ -608,13 +608,13 @@ test("order by", () => {
     const {
         x, y, z, w, a, b
     } = {
-            x: { value: 4, name: "a" },
-            y: { value: 3, name: "b" },
-            z: { value: 1, name: "d" },
-            w: { value: 5, name: "c" },
-            a: { value: 6, name: "f" },
-            b: { value: 2, name: "f" },
-        };
+        x: { value: 4, name: "a" },
+        y: { value: 3, name: "b" },
+        z: { value: 1, name: "d" },
+        w: { value: 5, name: "c" },
+        a: { value: 6, name: "f" },
+        b: { value: 2, name: "f" },
+    };
 
     const data = [x, y, z, w, a, b];
 
@@ -836,10 +836,10 @@ test("null safe", () => {
 
 test("nullsafe types", () => {
     interface A {
-            b: number,
-            c: string | null | undefined,
-            d: string | undefined,
-            e: string | null,
+        b: number,
+        c: string | null | undefined,
+        d: string | undefined,
+        e: string | null,
     };
 
     interface TestType {
@@ -869,7 +869,7 @@ test("nullsafe types", () => {
 
     const d2: string | undefined = nullsafe(test, x => x.c, x => x.d);
     const d3: string | undefined = nullsafe(test, x => x.d, x => x.d);
-})
+});
 
 test("map prev rx", async () => {
     const arr = [1, 4, 7, 10, 20];
@@ -1404,9 +1404,9 @@ test("rx Obj", () => {
         count: number,
         obj: (typeof obsObj) extends rx.Observable<infer R> ? R : any
     } = {
-            count: 0,
-            obj: null as any
-        };
+        count: 0,
+        obj: null as any
+    };
 
     obsObj.subscribe(next => ret = {
         count: ret.count + 1,
@@ -1720,7 +1720,7 @@ test("debounce", async () => {
     {
 
         const testDebounce = test.pipe(rxOps.debounceTime(unit * 3));
-        const testDebounceSync = test.pipe( debounceSync( x => delay(unit * 3)));
+        const testDebounceSync = test.pipe(debounceSync(x => delay(unit * 3)));
 
         const logDeb = await logObservable(testDebounce, unit);
         const logDebSync = await logObservable(testDebounceSync, unit);
@@ -1731,7 +1731,7 @@ test("debounce", async () => {
 
     {
         const testDebounce = test.pipe(rxOps.debounce(x => rx.interval((x == 1 ? 0 : 3) * unit)));
-        const testDebSync = test.pipe(debounceSync( x => x == 1 ? syncResolve() : delay(3 * unit)));
+        const testDebSync = test.pipe(debounceSync(x => x == 1 ? syncResolve() : delay(3 * unit)));
         const logDeb = await logObservable(testDebounce, unit);
         const logDebSync = await logObservable(testDebSync, unit);
 
