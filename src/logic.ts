@@ -920,6 +920,12 @@ function aplicarSepMiles(intpart: string, sep: string = ","): string {
     return ret;
 }
 
+/**Formatea una moneda con 2 decimales y separador de miles
+ */
+export function formatCurrency(number: number | null | undefined | string) {
+    return formatNumber(number, 0, 2, true, "$");
+}
+
 /**
  * Formatea un número
  * @param number El numero
