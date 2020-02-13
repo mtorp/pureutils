@@ -95,15 +95,7 @@ function promiseMapSelector<TResult extends PromiseMap, TOut>(
     options: SelectorOptions
 ): PromSelectorResult<TOut> {
 
-    const mapSyncPromise: SelectorMapFunc<PromiseMapToSyncMap<TResult>, TOut | PromiseLike<TOut>> = (curr, prev) => {
-        const ret = map(curr, prev);
-        if (!isPromiseLike(ret)) {
-            return ret;
-        }
-
-        return toSyncPromise(ret);
-    };
-    const obs = observableMapSelector(cacheState, mapToRx(results), mapSyncPromise, options);
+    const obs = observableMapSelector(cacheState, mapToRx(results), map, options);
     //TODO: Verificar que las promesas que devuelven de forma sincrona generan selectores que devuelven de forma sincrona:
     const outProm = obsToPromise(obs.result) as Promise<TOut>;
 

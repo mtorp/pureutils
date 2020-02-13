@@ -64,25 +64,3 @@ test("sync promise = sync selector",  () => {
     });
 
 });
-
-test("promise resolved is sync", async () => {
-    //La función es asíncrona y devuelve 20
-    const func = async (id: number) => {
-        delay(10);
-        return 20;
-    };
-
-    const idSel = toSelector((id: number) => id);
-    const funcSel = createSelectorAsync({idSel}, s => func(s.idSel));
-
-    const prom1 = funcSel.call(0);
-    //La primera llamada es asíncrona:
-    expect(isSyncPromise(prom1)).toBe(false);
-
-    const value = await prom1;
-    expect(value).toBe(20);
-
-    const prom2 = funcSel.call(2);
-    //La segunda llamada es síncrona:
-    expect(isSyncPromise( prom2)).toBe(true);
-});
