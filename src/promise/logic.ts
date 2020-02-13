@@ -1,4 +1,4 @@
-import { SplitPromise } from "./split";
+import { KeaPromise } from "./split";
 
  
 /**True si la promesa se resuelve síncronamente */
@@ -44,7 +44,7 @@ export function toSyncPromise<T>(x: PromiseLike<T>): PromiseLike<T> {
     if (isSyncPromise(x))
         return x;
 
-    return new SplitPromise((resolve, reject) => x.then(resolve, reject));
+    return new KeaPromise((resolve, reject) => x.then(resolve, reject));
 }
 
 /**Crea una nueva promesa y devuelve por separado la promesa y las funciones que resuelven y rechazan a la promesa */
@@ -52,7 +52,7 @@ export function splitPromise<T>(): { promise: PromiseLike<T>, resolve: (value?: 
     let resolve = null as any;
     let reject = null as any;
 
-    const promise = new SplitPromise<T>(
+    const promise = new KeaPromise<T>(
         (onfulfilled, onrejected) => {
             resolve = onfulfilled;
             reject = onrejected;

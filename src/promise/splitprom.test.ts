@@ -1,9 +1,9 @@
 import {  isSyncPromise, syncPromiseValue } from "./logic";
-import { SplitPromise } from "./split";
+import { KeaPromise } from "./split";
 import { delay } from "../logic";
 
 test("split promise rejection bubbling", async () => {
-    const prom = new SplitPromise<number>((resolve, reject) => {
+    const prom = new KeaPromise<number>((resolve, reject) => {
         setInterval(() => {
             reject("error 1");
         }, 10)
@@ -22,7 +22,7 @@ test("split promise rejection bubbling", async () => {
 });
 
 test("split promise rejection", async () => {
-    const prom = new SplitPromise<number>((resolve, reject) => {
+    const prom = new KeaPromise<number>((resolve, reject) => {
         setInterval(() => {
             reject("error 1");
         }, 10)
@@ -40,7 +40,7 @@ test("split promise rejection", async () => {
 });
 
 test("split promise chainable", async () => {
-    const prom = new SplitPromise<number>((resolve) => {
+    const prom = new KeaPromise<number>((resolve) => {
         setInterval(() => {
             resolve(20);
         }, 10)
@@ -61,7 +61,7 @@ test("split promise chainable", async () => {
 });
 
 test("split promise chainable", async () => {
-    const prom = new SplitPromise<number>((resolve) => {
+    const prom = new KeaPromise<number>((resolve) => {
         setInterval(() => {
             resolve(20);
         }, 10)
@@ -79,7 +79,7 @@ test("split promise chainable", async () => {
 
 
 test("split promise multiple thens", async () => {
-    const prom = new SplitPromise<number>((resolve) => {
+    const prom = new KeaPromise<number>((resolve) => {
         setInterval(() => {
             resolve(20);
         }, 10)
@@ -97,7 +97,7 @@ test("split promise multiple thens", async () => {
 });
 
 test("split promise multiple thens 2", async () => {
-    const prom = new SplitPromise<number>((resolve) => {
+    const prom = new KeaPromise<number>((resolve) => {
         setInterval(() => {
             resolve(20);
         }, 10)
@@ -117,7 +117,7 @@ test("split promise multiple thens 2", async () => {
 
 
 test("split promise thenable", async () => {
-    const prom = new SplitPromise((resolve) => {
+    const prom = new KeaPromise((resolve) => {
         setInterval(() => {
             resolve(20);
         }, 10)
@@ -133,14 +133,14 @@ test("split promise thenable", async () => {
 });
 
 test("split promise is sync", async () => {
-    const prom = new SplitPromise((resolve) => resolve(10));
+    const prom = new KeaPromise((resolve) => resolve(10));
     expect(isSyncPromise(prom)).toBe(true);
     expect(syncPromiseValue(prom).value).toBe(10);
 });
 
 
 test("split promise thenable 2", async () => {
-    const prom = new SplitPromise((resolve) => {
+    const prom = new KeaPromise((resolve) => {
         setInterval(() => {
             resolve(20);
         }, 10)

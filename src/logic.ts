@@ -1065,14 +1065,8 @@ export function unbindFunction<T extends (...args: any[]) => any>(func: T): T | 
     return arr[arr.length - 1];
 }
 
-
-
-
-
-
-
 /**Devuelve una promesa que se resuelve en cierto tiempo. Note que si ms == 0 la promesa devuelta no se resuelve síncronamente, ya que un setTimeout(..., 0) no es síncrono*/
-export function delay(ms: number): Promise<void> {
+export function delay(ms: number): PromiseLike<void> {
     return new Promise<void>(resolve => setTimeout(resolve, ms));
 }
 
