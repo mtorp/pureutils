@@ -6,12 +6,11 @@ import {
     search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx, mapMany, runningTotal, mapPrevious, formatNumber, formatDate, formatDateExcel,
     cloneFunction, bindFunction, unbindFunction, delay, uuid, allEqual, pick, zip, binarySearch, exclude,
     isSubset, innerJoin, leftJoin, unionKey, combinePath, generatePushID, sum, excludeKeys, coalesce, nextToPromise, objRxToRxObj, outOfRange, FloatRange,
-    base64ToString, stringToBase64, max, min, enumKeys, toIsoDate, debounceSync, syncResolve, mergeObj, orRx, treeTraversal
+    base64ToString, stringToBase64, max, min, enumKeys, toIsoDate, debounceSync, syncResolve, mergeObj, orRx, treeTraversal, isSyncPromise, syncPromiseValue
 } from "./index";
 
 import * as rx from "rxjs";
 import * as rxOps from "rxjs/operators";
-import { syncPromiseValue, isSyncPromise, toSyncPromise } from "./logic";
 
 
 test("orRx", async () => {

@@ -1,4 +1,5 @@
-import { enumObject, any, isObservable, isPromiseLike, mapObject, objRxToRxObj, ObservableMap, ObservableMapToSyncMap, toObservable, syncResolve, PromiseMapToSyncMap, promiseAllObj, valToPromise, obsToPromise, toSyncPromise } from "../../logic";
+import { enumObject, any, isObservable, isPromiseLike, mapObject, objRxToRxObj, ObservableMap, ObservableMapToSyncMap, toObservable,  
+    PromiseMapToSyncMap, promiseAllObj, valToPromise, obsToPromise } from "../../logic";
 import { Observable, combineLatest as combineLatestRx } from "rxjs";
 import { SelectorMap, SelectorOutType, SelectorMapOuts, SelectorMapIn, Selector, SelectorMapFunc, runSelectorDeps, createSelector, SelectorOptions, runSelectorRaw } from "../selector";
 import { SelectorCache, selectorCacheRequest } from "../cache";

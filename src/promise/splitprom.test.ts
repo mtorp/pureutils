@@ -1,4 +1,6 @@
-import { SplitPromise, isSyncPromise, syncPromiseValue, delay } from "../../logic";
+import {  isSyncPromise, syncPromiseValue } from "./logic";
+import { SplitPromise } from "./split";
+import { delay } from "../logic";
 
 test("split promise rejection bubbling", async () => {
     const prom = new SplitPromise<number>((resolve, reject) => {

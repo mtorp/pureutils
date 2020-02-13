@@ -1,4 +1,5 @@
-import { delay, toSyncPromise, isSyncPromise } from "./logic";
+import {  toSyncPromise, isSyncPromise } from "./logic";
+import { delay } from "../logic";
 
 test("asyncToSyncPromise ", async () => {
     const prom = (async () => {

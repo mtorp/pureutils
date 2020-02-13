@@ -6,6 +6,7 @@ import * as _uuidRandom from "uuid-random";
 
 import { interopRequireDefault } from "./interop";
 import { defer } from "rxjs";
+import { syncResolve, splitPromise } from "./promise";
 const uuidRandom = interopRequireDefault(_uuidRandom) as any;
 /**Devuelve un nuevo UUID */
 export function uuid(): string {
@@ -1064,129 +1065,10 @@ export function unbindFunction<T extends (...args: any[]) => any>(func: T): T | 
     return arr[arr.length - 1];
 }
 
-/**Devuelve una promesa que se resuelve síncronamente con el valor especificado, esto es diferente a Promise.resolve(x) ya que el metodo then del Promise.resolve() no se resuleve inmediatamente después de construir la promesa */
-export function syncResolve<T>(x: T | PromiseLike<T>): PromiseLike<T>
-export function syncResolve(): PromiseLike<void>
-export function syncResolve<T = void>(x?: T): PromiseLike<T> {
-    return new SplitPromise<T>((resolve) => resolve(x));
-}
 
 
-/**Devuelve una promesa que se resuelve síncronamente con el valor especificado, esto es diferente a Promise.resolve(x) ya que el metodo then del Promise.resolve() no se resuleve inmediatamente después de construir la promesa */
-export function syncFail(reason: any): PromiseLike<any>
-export function syncFail(reason: any): PromiseLike<any> {
-    return new SplitPromise<any>((resolve, reject) => reject(reason));
-    
-}
 
-/**True si la promesa se resuelve síncronamente */
-export function isSyncPromise(x: PromiseLike<any>): boolean {
-    return syncPromiseValue(x).status != "pending";
-}
 
-interface SyncPromiseResult<T> {
-    value?: T;
-    error?: any;
-    status: "resolved" | "error" | "pending"
-}
-
-/**Devuelve un objeto con el valor de la promesa si es síncrona, si no, devuelve undefined*/
-export function syncPromiseValue<T>(x: PromiseLike<T>): SyncPromiseResult<T> {
-    let sync: SyncPromiseResult<T> = {
-        status: "pending"
-    };
-
-    x.then((x) => sync = {
-        value: x,
-        status: "resolved"
-    }, err => sync = {
-        error: err,
-        status: "error"
-    });
-    return sync;
-}
-
-interface SyncPromise<T> extends PromiseLike<T> {
-    value?: T;
-    error?: any;
-    original: PromiseLike<T>;
-    status: "sync" | "async";
-}
-
-class AsyncToSyncPromise<T> implements PromiseLike<T> {
-    constructor(original: PromiseLike<T>) {
-        this.original = original;
-        this.original.then(x => {
-            this.status = "resolved";
-            this.value = x
-        }, err => {
-            this.status = "error";
-            this.error = err;
-        })
-    }
-
-    value?: T;
-    error?: any;
-    original: PromiseLike<T>;
-    status: "pending" | "resolved" | "error" = "pending";
-
-    then<TResult1 = T, TResult2 = never>(
-        onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null,
-        onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null):
-        PromiseLike<TResult1 | TResult2> {
-
-        switch (this.status) {
-            case "pending":
-                return this.original.then(onfulfilled, onrejected);
-            case "resolved":
-                if (onfulfilled) {
-                    const ret = onfulfilled(this.value as T);
-                    if (isPromiseLike(ret))
-                        return ret;
-                    else
-                        return syncResolve(ret);
-                }
-
-                return syncResolve(this.value as any as TResult1);
-            case "error":
-                if (onrejected) {
-                    const ret = onrejected(this.error);
-                    if (isPromiseLike(ret))
-                        return ret;
-                    else
-                        return syncResolve(ret);
-                }
-
-                return syncFail(this.error as any as TResult2);
-        }
-    }
-}
-
-/**
- * Devuelve una promesa que internamente almacena su valor una vez que fue resuelta, de tal manera que al resolverse de nuevo se resuleve de forma síncrona
- * @param x Una promesa
- */
-export function toSyncPromise<T>(x: PromiseLike<T>): PromiseLike<T> {
-    if (isSyncPromise(x))
-        return x;
-
-    return new AsyncToSyncPromise(x);
-}
-
-/**Devuelve una promesa que se rechaza síncronamente con el valor especificado, esto es diferente a Promise.reject(x) ya que el metodo then del Promise.resolve() no se resuleve inmediatamente después de construir la promesa */
-export function syncReject(err: any): PromiseLike<any> {
-    return {
-        then: <TResult1 = any, TResult2 = never>(
-            onfulfilled?: ((value: any) => TResult1 | PromiseLike<TResult1>) | undefined | null,
-            onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null
-        ): PromiseLike<TResult1> => {
-            if (onrejected) {
-                const ret = onrejected(err);
-            }
-            return syncReject(err);
-        }
-    };
-}
 
 
 /**Devuelve una promesa que se resuelve en cierto tiempo. Note que si ms == 0 la promesa devuelta no se resuelve síncronamente, ya que un setTimeout(..., 0) no es síncrono*/
@@ -1341,125 +1223,7 @@ export function nextToPromise<T>(obs: Observable<T>): Promise<T> {
     return new Promise<T>((resolve, reject) => obs.subscribe(resolve, reject));
 }
 
-interface ThenArg<T> {
-    onfulfilled: ((value: T) => any | PromiseLike<any>) | undefined | null,
-    onrejected: ((reason: any) => any | PromiseLike<any>) | undefined | null
-}
 
-export class SplitPromise<T> implements PromiseLike<T>  {
-    constructor(executor: (
-        resolve: (value?: T | PromiseLike<T>) => void,
-        reject: (reason?: any) => void
-    ) => void) {
-        executor(this.resolve, this.reject);
-    }
-
-    resolve: (value?: T) => void = (value) => {
-        this.value = value;
-        this.status = "resolved";
-        this.callListeners();
-    }
-
-    reject: (reason?: any) => void = reason => {
-        this.error = reason;
-        this.status = "error";
-        this.callListeners();
-    }
-
-    listeners: (() => void)[] = [];
-    callListeners = () => {
-        for (const l of this.listeners)
-            l();
-    }
-
-    value?: T;
-    error?: any;
-    status: "pending" | "resolved" | "error" = "pending";
-
-    callThenArg = <TResult1 = T, TResult2 = never>(arg: ThenArg<T>): TResult1 | PromiseLike<TResult1 | TResult2> => {
-        if (this.status == "pending")
-            throw new Error("Aun no se puede llamar a los thenArgs");
-
-        switch (this.status) {
-            case "resolved":
-                if (arg.onfulfilled) {
-                    return arg.onfulfilled(this.value as T);
-                }
-
-                return this.value! as any;
-            case "error":
-                if (arg.onrejected) {
-                    return arg.onrejected(this.error);
-                }
-
-                return this.error;
-        }
-    }
-
-    then<TResult1 = T, TResult2 = never>(
-        onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null,
-        onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null):
-        PromiseLike<any> {
-
-        switch (this.status) {
-            case "pending":
-                {
-                    const onF = onfulfilled;
-                    return new SplitPromise<T>((resolve, reject) => {
-                        return this.listeners.push(() => {
-                            const value = this.callThenArg({ onfulfilled, onrejected });
-                            if (this.status == "resolved")
-                                resolve(value);
-                            else {
-                                reject(value);
-                            }
-                        });
-                    })
-                }
-            case "resolved":
-                {
-                    if (onfulfilled) {
-                        const ret = onfulfilled(this.value!);
-                        if (isPromiseLike(ret)) {
-                            return ret;
-                        } else {
-                            return syncResolve(ret!);
-                        }
-
-                    }
-                    return syncResolve(this.value!);
-                }
-            case "error":
-                {
-                    if (onrejected) {
-                        const ret = onrejected(this.error);
-                        if (isPromiseLike(ret))
-                            return ret;
-                        else
-                            return syncResolve(ret);
-                    }
-                    debugger;
-                    return syncFail(this.error);
-                }
-        }
-    }
-
-}
-
-/**Crea una nueva promesa y devuelve por separado la promesa y las funciones que resuelven y rechazan a la promesa */
-export function splitPromise<T>(): { promise: PromiseLike<T>, resolve: (value?: T | PromiseLike<T> | undefined) => void, reject: (reason?: any) => void } {
-    let resolve = null as any;
-    let reject = null as any;
-
-    const promise = new SplitPromise<T>(
-        (onfulfilled, onrejected) => {
-            resolve = onfulfilled;
-            reject = onrejected;
-        }
-    );
-
-    return { promise, resolve, reject };
-}
 
 /**Tipo de un extremo del rango */
 export type RangeEndType = "in" | "ex";

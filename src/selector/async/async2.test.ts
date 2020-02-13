@@ -1,6 +1,7 @@
 import { toSelector } from "../selector";
 import { createSelectorAsync } from "./async";
-import { isSyncPromise, delay, toSyncPromise, obsToPromise, toObservable } from "../../logic";
+import { delay,  obsToPromise, toObservable } from "../../logic";
+import { toSyncPromise, isSyncPromise } from "../../promise/logic";
 
 test("obsToPrimise", async () => {
     //La función es asíncrona y devuelve 20

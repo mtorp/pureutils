@@ -1,7 +1,8 @@
 import { toSelector } from "../selector";
-import { syncResolve, delay } from "../../logic";
+import {  delay } from "../../logic";
 import { createSelectorAsync } from "./async";
 import * as rx from "rxjs";
+import { syncResolve } from "../../promise/split";
 
 test("observable de promesa inmediata es inmediato", () => {
     const prom = syncResolve(10);

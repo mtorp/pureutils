@@ -1,6 +1,6 @@
 import { createSelector, toSelector } from "./selector"
-import { syncResolve } from "../logic";
 import { createSelectorAsync } from "./async";
+import { syncResolve } from "../promise/split";
 test("selector simple test", () => {
     interface Props {
         a: number;
