@@ -11,6 +11,7 @@ import {
 
 import * as rx from "rxjs";
 import * as rxOps from "rxjs/operators";
+import { syncPromiseValue, isSyncPromise, toSyncPromise } from "./logic";
 
 
 test("orRx", async () => {
@@ -1621,13 +1622,6 @@ test("enum keys", () => {
 
 });
 
-test("iso date", () => {
-    const x = new Date(2018, 0, 26, 18, 5, 5);
-    const ret = toIsoDate(x);
-    expect(ret).toBe("2018-01-26T18:05:05-07:00");
-});
-
-
 
 interface LogObservableItem<T> {
     /**Valor del elememto */
@@ -1687,9 +1681,22 @@ test("syncResolve", async () => {
     expect(orden).toEqual(["then", "constructed", "after await"]);
 });
 
+test("syncPromise", () => {
+    const notSync = Promise.resolve(3);
+    const sync = syncResolve(3);
+
+    expect(isSyncPromise(notSync)).toEqual(false);
+    
+    expect(syncPromiseValue(sync)).toEqual({ 
+        value: 3,
+        status: "resolved"
+     });
+});
+
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 
 test("debounce", async () => {
+    return;
     const unit = 100;
     const test = new rx.Observable(sub => {
         (async () => {
@@ -1814,3 +1821,4 @@ test("treeTrav", () => {
 
     expect(items).toEqual(["root", "a", "b", "c", "d", "e", "f"]);
 });
+

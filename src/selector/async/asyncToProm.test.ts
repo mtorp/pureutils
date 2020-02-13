@@ -1,5 +1,7 @@
 import * as rx from "rxjs";
-import { obsToPromise, syncResolve, delay, doOnSubscribe, splitPromise } from "../../logic";
+import { obsToPromise, syncResolve, delay, doOnSubscribe, splitPromise, syncPromiseValue, isSyncPromise } from "../../logic";
+import { toSelector } from "../selector";
+import { createSelectorAsync } from "./async";
 
 test("observable to prom sync", async () => {
     const obs = rx.from([10, 20]);
@@ -46,4 +48,41 @@ test("observable to prom async", async () => {
     expect(result2).toBe(20);
 
     expect(sub1).toBe(sub2);
+});
+
+test("sync promise = sync selector",  () => {
+    const func =   (id: number) => syncResolve(30);
+
+    const idSel = toSelector((id: number) => id);
+    const funcSel = createSelectorAsync({idSel}, s => func(s.idSel));
+
+    const prom1 = funcSel.call(0);
+    //La primera llamada es asíncrona:
+    expect(syncPromiseValue(prom1)).toEqual({ 
+        value: 30,
+        status: "resolved"
+    });
+
+});
+
+test("promise resolved is sync", async () => {
+    //La función es asíncrona y devuelve 20
+    const func = async (id: number) => {
+        delay(10);
+        return 20;
+    };
+
+    const idSel = toSelector((id: number) => id);
+    const funcSel = createSelectorAsync({idSel}, s => func(s.idSel));
+
+    const prom1 = funcSel.call(0);
+    //La primera llamada es asíncrona:
+    expect(isSyncPromise(prom1)).toBe(false);
+
+    const value = await prom1;
+    expect(value).toBe(20);
+
+    const prom2 = funcSel.call(2);
+    //La segunda llamada es síncrona:
+    expect(isSyncPromise( prom2)).toBe(true);
 });

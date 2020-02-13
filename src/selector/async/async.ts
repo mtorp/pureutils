@@ -1,4 +1,4 @@
-import { enumObject, any, isObservable, isPromiseLike, mapObject, objRxToRxObj, ObservableMap, ObservableMapToSyncMap, toObservable, syncResolve, PromiseMapToSyncMap, promiseAllObj, valToPromise, obsToPromise } from "../../logic";
+import { enumObject, any, isObservable, isPromiseLike, mapObject, objRxToRxObj, ObservableMap, ObservableMapToSyncMap, toObservable, syncResolve, PromiseMapToSyncMap, promiseAllObj, valToPromise, obsToPromise, toSyncPromise } from "../../logic";
 import { Observable, combineLatest as combineLatestRx } from "rxjs";
 import { SelectorMap, SelectorOutType, SelectorMapOuts, SelectorMapIn, Selector, SelectorMapFunc, runSelectorDeps, createSelector, SelectorOptions, runSelectorRaw } from "../selector";
 import { SelectorCache, selectorCacheRequest } from "../cache";
@@ -94,7 +94,16 @@ function promiseMapSelector<TResult extends PromiseMap, TOut>(
     map: SelectorMapFunc<PromiseMapToSyncMap<TResult>, TOut | PromiseLike<TOut>>,
     options: SelectorOptions
 ): PromSelectorResult<TOut> {
-    const obs = observableMapSelector(cacheState, mapToRx(results), map, options);
+
+    const mapSyncPromise: SelectorMapFunc<PromiseMapToSyncMap<TResult>, TOut | PromiseLike<TOut>> = (curr, prev) => {
+        const ret = map(curr, prev);
+        if (!isPromiseLike(ret)) {
+            return ret;
+        }
+
+        return toSyncPromise(ret);
+    };
+    const obs = observableMapSelector(cacheState, mapToRx(results), mapSyncPromise, options);
     //TODO: Verificar que las promesas que devuelven de forma sincrona generan selectores que devuelven de forma sincrona:
     const outProm = obsToPromise(obs.result) as Promise<TOut>;
 
@@ -253,7 +262,7 @@ export function createSelectorAsync<TOut, TDeps extends SelectorMap<any>>(
     let cacheSync = createCacheState<SelOuts, Rxfy<TOut>>([cacheRx]);
 
     const mapRx = (curr: SelOuts) => {
-        //Convierte cada uno de los elementos a observable, note que este elemento puede ser 
+        //Convierte cada uno de los elementos a promise, note que este elemento puede ser 
         //Promise, Observable o cualquier otro
         const selRx = mapToPromise(curr);
         return promiseMapSelector(cacheSync, selRx, map, options || {});

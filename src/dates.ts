@@ -39,7 +39,12 @@ export function addDate(date: Date, units: DateUnits, value: number): Date {
         case "hours":
             return new Date(ms + value * 1000 * 60 * 60);
         case "days":
-            return new Date(ms + value * 1000 * 60 * 60 * 24);
+            //Note que no podemos sumar 24 horas por dia por lo del cambio de horario
+            {
+                const a = new Date(ms);
+                a.setDate(a.getDate() + value);
+                return a;
+            }
         case "months":
             {
                 const a = new Date(ms);
