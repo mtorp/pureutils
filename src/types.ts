@@ -5,3 +5,11 @@ export interface Range<T>{
     /**Máximo */
     max: T;
 }
+
+/**Una sección ya sea de un arreglo o string*/
+export interface Span {
+    /**Indice de donde se encontró */
+    index: number;
+    /**Longitud de lo encontrado */
+    len: number;
+}

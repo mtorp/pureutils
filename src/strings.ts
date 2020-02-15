@@ -1,13 +1,7 @@
-/**Resultado de haber encontrado cierto regex o cadena en otra cadena */
-interface FindResult {
-    /**Indice de donde se encontró */
-    index: number;
-    /**Longitud de lo encontrado */
-    len: number;
-}
+import { Span } from "./types";
 
 /**Devuelve la siguiente aparicion en la cadena dado startIndex */
-function indexOf(input: string, pattern: RegExp | string): FindResult | undefined {
+function indexOf(input: string, pattern: RegExp | string): Span | undefined {
     if (typeof (pattern) == "string") {
         const index = input.indexOf(pattern);
         if (index < 0)
@@ -33,7 +27,7 @@ function indexOf(input: string, pattern: RegExp | string): FindResult | undefine
 }
 
 /**Devuelve la siguiente aparición en la cadena despues de @param startIndex */
-function indexOfAt(input: string, startIndex: number, pattern: RegExp | string): FindResult | undefined {
+function indexOfAt(input: string, startIndex: number, pattern: RegExp | string): Span | undefined {
     const input2 = input.substr(startIndex);
     const ret2 = indexOf(input2, pattern);
 
@@ -47,9 +41,9 @@ function indexOfAt(input: string, startIndex: number, pattern: RegExp | string):
 }
 
 /**Encuentra todas las apariciones de cierto patron en una cadena */
-export function findAll(input: string, pattern: RegExp | string): FindResult[] {
+export function findAll(input: string, pattern: RegExp | string): Span[] {
     let index = 0;
-    let ret: FindResult[] = [];
+    let ret: Span[] = [];
     while(index < input.length) {
         const next = indexOfAt(input, index, pattern);
         if(!next) {
