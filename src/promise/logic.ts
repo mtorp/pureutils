@@ -1,6 +1,6 @@
 import { KeaPromise } from "./split";
 
- 
+
 /**True si la promesa se resuelve síncronamente */
 export function isSyncPromise(x: PromiseLike<any>): boolean {
     return syncPromiseValue(x).status != "pending";
@@ -35,9 +35,19 @@ interface SyncPromise<T> extends PromiseLike<T> {
     status: "sync" | "async";
 }
 
+/**Una clase de una promesa */
+interface PromiseClass {
+    new(executor: (resolve: (value: any) => any) => any) : PromiseLike<any>;
+}
+
+/**Devuelve true si una implementación de Promise soporta resolución síncrona */
+export function isSyncPromiseType(promiseClass: PromiseClass) {
+    return isSyncPromise(new promiseClass((resolve) => resolve(10)));
+}
 
 /**
- * Devuelve una promesa que internamente almacena su valor una vez que fue resuelta, de tal manera que al resolverse de nuevo se resuleve de forma síncrona
+ * Devuelve una promesa que internamente almacena su valor una vez que fue resuelta, de tal manera que al resolverse de nuevo se resuleve de forma síncrona.
+ * Esto mejora el rendimiento bastante el rendimiento ya que se puede verificar de forma síncrona si la promesa ya esta resuelta (no se ocupa un estatus intermedio de "cargando")
  * @param x Una promesa
  */
 export function toSyncPromise<T>(x: PromiseLike<T>): PromiseLike<T> {

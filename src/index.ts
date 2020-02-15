@@ -13,3 +13,4 @@ export * from "./debounce";
 export * from "./selector";
 export * from "./types";
 export * from "./promise";
+export * from "./strings";
