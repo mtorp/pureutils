@@ -59,7 +59,7 @@ export function findAll(input: string, pattern: RegExp | string): FindResult[] {
         ret.push(next);
         const nextIndex = next.index + next.len;
         if(nextIndex == index) {
-            throw new Error(`Se encontraron infintas apariciones  del patron '${pattern}' en la cadena '${input}'`);
+            throw new Error(`Se encontraron infintas apariciones del patron '${pattern}' en la cadena '${input}'`);
         }
         index = nextIndex;
     }

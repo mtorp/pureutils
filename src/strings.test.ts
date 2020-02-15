@@ -41,3 +41,7 @@ test("findAll 3", () => {
         }
     ])
 });
+
+test("infinite", () => {
+    expect(() =>  findAll("hola", /\d*/)).toThrow(/infint/);
+});
