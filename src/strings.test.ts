@@ -1,4 +1,4 @@
-import { findAll } from "./strings";
+import { findAll, ReplaceIndex, getReplaceAllIndices } from "./strings";
 
 test("findAll", () => {
     const ret = findAll("holala", /la/) ;
@@ -44,4 +44,64 @@ test("findAll 3", () => {
 
 test("infinite", () => {
     expect(() =>  findAll("hola", /\d*/)).toThrow(/infint/);
+});
+
+test("replace index 1", () => {
+
+        const indices: ReplaceIndex[] = [
+            {
+                 index: 0,
+                 inputLength: 1,
+                 outputLength: 2
+            }, {
+                index: 3,
+                inputLength: 1,
+                outputLength: 2
+            }
+        ];
+
+        const actual = getReplaceAllIndices(indices);
+        expect(actual).toEqual([0, 4]);
+});
+
+test("replace index 2", () => {
+
+    const indices: ReplaceIndex[] = [
+        {
+            index: 3,
+            inputLength: 1,
+            outputLength: 2
+        }, 
+        {
+            index: 0,
+            inputLength: 1,
+            outputLength: 2
+       }
+    ];
+
+    const actual = getReplaceAllIndices(indices);
+    expect(actual).toEqual([4, 0]);
+});
+
+test("replace index 3", () => {
+
+    const indices: ReplaceIndex[] = [
+        {
+            index: 3,
+            inputLength: 1,
+            outputLength: 3
+        }, 
+        {
+            index: 0,
+            inputLength: 1,
+            outputLength: 2
+       }, {
+           index: 4,
+           inputLength: 1,
+           outputLength: 3
+       }
+    ];
+
+    const actual = getReplaceAllIndices(indices);
+    expect(actual).toEqual([4, 0, 6]);
 });
