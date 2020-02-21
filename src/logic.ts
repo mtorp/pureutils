@@ -13,8 +13,13 @@ export function uuid(): string {
     return uuidRandom();
 }
 
-/**Devuelve true si todos los elementos de un arreglo encajan con el predicado */
-export function all<T>(arr: T[], pred: (x: T) => boolean): boolean {
+/**Devuelve true si todos los elementos de un arreglo encajan con el predicado
+ * @pred Devuelve la condición por cada elemento, si no se usa devuelve el elemento tal cual, es decir que los elementos deben de ser
+ * truthy para pasar
+*/
+export function all<T>(arr: T[], pred?: (x: T) => boolean): boolean {
+    pred = pred || (x => !!x);
+    
     for (const x of arr) {
         if (!pred(x))
             return false;
@@ -112,7 +117,7 @@ function shallowEqualsCompareByRef(x: any) {
 }
 
 /**Compara dos objetos propiedad por propiedad */
-export function shallowEquals<T>(a: T, b: T, comparer?: (a: T[keyof T], b: T[keyof T]) => boolean) {
+export function shallowEquals<T>(a: T, b: T, comparer?: (a: T[keyof T], b: T[keyof T]) => boolean): boolean {
     if (typeof (a) == "function" || typeof (b) == "function") {
         //Las funciones se comparan por igualdad estricta:
         return a === b;

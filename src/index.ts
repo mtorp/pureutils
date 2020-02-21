@@ -14,3 +14,4 @@ export * from "./selector";
 export * from "./types";
 export * from "./promise";
 export * from "./strings";
+export * from "./compare";
