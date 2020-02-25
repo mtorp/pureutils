@@ -2,7 +2,7 @@ import { toSelector } from "../selector";
 import { createSelectorAsync, createSelectorRx } from "./async";
 import { delay, obsToPromise, toObservable, rxFlatten } from "../../logic";
 import { toSyncPromise, isSyncPromise } from "../../promise/logic";
-import {  Observable , from} from "rxjs";
+import { Observable, from } from "rxjs";
 import { map } from "rxjs/operators";
 
 test("obsToPrimise", async () => {
@@ -52,16 +52,16 @@ test("observable same instance", async () => {
         delay(10);
         return 20;
     };
-  
-    const getValueFunc = () => "hola";
-    const getValue = toSelector((id: number) =>getValueFunc());
 
-    const mapFunc = createSelectorRx({getValue}, s => (x) => {
+    const getValueFunc = () => "hola";
+    const getValue = toSelector((id: number) => getValueFunc());
+
+    const mapFunc = createSelectorRx({ getValue }, s => (x) => {
         return x + 1;
     });
 
-    let test: any[]=[];
-    const itemsMapped = createSelectorRx({mapFunc}, (s, old) => {
+    let test: any[] = [];
+    const itemsMapped = createSelectorRx({ mapFunc }, (s, old) => {
         test.push(old);
         return from([1]).pipe(map(s.mapFunc));
     });
@@ -75,6 +75,6 @@ test("observable same instance", async () => {
     b1.subscribe(x => {
 
     });
-
-    
 });
+
+

@@ -80,7 +80,7 @@ test("replace index 2", () => {
     ];
 
     const actual = getReplaceAllIndices(indices);
-    expect(actual).toEqual([4, 0]);
+    expect(actual).toEqual([3, 0]);
 });
 
 test("replace index 3", () => {
@@ -103,5 +103,5 @@ test("replace index 3", () => {
     ];
 
     const actual = getReplaceAllIndices(indices);
-    expect(actual).toEqual([4, 0, 6]);
+    expect(actual).toEqual([3, 0, 7]);
 });
