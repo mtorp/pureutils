@@ -1,7 +1,9 @@
 import { toSelector } from "../selector";
-import { createSelectorAsync } from "./async";
-import { delay,  obsToPromise, toObservable } from "../../logic";
+import { createSelectorAsync, createSelectorRx } from "./async";
+import { delay, obsToPromise, toObservable, rxFlatten } from "../../logic";
 import { toSyncPromise, isSyncPromise } from "../../promise/logic";
+import {  Observable , from} from "rxjs";
+import { map } from "rxjs/operators";
 
 test("obsToPrimise", async () => {
     //La función es asíncrona y devuelve 20
@@ -17,7 +19,6 @@ test("obsToPrimise", async () => {
     const fromObs = obsToPromise(obs);
 
     const value = await prom;
-    debugger;
     expect(isSyncPromise(prom)).toBe(true);
     expect(isSyncPromise(fromObs)).toBe(true);
 })
@@ -39,8 +40,41 @@ test("promise resolved is sync", async () => {
     const value = await prom1;
     expect(value).toBe(20);
 
-    debugger;
     const prom2 = funcSel.call(0);
     //La segunda llamada es síncrona:
     expect(isSyncPromise(prom2)).toBe(true);
+});
+
+
+test("observable same instance", async () => {
+    //La función es asíncrona y devuelve 20
+    const func = async (id: number) => {
+        delay(10);
+        return 20;
+    };
+  
+    const getValueFunc = () => "hola";
+    const getValue = toSelector((id: number) =>getValueFunc());
+
+    const mapFunc = createSelectorRx({getValue}, s => (x) => {
+        return x + 1;
+    });
+
+    let test: any[]=[];
+    const itemsMapped = createSelectorRx({mapFunc}, (s, old) => {
+        test.push(old);
+        return from([1]).pipe(map(s.mapFunc));
+    });
+
+    const b1 = itemsMapped.call(1);
+    const b2 = itemsMapped.call(1);
+
+    expect(b1).toBe(b2);
+
+    debugger;
+    b1.subscribe(x => {
+
+    });
+
+    
 });
