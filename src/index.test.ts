@@ -5,7 +5,7 @@ import {
     truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd, toObservable, isArray, isArrayLike, isPromiseLike, isObservable,
     search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx, mapMany, runningTotal, mapPrevious, formatNumber, formatDate, formatDateExcel,
     cloneFunction, bindFunction, unbindFunction, delay, uuid, allEqual, pick, zip, binarySearch, exclude,
-    isSubset, innerJoin, leftJoin, unionKey, combinePath, generatePushID, sum, excludeKeys, coalesce, nextToPromise, objRxToRxObj, outOfRange, Range,
+    isSubset, innerJoin, leftJoin, unionKey, combinePath, generatePushID, sum, excludeKeys, coalesce, nextToPromise, objRxToRxObj, outOfRange, RangeOptional,
     base64ToString, stringToBase64, max, min, enumKeys, toIsoDate, debounceSync, syncResolve, mergeObj, orRx, treeTraversal, isSyncPromise, syncPromiseValue
 } from "./index";
 
@@ -1538,7 +1538,7 @@ test("check range", () => {
         }
     })).toBe("max");
 
-    const r: Range = {
+    const r: RangeOptional = {
         min: {
             value: 6,
             type: "in"

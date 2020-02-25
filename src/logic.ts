@@ -1232,7 +1232,7 @@ export interface RangeType {
     type: RangeEndType;
 }
 /**Un rango de numeros */
-export interface Range {
+export interface RangeOptional {
     /**Minimo del rango */
     min?: RangeType,
     /**Máximo del rango */
@@ -1241,7 +1241,7 @@ export interface Range {
 
 export type RangeCheckResult = "min" | "max";
 /**Determina si un numero esta afuera del rango, y devuelve de que parte del rango esta afuera */
-export function outOfRange(value: number, range: Range): RangeCheckResult | null {
+export function outOfRange(value: number, range: RangeOptional): RangeCheckResult | null {
     if (range.min && ((range.min.type == "in" && value < range.min.value) || (range.min.type == "ex" && value <= range.min.value)))
         return "min";
     else if (range.max && ((range.max.type == "in" && value > range.max.value) || (range.max.type == "ex" && value >= range.max.value)))
