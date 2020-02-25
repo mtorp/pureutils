@@ -1,4 +1,4 @@
-import { Span } from "./types";
+import { Span } from "../types";
 
 /**Devuelve la siguiente aparicion en la cadena dado startIndex */
 function indexOf(input: string, pattern: RegExp | string): Span | undefined {

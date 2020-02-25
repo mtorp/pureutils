@@ -790,6 +790,15 @@ export function take<T>(arr: T[], count: number): T[] {
     return ret;
 }
 
+/**Se salta los primeros N elementos del arreglo */
+export function skip<T>(arr: T[], count: number): T[] {
+    let ret: T[] = [];
+    for (var i = count; i < arr.length; i++) {
+        ret.push(arr[i]);
+    }
+    return ret;
+}
+
 /**Obtiene le primer elemento mapeado de un arreglo o undefined */
 export function firstMap<T, R>(arr: T[], predicate: (x: T) => boolean, map: (x: T, i: number) => R): R | undefined {
     for (let i = 0; i < arr.length; i++) {

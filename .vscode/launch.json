@@ -11,7 +11,7 @@
             "request": "launch",
             "program": "${workspaceRoot}/node_modules/jest-cli/bin/jest.js",
             "stopOnEntry": false,
-            "args": [  "--runInBand", "--no-cache", "async2.test" ],
+            "args": [  "--runInBand", "--no-cache", "regex.test" ],
             "cwd": "${workspaceRoot}",
             "runtimeExecutable": null,
             "runtimeArgs": [
