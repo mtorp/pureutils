@@ -1089,6 +1089,16 @@ export function assertUnreachable(x: never): never {
     throw new Error("Se llamó a la función assertUnreachable, esto puede indicar un tipo inesperado en una discriminación de tips");
 }
 
+/**Devuelve el indice de la primera aparición de un elemento que cumpla con @see pred */
+export function indexOf<T>(arr: T[], pred: (x: T) => boolean) : number | null {
+    for(let i = 0 ; i < arr.length; i++) {
+        if(pred(arr[i])) {
+            return i;
+        }
+    }
+    return null;
+}
+
 /**Realiza una busqueda binaria en un arreglo, devuelve el indice del elemento mas cercano y si fue encontrado o no el elemento.
  * En caso de que no encaje devuelve el indice del ultimo elemento que es menor que el valor de busqueda. Si ningun elemento del arreglo es menor al valor de busqueda devuelve -1.
  */
