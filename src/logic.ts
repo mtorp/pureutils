@@ -19,7 +19,7 @@ export function uuid(): string {
 */
 export function all<T>(arr: T[], pred?: (x: T) => boolean): boolean {
     pred = pred || (x => !!x);
-    
+
     for (const x of arr) {
         if (!pred(x))
             return false;
@@ -1017,6 +1017,18 @@ export function formatDate(x: Date | null | undefined | string, fullDateTime?: b
     }
 }
 
+/**Convierte una representación de una fecha a una fecha */
+export function toDate(value: Date | string | number): Date
+/**Convierte una representación de una fecha a una fecha */
+export function toDate<TNull extends null | undefined>(value: Date | string | TNull | number): Date | TNull
+export function toDate<TNull extends null | undefined>(value: Date | string | TNull | number): Date | TNull {
+    if (value == null) {
+        return value as TNull;
+    }
+    if (typeof value == "string" || typeof (value) == "number") return new Date(value);
+    return value;
+}
+
 /**Convierte una fecha al formato ISO 8601 respetando la zona horaria */
 export function toIsoDate(x: Date): string {
     const year = formatNumber(x.getFullYear(), 4);
@@ -1090,9 +1102,9 @@ export function assertUnreachable(x: never): never {
 }
 
 /**Devuelve el indice de la primera aparición de un elemento que cumpla con @see pred */
-export function indexOf<T>(arr: T[], pred: (x: T) => boolean) : number | null {
-    for(let i = 0 ; i < arr.length; i++) {
-        if(pred(arr[i])) {
+export function indexOf<T>(arr: T[], pred: (x: T) => boolean): number | null {
+    for (let i = 0; i < arr.length; i++) {
+        if (pred(arr[i])) {
             return i;
         }
     }
