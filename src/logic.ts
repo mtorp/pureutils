@@ -800,10 +800,10 @@ export function skip<T>(arr: T[], count: number): T[] {
 }
 
 /**Obtiene le primer elemento mapeado de un arreglo o undefined */
-export function firstMap<T, R>(arr: T[], predicate: (x: T) => boolean, map: (x: T, i: number) => R): R | undefined {
+export function firstMap<T, R>(arr: T[], predicate: (x: T, index: number) => boolean, map: (x: T, i: number) => R): R | undefined {
     for (let i = 0; i < arr.length; i++) {
         const x = arr[i];
-        if (predicate(x)) {
+        if (predicate(x, i)) {
             return map(x, i);
         }
     }
