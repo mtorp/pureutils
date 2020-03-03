@@ -1,1 +1,1 @@
-export { createSelectorRx, createSelectorAsync, LoadingSym } from "./async";
+export { createSelectorRx, createSelectorAsync } from "./async";

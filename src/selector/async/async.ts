@@ -1,20 +1,22 @@
-import { enumObject, any, isObservable, isPromiseLike, mapObject, objRxToRxObj, ObservableMap, ObservableMapToSyncMap, toObservable,  
-    PromiseMapToSyncMap, promiseAllObj, valToPromise, obsToPromise } from "../../logic";
+import {
+    enumObject, any, isObservable, isPromiseLike, mapObject, objRxToRxObj, ObservableMap, ObservableMapToSyncMap, toObservable,
+    PromiseMapToSyncMap, promiseAllObj, valToPromise, obsToPromise
+} from "../../logic";
 import { Observable, combineLatest as combineLatestRx } from "rxjs";
 import { SelectorMap, SelectorOutType, SelectorMapOuts, SelectorMapIn, Selector, SelectorMapFunc, runSelectorDeps, createSelector, SelectorOptions, runSelectorRaw } from "../selector";
 import { SelectorCache, selectorCacheRequest } from "../cache";
 import { map as mapRx, map, switchAll as switchAllRx, catchError } from "rxjs/operators";
 
 
-
-/**Utilizado como elemento de un Observable, indica que el siguiente valor esta cargando */
-export const LoadingSym = Symbol("LoadingSym");
-
 /**Extrae el tipo de un Promise/Observable */
 type RemoveAsync<T> =
     T extends PromiseLike<infer R> ? R :
-    T extends Observable<(infer R) | (typeof LoadingSym)> ? R :
+    T extends Observable<infer R> ? R :
     T;
+
+/**Extrae el tipo de un Promise/Observable */
+type RemovePromise<T> = T extends PromiseLike<infer R> ? R : T;
+
 
 type SelectorRxMapOuts<T extends SelectorMap<any>> = {
     [K in keyof T]: RemoveAsync<SelectorOutType<T[K]>>
@@ -42,17 +44,14 @@ function areAllSync<TMap extends {}>(x: TMap): boolean {
     return !anyAsync;
 }
 
-function anyLoading<TMap extends {}>(x: TMap): boolean {
-    const values = enumObject(x).map(x => x.value);
-    return any(values, x => (x as any) === LoadingSym);
-}
+
 
 interface AsyncCacheSelectorResult<T> {
     clear: () => void;
     result: T;
 }
 
-interface ObsSelectorResult<TOut> extends AsyncCacheSelectorResult<Observable<TOut | typeof LoadingSym>> { }
+interface ObsSelectorResult<TOut> extends AsyncCacheSelectorResult<Observable<TOut>> { }
 interface PromSelectorResult<TOut> extends AsyncCacheSelectorResult<Promise<TOut>> { }
 
 export type ObservablePromiseMap = {
@@ -126,10 +125,6 @@ function observableMapSelector<TResult extends ObservableMap, TOut>(
     const outObs =
         obs.pipe(
             mapRx(args => {
-                if (anyLoading(args)) {
-                    return toObservable(LoadingSym) as Observable<typeof LoadingSym | TOut>;
-                }
-
                 const resp = selectorCacheRequest(cacheState.get(), {
                     args: args,
                     func: map
@@ -137,7 +132,7 @@ function observableMapSelector<TResult extends ObservableMap, TOut>(
 
                 //Actualizar el cache:
                 cacheState.set(resp.cache);
-                return toObservable(resp.result) as Observable<typeof LoadingSym | TOut>;
+                return toObservable(resp.result) as Observable<TOut>;
             }),
             switchAllRx()
         );
@@ -161,11 +156,6 @@ function mapToRx<T extends {}>(map: T): {
     const r = mapObject(map, x => toObservable(x as any));
     return r;
 }
-/**Extrae el tipo de un Promise/Observable */
-type RemovePromise<T> =
-    T extends PromiseLike<infer R> ? R :
-    T extends Observable<(infer R) | (typeof LoadingSym)> ? R :
-    T;
 
 function mapToPromise<T extends {}>(map: T): {
     [K in keyof T]: PromiseLike<RemovePromise<T[K]>>
@@ -174,7 +164,7 @@ function mapToPromise<T extends {}>(map: T): {
     return r;
 }
 
-export type Rxfy<T> = T | PromiseLike<T> | Observable<T | typeof LoadingSym>;
+export type Rxfy<T> = T | PromiseLike<T> | Observable<T>;
 
 
 function createSelectorRxAsync<TDeps extends SelectorMap<any>, TCache extends AsyncCacheSelectorResult<any>>(
@@ -213,8 +203,6 @@ function createSelectorRxAsync<TDeps extends SelectorMap<any>, TCache extends As
 }
 
 export type ObservableType<T> = T extends Observable<infer R> ? R : never;
-export type LoadingSymbolType<T> = T extends (typeof LoadingSym) ? T : never;
-export type ExtractLoadingSymbolDeps<TDeps> = LoadingSymbolType<ObservableType<SelectorOutType<TDeps[keyof TDeps]>>>;
 
 /**
  * Crea un selector observable, el cual tiene una función que depende de otros selectores que también pueden devolver observables
@@ -223,7 +211,7 @@ export function createSelectorRx<TOut, TDeps extends SelectorMap<any>>(
     dependsOn: TDeps,
     map: SelectorRxMapFunc<TDeps, Rxfy<TOut>>,
     options?: SelectorOptions
-): Selector<SelectorMapIn<TDeps>, Observable<TOut | ExtractLoadingSymbolDeps<TDeps>>> {
+): Selector<SelectorMapIn<TDeps>, Observable<TOut>> {
 
     type SelOuts = SelectorMapOuts<TDeps>;
     let cacheRx = createCacheState<SelOuts, ObsSelectorResult<TOut>>([]);
