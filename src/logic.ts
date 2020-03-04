@@ -1,5 +1,5 @@
 import { pipe } from "./pipe";
-import { Observable, pipe as pipeRx, combineLatest as combineLatestRx, from as fromRx, isObservable as isObservableRx } from "rxjs";
+import { Observable, pipe as pipeRx, combineLatest as combineLatestRx, from as fromRx, isObservable as isObservableRx, ReplaySubject, from } from "rxjs";
 import { map as mapRx, concatAll as concatAllRx, scan as scanRx, startWith as startWithRx, filter as filterRx, switchAll } from "rxjs/operators";
 
 import * as _uuidRandom from "uuid-random";
@@ -770,15 +770,26 @@ export function valToPromise<T>(value: T | PromiseLike<T>): PromiseLike<T> {
     return syncResolve(value);
 }
 
+/**Convierte una promesa a observable, si la promesa se resuelve las siguientes subscripciones obtienen el valor de la promesa de forma síncorna */
+export function promiseToObservable<T>(prom: PromiseLike<T>) : Observable<T> {
+    const sub = new ReplaySubject<T>(1);
+    prom.then(x => {
+        sub.next(x);
+        sub.complete();
+    }, err => sub.error(err));
+
+    return sub;
+}
+
 /**Convierte un valor o una promesa a un observable, si el valor ya es un observable lo devuelve tal cual */
 export function toObservable<T>(value: T | PromiseLike<T> | Observable<T>): Observable<T> {
     if (value instanceof Observable) {
         return value;
     } else if (isPromiseLike(value)) {
-        return fromRx(value);
+        return promiseToObservable(value);
     }
 
-    return fromRx(syncResolve(value));
+    return from([value]);
 }
 
 /**Toma los primeros N elementos del arreglo */

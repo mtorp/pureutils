@@ -1821,3 +1821,44 @@ test("treeTrav", () => {
     expect(items).toEqual(["root", "a", "b", "c", "d", "e", "f"]);
 });
 
+
+test("promise to obs", async () => {
+    const prom = delay(1).then(x => 10);
+    const obs = toObservable(prom);
+
+    let a:number = 0, b: number = 0;
+
+    const c = await prom;
+    expect(c).toBe(10);
+
+    //Se asegura que el observable devuelve el valor de la promesa incluso si se subscribe despupes de que termino la promesa
+    obs.subscribe(x => a = x);
+    await delay(5); //Recordamos que el promise no es sincrono
+    debugger;
+    expect(a).toBe(10);
+
+    await delay(100);
+
+    //En el segundo intento debe de devolver síncronamente:
+    obs.subscribe(x => b = x);
+    expect(b).toBe(10);
+});
+
+
+test("promise to obs sync", async () => {
+    const prom = syncResolve().then(x => 10);
+    const obs = toObservable(prom);
+
+    let a:number = 0, b: number = 0;
+
+    //Sincronamente se asigna el valor:
+    obs.subscribe(x => a = x);
+    expect(a).toBe(10);
+
+    await delay(10);
+
+    obs.subscribe(x => b = x);
+    expect(b).toBe(10);
+});
+
+
