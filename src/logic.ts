@@ -206,7 +206,7 @@ export function canBeArray(arr: any): arr is ArrayLike<any> | Iterable<any> {
     return isArrayLike(arr) || hasIterationProtocol(arr);
 }
 
-/**Devuelve true si x es un array o un array like */
+/**Devuelve true si x es un array o un array like. Note que devuelve true para string. Normalmente es mejor usar la función @see isArray ya que esa si devuelve false para @see string*/
 export function isArrayLike(x: any): x is ArrayLike<any> {
     return x != null && x.length !== undefined;
 }
@@ -779,6 +779,37 @@ export function promiseToObservable<T>(prom: PromiseLike<T>) : Observable<T> {
     }, err => sub.error(err));
 
     return sub;
+}
+
+
+/**Convierte una función que devuelve una promesa a un observable,
+ * la función es llamada sólamente una vez en la primera subscripción del observable, subsecuentes subscripciones al observable no resultan en nuevas
+ * llamadas al thunk.
+ * 
+ * Una vez que el thunk se reseulve su valor se almacena y subscripciones posteriores devuelven inmedatamente el valor y se completan.
+ * 
+ * @param thunk Función que se va a llamar sólo una vez, en la primera subscripción.
+ */
+export function asyncThunkToObservable<T>(thunk: () => PromiseLike<T>): Observable<T>
+{
+    const sub = new ReplaySubject<T>(1);
+
+    /**Si es la primera subscripción */
+    let first= true;
+
+    return new Observable(observer => {
+        if(first) {
+            //Llama al thunk sólo en la primera subscripción
+            thunk().then(x => {
+                sub.next(x);
+                sub.complete();
+            }, err => sub.error(err));
+
+            first = false;
+        }
+
+        return sub.subscribe(observer);
+    });
 }
 
 /**Convierte un valor o una promesa a un observable, si el valor ya es un observable lo devuelve tal cual */
@@ -1439,5 +1470,4 @@ export function obsToPromise<T>(obs: Observable<T>): PromiseLike<T> {
         return ret.promise;
     }
 }
-
 
