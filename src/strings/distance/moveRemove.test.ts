@@ -42,7 +42,39 @@ test("moveRemove", () => {
     expect(e).toBe("0123425678");
 });
 
-test("stringMoves 1", () => {
+test("stringMoves moves", () => {
+    const source = "ABCD";
+
+    expect(getStringMoves(source, "ABCD")).toEqual([]);
+
+    expect(getStringMoves(source, "ABC")).toEqual([
+        {
+            type: "remove",
+            index: 3
+        }
+    ]);
+
+    expect(getStringMoves(source, "AB")).toEqual([
+        {
+            type: "remove",
+            index: 2
+        }, {
+            type: "remove",
+            index: 2
+        }
+    ]);
+
+    expect(getStringMoves(source, "BACD")).toEqual([
+        {
+            type: "move",
+            sourceIndex: 1,
+            destIndex: 0
+        }
+    ]);
+
+});
+
+test("stringMoves results", () => {
     const source = "ABCD";
 
     function test(dest: string) {
