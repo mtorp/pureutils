@@ -771,7 +771,7 @@ export function valToPromise<T>(value: T | PromiseLike<T>): PromiseLike<T> {
 }
 
 /**Convierte una promesa a observable, si la promesa se resuelve las siguientes subscripciones obtienen el valor de la promesa de forma síncorna */
-export function promiseToObservable<T>(prom: PromiseLike<T>) : Observable<T> {
+export function promiseToObservable<T>(prom: PromiseLike<T>): Observable<T> {
     const sub = new ReplaySubject<T>(1);
     prom.then(x => {
         sub.next(x);
@@ -790,15 +790,14 @@ export function promiseToObservable<T>(prom: PromiseLike<T>) : Observable<T> {
  * 
  * @param thunk Función que se va a llamar sólo una vez, en la primera subscripción.
  */
-export function asyncThunkToObservable<T>(thunk: () => PromiseLike<T>): Observable<T>
-{
+export function asyncThunkToObservable<T>(thunk: () => PromiseLike<T>): Observable<T> {
     const sub = new ReplaySubject<T>(1);
 
     /**Si es la primera subscripción */
-    let first= true;
+    let first = true;
 
     return new Observable(observer => {
-        if(first) {
+        if (first) {
             //Llama al thunk sólo en la primera subscripción
             thunk().then(x => {
                 sub.next(x);
@@ -1144,13 +1143,24 @@ export function assertUnreachable(x: never): never {
 }
 
 /**Devuelve el indice de la primera aparición de un elemento que cumpla con @see pred */
-export function indexOf<T>(arr: T[], pred: (x: T) => boolean): number | null {
-    for (let i = 0; i < arr.length; i++) {
+export function indexOf<T>(arr: ArrayLike<T>, pred: (x: T) => boolean, startIndex: number = 0): number | null {
+    for (let i = startIndex; i < arr.length; i++) {
         if (pred(arr[i])) {
             return i;
         }
     }
     return null;
+}
+
+/**Devuelve los indices de todas las apariciones de los items que cumplan con @see pred */
+export function indicesOf<T>(arr: ArrayLike<T>, pred: (x: T) => boolean, startIndex: number = 0): number[] {
+    let ret: number[] = [];
+    for (let i = startIndex; i < arr.length; i++) {
+        if (pred(arr[i])) {
+            ret.push(i);
+        }
+    }
+    return ret;
 }
 
 /**Realiza una busqueda binaria en un arreglo, devuelve el indice del elemento mas cercano y si fue encontrado o no el elemento.

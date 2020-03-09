@@ -1,20 +1,20 @@
-import { applyStringMove } from "./moveRemove";
+import { applyStringMove, getStringMoves } from "./moveRemove";
 
 test("moveRemove", () => {
     const source = "012345678";
 
     const a = applyStringMove(source, {
         type: "move",
-        oldIndex: 6,
-        newIndex: 3
+        sourceIndex: 6,
+        destIndex: 3
     });
 
     expect(a).toBe("012634578");
 
     const b = applyStringMove(source, {
         type: "move",
-        oldIndex: 3,
-        newIndex: 6
+        sourceIndex: 3,
+        destIndex: 6
     });
 
     expect(b).toBe("012456378");
@@ -33,4 +33,39 @@ test("moveRemove", () => {
     });
 
     expect(d).toBe("0123945678");
+
+    const e = applyStringMove(source, {
+        type: "dup",
+        sourceIndex: 2,
+        destIndex: 5
+    })
+    expect(e).toBe("0123425678");
+});
+
+test("stringMoves 1", () => {
+    const source = "ABCD";
+
+    function test(dest: string) {
+        const moves = getStringMoves(source, dest);
+        const actualDest = moves.reduce((a, b) => applyStringMove(a, b), source);
+        expect(actualDest).toEqual(dest);
+    }
+
+    test("ABABAB");
+    test("CCCAAA");
+    test("CCCAAACCC");
+    test("FABCDF");
+    test("ABCDF");
+    test("DCBA");
+    test("DCCBA");
+    test("BCAAA");
+    test("ACD");
+    test("ABCD");
+    test("BACD");
+    test("A");
+    test("");
+    test("ABBCD");
+    test("AAAA");
+    test("CCCC");
+
 });
