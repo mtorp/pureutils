@@ -19,7 +19,7 @@ interface StringInsert<T> {
     /**Indice en donde insertar */
     index: number;
     /**Valores a insertar */
-    values: T;
+    value: T;
 }
 
 /**Duplica un elemento */
@@ -34,20 +34,11 @@ interface StringDup<T> {
 /**Una operación de movimiento en una cadena */
 export type StringMoveOp<T> = StringMove | StringRemove | StringInsert<T> | StringDup<T>;
 
-/**Interfaz que funciona tanto para string como para arreglos */
-interface IString<TSelf, TItem = any> extends ArrayLike<TItem> {
-    slice: (startIndex: number, endIndex: number) => TSelf;
-    concat: (other: TSelf | TItem) => TSelf;
-}
-
 /**Aplica un movimiento de cadena a una cadena */
-export function applyStringMove(source: string, move: StringMoveOp<string>): string
-export function applyStringMove<T>(source: T[], move: StringMoveOp<T>): T[]
-export function applyStringMove<T extends IString<T>>(source: T, move: StringMoveOp<T>): T
-export function applyStringMove<T extends IString<T>>(source: T, move: StringMoveOp<T>): T {
+export function applyStringMove<T>(source: T[], move: StringMoveOp<T>): T[] {
     switch (move.type) {
         case "insert":
-            return source.slice(0, move.index).concat(move.values).concat(source.slice(move.index, source.length + 1));
+            return source.slice(0, move.index).concat([move.value]).concat(source.slice(move.index, source.length + 1));
         case "remove":
             return source.slice(0, move.index).concat(source.slice(move.index + 1, source.length + 1));
         case "move": {
@@ -80,7 +71,7 @@ export function applyStringMove<T extends IString<T>>(source: T, move: StringMov
 
 
 /**Obtiene la cantidad mínima de movimientos para llegar de source a dest, considerando los movimientos de "move", "remove", "insert" y "dup" */
-export function getStringMoves<T extends IString<T>>(source: T, dest: T, equals?: (a: any, b: any) => boolean): StringMoveOp<T>[] {
+export function getStringMoves<T >(source: T[], dest: T[], equals?: (a: any, b: any) => boolean): StringMoveOp<T>[] {
     const eq = equals || referenceEquals;
 
     let i = 0;
@@ -100,7 +91,7 @@ export function getStringMoves<T extends IString<T>>(source: T, dest: T, equals?
             const mov: StringMoveOp<T> = {
                 type: "insert",
                 index: i,
-                values: dest.slice(i, i + 1)
+                value: dest[i]
             };
             ret.push(mov);
 
@@ -142,7 +133,7 @@ export function getStringMoves<T extends IString<T>>(source: T, dest: T, equals?
     }
 
     const lastDestIndex = i;
-    while(i < source.length){
+    while (i < source.length) {
         //Quitar el resto:
         ret.push({
             type: "remove",

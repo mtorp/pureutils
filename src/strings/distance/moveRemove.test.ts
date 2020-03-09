@@ -1,7 +1,7 @@
 import { applyStringMove, getStringMoves } from "./moveRemove";
 
 test("moveRemove", () => {
-    const source = "012345678";
+    const source = Array.from("012345678");
 
     const a = applyStringMove(source, {
         type: "move",
@@ -9,7 +9,7 @@ test("moveRemove", () => {
         destIndex: 3
     });
 
-    expect(a).toBe("012634578");
+    expect(a).toEqual(Array.from("012634578"));
 
     const b = applyStringMove(source, {
         type: "move",
@@ -17,44 +17,44 @@ test("moveRemove", () => {
         destIndex: 6
     });
 
-    expect(b).toBe("012456378");
+    expect(b).toEqual(Array.from("012456378"));
 
     const c = applyStringMove(source, {
         type: "remove",
         index: 3
     });
 
-    expect(c).toBe("01245678");
+    expect(c).toEqual(Array.from("01245678"));
 
     const d = applyStringMove(source, {
         type: "insert",
         index: 4,
-        values: "9"
+        value: "9"
     });
 
-    expect(d).toBe("0123945678");
+    expect(d).toEqual(Array.from("0123945678"));
 
     const e = applyStringMove(source, {
         type: "dup",
         sourceIndex: 2,
         destIndex: 5
     })
-    expect(e).toBe("0123425678");
+    expect(e).toEqual(Array.from("0123425678"));
 });
 
 test("stringMoves moves", () => {
-    const source = "ABCD";
+    const source = Array.from("ABCD");
 
-    expect(getStringMoves(source, "ABCD")).toEqual([]);
+    expect(getStringMoves(source, Array.from("ABCD"))).toEqual([]);
 
-    expect(getStringMoves(source, "ABC")).toEqual([
+    expect(getStringMoves(source, Array.from("ABC"))).toEqual([
         {
             type: "remove",
             index: 3
         }
     ]);
 
-    expect(getStringMoves(source, "AB")).toEqual([
+    expect(getStringMoves(source, Array.from("AB"))).toEqual([
         {
             type: "remove",
             index: 2
@@ -64,7 +64,7 @@ test("stringMoves moves", () => {
         }
     ]);
 
-    expect(getStringMoves(source, "BACD")).toEqual([
+    expect(getStringMoves(source, Array.from("BACD"))).toEqual([
         {
             type: "move",
             sourceIndex: 1,
@@ -75,12 +75,13 @@ test("stringMoves moves", () => {
 });
 
 test("stringMoves results", () => {
-    const source = "ABCD";
+    const source = Array.from("ABCD");
 
     function test(dest: string) {
-        const moves = getStringMoves(source, dest);
+        const destArr = Array.from(dest);
+        const moves = getStringMoves(source, destArr);
         const actualDest = moves.reduce((a, b) => applyStringMove(a, b), source);
-        expect(actualDest).toEqual(dest);
+        expect(actualDest).toEqual(destArr);
     }
 
     test("ABABAB");
