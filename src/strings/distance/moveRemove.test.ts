@@ -101,3 +101,18 @@ test("stringMoves results", () => {
     test("CCCC");
 
 });
+
+
+test("stringMoves string array", () => {
+    const source = ["ab", "cd", "ef"];
+
+    function test(dest: string[]) {
+        const moves = getStringMoves(source, dest);
+        const actualDest = moves.reduce((a, b) => applyStringMove(a, b), source);
+        expect(actualDest).toEqual(dest);
+    }
+
+    test(["ab", "cd", "ef"]);
+    test(["cd", "ab", "ef"]);
+
+});

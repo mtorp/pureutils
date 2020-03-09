@@ -31,7 +31,8 @@ interface StringDup<T> {
     destIndex: number;
 }
 
-type StringOp<T> = StringMove | StringRemove | StringInsert<T> | StringDup<T>;
+/**Una operación de movimiento en una cadena */
+export type StringMoveOp<T> = StringMove | StringRemove | StringInsert<T> | StringDup<T>;
 
 /**Interfaz que funciona tanto para string como para arreglos */
 interface IString<TSelf, TItem = any> extends ArrayLike<TItem> {
@@ -40,10 +41,10 @@ interface IString<TSelf, TItem = any> extends ArrayLike<TItem> {
 }
 
 /**Aplica un movimiento de cadena a una cadena */
-export function applyStringMove(source: string, move: StringOp<string>): string
-export function applyStringMove<T>(source: T[], move: StringOp<T>): T[]
-export function applyStringMove<T extends IString<T>>(source: T, move: StringOp<T>): T
-export function applyStringMove<T extends IString<T>>(source: T, move: StringOp<T>): T {
+export function applyStringMove(source: string, move: StringMoveOp<string>): string
+export function applyStringMove<T>(source: T[], move: StringMoveOp<T>): T[]
+export function applyStringMove<T extends IString<T>>(source: T, move: StringMoveOp<T>): T
+export function applyStringMove<T extends IString<T>>(source: T, move: StringMoveOp<T>): T {
     switch (move.type) {
         case "insert":
             return source.slice(0, move.index).concat(move.values).concat(source.slice(move.index, source.length + 1));
@@ -79,12 +80,12 @@ export function applyStringMove<T extends IString<T>>(source: T, move: StringOp<
 
 
 /**Obtiene la cantidad mínima de movimientos para llegar de source a dest, considerando los movimientos de "move", "remove", "insert" y "dup" */
-export function getStringMoves<T extends IString<T>>(source: T, dest: T, equals?: (a: any, b: any) => boolean): StringOp<T>[] {
+export function getStringMoves<T extends IString<T>>(source: T, dest: T, equals?: (a: any, b: any) => boolean): StringMoveOp<T>[] {
     const eq = equals || referenceEquals;
 
     let i = 0;
 
-    let ret: StringOp<T>[] = [];
+    let ret: StringMoveOp<T>[] = [];
     while (i < dest.length) {
         if (eq(source[i], dest[i])) {
             //Los 2 items encajan, no hay movimientos:
@@ -96,7 +97,7 @@ export function getStringMoves<T extends IString<T>>(source: T, dest: T, equals?
         const itemSourceIndex = indexOf(source, x => eq(x, destItem));
         if (itemSourceIndex == null) {
             //El elemento es nuevo:
-            const mov: StringOp<T> = {
+            const mov: StringMoveOp<T> = {
                 type: "insert",
                 index: i,
                 values: dest.slice(i, i + 1)
@@ -113,7 +114,7 @@ export function getStringMoves<T extends IString<T>>(source: T, dest: T, equals?
         const itemDestIndices = indicesOf(dest, x => eq(x, destItem));
         const repetido = itemDestIndices.length >= 2;
         if (repetido) {
-            const mov: StringOp<T> = {
+            const mov: StringMoveOp<T> = {
                 type: "dup",
                 sourceIndex: itemSourceIndex,
                 destIndex: i
@@ -127,7 +128,7 @@ export function getStringMoves<T extends IString<T>>(source: T, dest: T, equals?
 
         //El elemento no está repetido, es un mov:
         {
-            const mov: StringOp<T> = {
+            const mov: StringMoveOp<T> = {
                 type: "move",
                 sourceIndex: itemSourceIndex,
                 destIndex: itemDestIndices[0],
