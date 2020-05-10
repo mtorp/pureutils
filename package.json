@@ -4,7 +4,7 @@
   "description": "Funciones puras para manipulación de objetos, arreglos, promesas y observables",
   "main": "dist/commonjs/index.js",
   "module": "dist/esm/index.js",
-  "types": "dist/esm/index.d.ts",
+  "types": "dist/types/index.d.ts",
   "dependencies": {
     "rxjs": "^6.5.1"
   },
@@ -21,7 +21,9 @@
     "typescript": "^3.8.3"
   },
   "scripts": {
-    "build": "tsc && tsc -m commonjs -outDir dist/commonjs",
+    "buildCommonJs": "tsc -m commonjs -outDir dist/commonjs -d false",
+    "buildES6": "tsc -d -declarationDir dist/types",
+    "build": "npm run buildES6 && npm run buildCommonJs",
     "test": "jest",
     "prepublishOnly": "npm run build",
     "tsc": "tsc --noemit"
