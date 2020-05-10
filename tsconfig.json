@@ -3,9 +3,10 @@
         "module": "ES6",
         "moduleResolution": "node",
         "target": "es5",
+        "jsx": "react",
         "noImplicitAny": false,
         "inlineSourceMap": true,
-        "strictNullChecks": true,
+        "strict": true,
         "lib": [
             "es6",
             "dom",

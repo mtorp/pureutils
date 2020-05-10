@@ -1,4 +1,4 @@
-import {  isSyncPromise, syncPromiseValue } from "./logic";
+import { isSyncPromise, syncPromiseValue } from "./logic";
 import { SyncPromise } from "./split";
 import { delay } from "../logic";
 
@@ -153,4 +153,13 @@ test("split promise thenable 2", async () => {
     prom.then(x => value1 = x);
     await prom;
     expect(value1).toBe(20);
+});
+
+test("split promise pass promise to resolve", async () => {
+    const promise = delay(10).then(() => 20);
+    const prom = new SyncPromise<number>((resolve) => resolve(promise));
+    const prom2 = prom.then(x => x * 3);
+
+    const val = await prom2;
+    expect(val).toBe(60);
 });
