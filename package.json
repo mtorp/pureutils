@@ -1,10 +1,10 @@
 {
   "name": "simple-pure-utils",
-  "version": "2.0.2",
+  "version": "2.0.3",
   "description": "Funciones puras para manipulación de objetos, arreglos, promesas y observables",
-  "main": "dist/index.js",
-  "module": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "dist/commonjs/index.js",
+  "module": "dist/esm/index.js",
+  "types": "dist/esm/index.d.ts",
   "dependencies": {
     "rxjs": "^6.5.1"
   },
@@ -21,8 +21,9 @@
     "typescript": "^3.8.3"
   },
   "scripts": {
+    "build": "tsc && tsc -m commonjs -outDir dist/commonjs",
     "test": "jest",
-    "prepublishOnly": "tsc",
+    "prepublishOnly": "npm run build",
     "tsc": "tsc --noemit"
   },
   "keywords": [
