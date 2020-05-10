@@ -5,7 +5,7 @@ interface TextSearchMatch {
     count: number;
 } 
 
-/**Realiza una busqueda de texto y devuelve las partes en donde encaja la cadena, el arreglo resultante tendrá por lo menos un elemento si el texto SI encaja */
+/**Realiza una busqueda de texto y devuelve true si text encaja con pattern */
 export function search(pattern: string | null | undefined, text: string | null | undefined) : boolean {
     if (!pattern) return true;
     if (!text) return false;

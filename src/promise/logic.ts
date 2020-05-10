@@ -1,5 +1,4 @@
-import { KeaPromise } from "./split";
-
+import { SyncPromise } from "./split";
 
 /**True si la promesa se resuelve síncronamente */
 export function isSyncPromise(x: PromiseLike<any>): boolean {
@@ -28,12 +27,7 @@ export function syncPromiseValue<T>(x: PromiseLike<T>): SyncPromiseResult<T> {
     return sync;
 }
 
-interface SyncPromise<T> extends PromiseLike<T> {
-    value?: T;
-    error?: any;
-    original: PromiseLike<T>;
-    status: "sync" | "async";
-}
+
 
 /**Una clase de una promesa */
 interface PromiseClass {
@@ -54,7 +48,7 @@ export function toSyncPromise<T>(x: PromiseLike<T>): PromiseLike<T> {
     if (isSyncPromise(x))
         return x;
 
-    return new KeaPromise((resolve, reject) => x.then(resolve, reject));
+    return new SyncPromise((resolve, reject) => x.then(resolve, reject));
 }
 
 /**Crea una nueva promesa y devuelve por separado la promesa y las funciones que resuelven y rechazan a la promesa */
@@ -62,7 +56,7 @@ export function splitPromise<T>(): { promise: PromiseLike<T>, resolve: (value?: 
     let resolve = null as any;
     let reject = null as any;
 
-    const promise = new KeaPromise<T>(
+    const promise = new SyncPromise<T>(
         (onfulfilled, onrejected) => {
             resolve = onfulfilled;
             reject = onrejected;

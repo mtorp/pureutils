@@ -1,6 +1,6 @@
 import {  toSyncPromise, isSyncPromise, isSyncPromiseType } from "./logic";
 import { delay } from "../logic";
-import { KeaPromise } from "./split";
+import { SyncPromise } from "./split";
 
 test("asyncToSyncPromise ", async () => {
     const prom = (async () => {
@@ -22,7 +22,7 @@ test("asyncToSyncPromise ", async () => {
 
 test("type test", async () => {
     expect(isSyncPromiseType(Promise)).toBe(false);
-    expect(isSyncPromiseType(KeaPromise)).toBe(true);
+    expect(isSyncPromiseType(SyncPromise)).toBe(true);
 })
 
 test("asyncToSyncPromise 2", async () => {

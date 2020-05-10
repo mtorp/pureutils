@@ -1,17 +1,10 @@
-import { pipe } from "./pipe";
 import { Observable, pipe as pipeRx, combineLatest as combineLatestRx, from as fromRx, isObservable as isObservableRx, ReplaySubject, from } from "rxjs";
 import { map as mapRx, concatAll as concatAllRx, scan as scanRx, startWith as startWithRx, filter as filterRx, switchAll } from "rxjs/operators";
-
-import * as _uuidRandom from "uuid-random";
 
 import { interopRequireDefault } from "./interop";
 import { defer } from "rxjs";
 import { syncResolve, splitPromise } from "./promise";
-const uuidRandom = interopRequireDefault(_uuidRandom) as any;
-/**Devuelve un nuevo UUID */
-export function uuid(): string {
-    return uuidRandom();
-}
+import { pipe } from "./pipe";
 
 /**Devuelve true si todos los elementos de un arreglo encajan con el predicado
  * @pred Devuelve la condición por cada elemento, si no se usa devuelve el elemento tal cual, es decir que los elementos deben de ser
@@ -1094,42 +1087,6 @@ export function formatDateExcel(x: Date): string {
     const f4 = x => formatNumber(x, 4);
 
     return `${f4(x.getFullYear())}-${f(x.getMonth() + 1)}-${f(x.getDate())} ${f(x.getHours())}:${f(x.getMinutes())}:${f(x.getSeconds())}`;
-}
-
-/**Devuelve una copia de una función. Respeta las propiedades agregadas a la función */
-export function cloneFunction<T extends (...args: any[]) => any>(func: T): T {
-    const ret = (...args: any[]): any => func(...args);
-    const keys = Object.keys(func);
-    for (const key of keys) {
-        ret[key] = func[key];
-    }
-
-    return ret as T;
-}
-
-const bindOrigFuncKey = "_keautils_bindFunction_origFunctions";
-
-/**Aplica un Function.bind respetando las propiedades agregadas a la función. Tambien se almacena la funcion original de tal manera que se puede devolver al estado original */
-export function bindFunction<T extends (...args: any[]) => any>(func: T, thisArg?: any, ...argArray: any[]): T {
-    const keys = Object.keys(func);
-    const ret = func.bind(thisArg, ...argArray);
-    for (const key of keys) {
-        ret[key] = func[key];
-    };
-
-    ret[bindOrigFuncKey] = ret[bindOrigFuncKey] || [];
-    ret[bindOrigFuncKey] = [...ret[bindOrigFuncKey], func];
-
-    return ret;
-}
-
-/**Deshace un bind aplicado con bindFunction. Un bind aplicado con Function.bind directamente no se puede deshacer. Si al argumento no se le fue aplicado un bind devuelve undefined */
-export function unbindFunction<T extends (...args: any[]) => any>(func: T): T | undefined {
-    if (!func[bindOrigFuncKey]) {
-        return undefined;
-    }
-    const arr: any[] = func[bindOrigFuncKey];
-    return arr[arr.length - 1];
 }
 
 /**Devuelve una promesa que se resuelve en cierto tiempo. Note que si ms == 0 la promesa devuelta no se resuelve síncronamente, ya que un setTimeout(..., 0) no es síncrono*/

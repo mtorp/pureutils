@@ -1,6 +1,5 @@
 import * as rx from "rxjs";
 import { obsToPromise,  delay, doOnSubscribe, } from "../logic";
-import { toSelector, createSelectorAsync } from "../selector";
 import { syncResolve } from "./split";
 import { syncPromiseValue } from "./logic";
 
@@ -49,19 +48,4 @@ test("observable to prom async", async () => {
     expect(result2).toBe(20);
 
     expect(sub1).toBe(sub2);
-});
-
-test("sync promise = sync selector",  () => {
-    const func =   (id: number) => syncResolve(30);
-
-    const idSel = toSelector((id: number) => id);
-    const funcSel = createSelectorAsync({idSel}, s => func(s.idSel));
-
-    const prom1 = funcSel.call(0);
-    //La primera llamada es asíncrona:
-    expect(syncPromiseValue(prom1)).toEqual({ 
-        value: 30,
-        status: "resolved"
-    });
-
 });

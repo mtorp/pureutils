@@ -1,16 +1,17 @@
 import {
     sequenceEquals, shallowEquals, flatten, groupBy, Grouping,
-    deepEquals, pipe, enumObject, setEquals, all, any, arrayToMap, contains, filterObject, first, mapObject, omit, ObjMap, toMap, moveItem, swapItems, upDownItem, promiseAllObj,
+    deepEquals, enumObject, setEquals, all, any, arrayToMap, contains, filterObject, first, mapObject, omit, ObjMap, toMap, moveItem, swapItems, upDownItem, promiseAllObj,
     unique, filterIf, mapKeys, intersect, omitUndefined, single, awaitObj, shallowDiff, range, sort, defaultComparer, orderBy, orderByDesc,
     truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd, toObservable, isArray, isArrayLike, isPromiseLike, isObservable,
-    search, removeDiacritics, containsAll, containsAny, nullsafe, mapPreviousRx, mapMany, runningTotal, mapPrevious, formatNumber, formatDate, formatDateExcel,
-    cloneFunction, bindFunction, unbindFunction, delay, uuid, allEqual, pick, zip, binarySearch, exclude,
-    isSubset, innerJoin, leftJoin, unionKey, combinePath, generatePushID, sum, excludeKeys, coalesce, nextToPromise, objRxToRxObj, outOfRange, RangeOptional,
+    search, removeDiacritics, containsAll, containsAny, mapPreviousRx, mapMany, runningTotal, mapPrevious, formatNumber, formatDate, formatDateExcel,
+    delay,  allEqual, pick, zip, binarySearch, exclude,
+    isSubset, innerJoin, leftJoin, unionKey, combinePath, sum, excludeKeys, nextToPromise, objRxToRxObj, outOfRange, RangeOptional,
     base64ToString, stringToBase64, max, min, enumKeys, toIsoDate, debounceSync, syncResolve, mergeObj, orRx, treeTraversal, isSyncPromise, syncPromiseValue
 } from "./index";
 
 import * as rx from "rxjs";
 import * as rxOps from "rxjs/operators";
+import { pipe } from "./pipe";
 
 
 test("orRx", async () => {
@@ -792,84 +793,6 @@ test("contains any", () => {
     expect(containsAny([1, 2, 3], [3, 1])).toBe(true);
 });
 
-test("null safe", () => {
-    type RecPartial<T> = { [K in keyof T]?: RecPartial<T[K]> };
-
-    interface TestType {
-        A: {
-            B: {
-                C: {
-                    D: {
-                        E: number
-                    }
-                }
-            }
-        }
-    };
-    type TestType2 = RecPartial<TestType>;
-    const a: TestType2 | null = {};
-    const b: TestType2 | null = null as any;
-    const c: TestType2 | null = { A: { B: { C: {} } } };
-    const d: TestType2 | null = { A: { B: { C: { D: { E: 10 } } } } };
-
-
-    nullsafe(b);
-    expect(nullsafe(0)).toBe(0);
-    expect(nullsafe(1)).toBe(1);
-    expect(nullsafe(null)).toBe(null);
-    expect(nullsafe(undefined)).toBe(undefined);
-
-    expect(nullsafe(a, x => x.A, x => x.B)).toBe(undefined);
-    expect(nullsafe(b, x => x.A, x => x.B)).toBe(null);
-    expect(nullsafe(c, x => x.A)).not.toBe(undefined);
-    expect(nullsafe(c, x => x.A, x => x.B)).not.toBe(undefined);
-    expect(nullsafe(c, x => x.A, x => x.B, x => x.C)).not.toBe(undefined);
-    expect(nullsafe(c, x => x.A, x => x.B, x => x.C, x => x.D)).toBe(undefined);
-
-    expect(nullsafe(d, x => x.A, x => x.B, x => x.C, x => x.D, x => x.E)).toBe(10);
-
-    //Probamos que el nullsafe no se confunda con el 0
-    expect(nullsafe(-1, x => x + 1, x => x + 1)).toBe(1);
-    expect(nullsafe(0, x => x + 1, x => x + 1)).toBe(2);
-
-});
-
-test("nullsafe types", () => {
-    interface A {
-        b: number,
-        c: string | null | undefined,
-        d: string | undefined,
-        e: string | null,
-    };
-
-    interface TestType {
-        a: A | null,
-        b?: string,
-        c: {
-            b: number,
-            c: string | null | undefined,
-            d: string | undefined
-        } | undefined,
-        d: {
-            b: number,
-            c: string | null | undefined,
-            d: string | undefined
-        },
-    };
-
-    const test = null as any as TestType;
-    //Simplemente comprobamos al compilar que los tipos que devuelve el nullsafe en cajan con los tipos del
-    const ar = nullsafe(test, x => x.a);
-    const a: {} | null = ar;
-    const b: number | null = nullsafe(test, x => x.a, x => x.b);
-    const c: string | null | undefined = nullsafe(test, x => x.a, x => x.c);
-    const d: string | null | undefined = nullsafe(test, x => x.a, x => x.d);
-    const e: string | null = nullsafe(test, x => x.a, x => x.e);
-    const b2: string | undefined = nullsafe(test, x => x.b);
-
-    const d2: string | undefined = nullsafe(test, x => x.c, x => x.d);
-    const d3: string | undefined = nullsafe(test, x => x.d, x => x.d);
-});
 
 test("map prev rx", async () => {
     const arr = [1, 4, 7, 10, 20];
@@ -1049,92 +972,9 @@ test("format datetime excel", () => {
 
 })
 
-test("clone function", () => {
-
-    const funcA = () => 10;
-    const funcB = (a: number, b: number) => a + b;
-    const funcC = (a: number, ...b: number[]) => a * b.reduce((a, b) => a + b, 0);
-    const funcD = (a: string, b: number, c: number) => a + b + c;
-    const funcE: any = () => 20;
-    funcE.hello = "rafa";
-
-    const cloneA = cloneFunction(funcA);
-    const cloneB = cloneFunction(funcB);
-    const cloneC = cloneFunction(funcC);
-    const cloneD = cloneFunction(funcD);
-    const cloneE = cloneFunction(funcE);
-
-    expect(funcA).not.toBe(cloneA);
-    expect(funcB).not.toBe(cloneB);
-    expect(funcC).not.toBe(cloneC);
-    expect(funcD).not.toBe(cloneD);
-
-    (cloneA as any).myProp = "hello";
-
-    expect((cloneA as any).myProp).toBe("hello");
-    expect((funcA as any).myProp).toBeUndefined();
-
-    expect(cloneA()).toBe(10);
-    expect(cloneB(1, 4)).toBe(5);
-    expect(cloneC(2, ...[1, 2, 3])).toBe(12);
-    expect(cloneC(2, 3, 4, 5, 6)).toBe(36);
-    expect(cloneD("hola", 3, 4)).toBe("hola34");
-
-    expect(cloneE()).toBe(20);
-    expect(cloneE.hello).toBe("rafa");
-});
-
-test("bind function", () => {
-    const func = function (this: number | void, a) {
-        return this + a;
-    };
-
-    (func as any).hello = "rafa";
-
-    const func2 = bindFunction(func, 10);
-
-    expect(func(1)).toBeNaN();
-    expect(func2(1)).toBe(11);
-    expect(func2(2)).toBe(12);
-
-    expect((func2 as any).hello).toBe("rafa");
-    expect(func2).not.toBe(func);
-});
-
-test("unbind function", () => {
-    const func = function (this: number | void, a) { return this + a };
-    const bind10 = bindFunction(func, 10);
-    const bind10_10 = bindFunction(bind10, 10);
-
-
-    const bind20Over10 = bindFunction(bind10, 20);
-    const bind20Over10unbind = bindFunction(unbindFunction(bind10)!, 20);
-    const bind20Over10_10unbind = bindFunction(unbindFunction(bind10_10)!, 20);
-    const bind20Over10_10unbind_unbind = bindFunction(unbindFunction(unbindFunction(bind10_10)!)!, 20);
-
-    const unbindFunc = unbindFunction(func);
-
-    expect(func(1)).toBeNaN();
-    expect(bind10(1)).toBe(11);
-    expect(bind10_10(1)).toBe(11);
-
-    expect(bind20Over10(1)).toBe(11);
-    expect(bind20Over10unbind(1)).toBe(21);
-    expect(bind20Over10_10unbind(1)).toBe(11);
-    expect(bind20Over10_10unbind_unbind(1)).toBe(21);
-    expect(unbindFunc).toBeUndefined();
-});
-
 
 test("is observable", () => {
     expect(isObservable(rx.from([undefined]))).toBe(true);
-});
-
-test("uuid random", () => {
-    const arr = range(0, 100).map(x => uuid());
-    const uni = unique(arr);
-
-    expect(uni.length).toBe(arr.length);
 });
 
 test("all equal", () => {
@@ -1269,7 +1109,7 @@ test("join", () => {
 
     const left =
         leftJoin(clientes, paises, (a, b) => a.idPais == b.id)
-            .map(x => ({ nombre: x.left.nombre, pais: nullsafe(x.right, x => x.nombre) }));
+            .map(x => ({ nombre: x.left.nombre, pais: x.right?.nombre }));
 
     const inner =
         innerJoin(clientes, paises, (a, b) => a.idPais == b.id)
@@ -1349,17 +1189,6 @@ test("combinePath", () => {
     //TODO: Hacer pruebas con los parametros prefix y postfix
 });
 
-test("generate push", () => {
-    const a = generatePushID();
-    const b = generatePushID();
-    const c = generatePushID();
-    const d = generatePushID();
-
-    expect(d > c).toBeTruthy();
-    expect(c > b).toBeTruthy();
-    expect(b > a).toBeTruthy();
-});
-
 test("sum", () => {
     expect(sum([])).toBe(0);
     expect(sum([null, undefined])).toBe(0);
@@ -1367,17 +1196,6 @@ test("sum", () => {
     expect(sum([0, null, undefined, 4])).toBe(4);
     expect(sum([0, null, undefined, 4, 3])).toBe(7);
 });
-
-test("coalesce", () => {
-    expect(coalesce(false, "hola")).toBe(false);
-    expect(coalesce(null, "hola")).toBe("hola");
-    expect(coalesce(null, undefined, "rafa")).toBe("rafa");
-    expect(coalesce(null, "hey", "rafa")).toBe("hey");
-    expect(coalesce(true)).toBe(true);
-    expect(coalesce(null)).toBe(null);
-    expect(coalesce(undefined)).toBe(undefined);
-
-})
 
 test("nextToPromise", async () => {
     const obs = new rx.BehaviorSubject(1);
@@ -1685,11 +1503,11 @@ test("syncPromise", () => {
     const sync = syncResolve(3);
 
     expect(isSyncPromise(notSync)).toEqual(false);
-    
-    expect(syncPromiseValue(sync)).toEqual({ 
+
+    expect(syncPromiseValue(sync)).toEqual({
         value: 3,
         status: "resolved"
-     });
+    });
 });
 
 jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
@@ -1826,7 +1644,7 @@ test("promise to obs", async () => {
     const prom = delay(1).then(x => 10);
     const obs = toObservable(prom);
 
-    let a:number = 0, b: number = 0;
+    let a: number = 0, b: number = 0;
 
     const c = await prom;
     expect(c).toBe(10);
@@ -1849,7 +1667,7 @@ test("promise to obs sync", async () => {
     const prom = syncResolve().then(x => 10);
     const obs = toObservable(prom);
 
-    let a:number = 0, b: number = 0;
+    let a: number = 0, b: number = 0;
 
     //Sincronamente se asigna el valor:
     obs.subscribe(x => a = x);

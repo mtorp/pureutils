@@ -1,2 +1,2 @@
-# keautils
-Funciones puras para manipulación de colecciones y cadenas
+# pureutils
+Funciones puras para manipulación de objetos, arreglos, promesas y observables

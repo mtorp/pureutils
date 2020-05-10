@@ -1,20 +1,18 @@
 {
-  "name": "keautils",
-  "version": "5.0.6",
-  "description": "metodos de linq para javascript",
+  "name": "pureutils",
+  "version": "1.0.0",
+  "description": "Funciones puras para manipulación de objetos, arreglos, promesas y observables",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "dependencies": {
-    "moize": "^4.0.3",
-    "rxjs": "^6.5.1",
-    "uuid-random": "^1.0.6"
+    "rxjs": "^6.5.1"
   },
   "devDependencies": {
     "@types/jest": "^21.1.4",
     "jest": "^24.8.0",
     "jest-cli": "^21.2.1",
     "ts-jest": "^24.0.2",
-    "typescript": "^3.4.5"
+    "typescript": "^3.8.3"
   },
   "scripts": {
     "test": "jest",
