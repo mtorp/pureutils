@@ -28,9 +28,6 @@
     "prepublishOnly": "npm run build",
     "tsc": "tsc --noemit"
   },
-  "keywords": [
-    "linq"
-  ],
   "jest": {
     "transform": {
       ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"

@@ -2,7 +2,8 @@
     "compilerOptions": {
         "module": "ES6",
         "moduleResolution": "node",
-        "target": "es5",
+        "target": "es6",
+        "jsx": "react",
         "noImplicitAny": false,
         "inlineSourceMap": true,
         "strict": true,
@@ -11,8 +12,6 @@
             "dom",
             "dom.iterable"
         ],
-        "downlevelIteration": true,
-        "noImplicitThis": true,
         "outDir": "dist/esm",
         "rootDir": "src",
     },

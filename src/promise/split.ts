@@ -22,7 +22,16 @@ export class SyncPromise<T> implements PromiseLike<T>  {
         executor(this.resolve, this.reject);
     }
 
-    resolve: (value?: T) => void = (value) => {
+    resolve: (value?: T | PromiseLike<T>) => void = value => {
+        if(isPromiseLike(value)){
+            value.then(this.resolve, this.reject);
+            return;
+        }
+
+        this.syncResolve(value);
+    };
+
+    private syncResolve: (value?: T) => void = (value) => {
         this.value = value;
         this.status = "resolved";
         this.callListeners();
