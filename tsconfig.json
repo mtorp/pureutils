@@ -5,7 +5,7 @@
         "target": "es5",
         "noImplicitAny": false,
         "inlineSourceMap": true,
-        "strictNullChecks": true,
+        "strict": true,
         "lib": [
             "es6",
             "dom",
