@@ -21,6 +21,7 @@ test("contains", () => {
 
     const arr : readonly number[] = [1,2,3];
 
+    //Accepts readonly:
     expect(contains(arr, 4)).toBe(false);
 
 })

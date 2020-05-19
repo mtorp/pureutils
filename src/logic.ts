@@ -10,7 +10,7 @@ import { pipe } from "./pipe";
  * @pred Devuelve la condición por cada elemento, si no se usa devuelve el elemento tal cual, es decir que los elementos deben de ser
  * truthy para pasar
 */
-export function all<T>(arr: T[], pred?: (x: T) => boolean): boolean {
+export function all<T>(arr: readonly T[], pred?: (x: T) => boolean): boolean {
     pred = pred || (x => !!x);
 
     for (const x of arr) {
@@ -24,7 +24,7 @@ export function all<T>(arr: T[], pred?: (x: T) => boolean): boolean {
 /**Devuelve true si todos los elementos de un arreglo son iguales. Si el arreglo esta vacío devuelve true
  * @param comparer El comparador de igualdar, por default es @see referenceEquals
  */
-export function allEqual<T>(arr: T[], comparer?: (a: T, b: T) => boolean): boolean {
+export function allEqual<T>(arr: readonly T[], comparer?: (a: T, b: T) => boolean): boolean {
     if (arr.length == 0) return true;
     const effectiveComparer = comparer || referenceEquals;
     const first = arr[0];
@@ -59,12 +59,12 @@ export function contains<TA, TB>(arr: readonly TA[], value: TB, comparer?: (a: T
 }
 
 /**Devuelve true si todos los valores en @see values existen en el arreglo @see arr . Si @see values esta vacío devuelve true */
-export function containsAll<T>(arr: T[], values: T[], comparer?: (a: T, b: T) => boolean) {
+export function containsAll<T>(arr: readonly T[], values: readonly T[], comparer?: (a: T, b: T) => boolean) {
     return all(values, x => contains(arr, x, comparer));
 }
 
 /**Devuelve true si existe algun valor en @see values que exista en @see arr . Si @see values esta vacío devuelve false */
-export function containsAny<T>(arr: T[], values: T[], comparer?: (a: T, b: T) => boolean) {
+export function containsAny<T>(arr: readonly T[], values: readonly T[], comparer?: (a: T, b: T) => boolean) {
     return any(values, x => contains(arr, x, comparer));
 }
 
@@ -78,7 +78,7 @@ export function referenceEquals<T>(a: T, b: T) {
 }
 
 /**Compara dos arreglos valor por valor */
-export function sequenceEquals<T>(a: T[], b: T[], comparer?: (a: T, b: T) => boolean) {
+export function sequenceEquals<T>(a: readonly T[], b: readonly T[], comparer?: (a: T, b: T) => boolean) {
     if (a === b) return true;
     if (a == null || b == null) return false;
     if (a.length != b.length) return false;
@@ -93,7 +93,7 @@ export function sequenceEquals<T>(a: T[], b: T[], comparer?: (a: T, b: T) => boo
 /**Devuelve true si 2 arreglos contienen los mismos valores, sin considerar el orden o la cantidad de veces que el mismo valor esta repetido en el arreglo
  * @param comparer Función que se usa para comparar los elementos, si no se especifica, se usa el referenceEquals
  */
-export function setEquals<T>(a: T[], b: T[], comparer?: (a: T, b: T) => boolean): boolean {
+export function setEquals<T>(a: readonly T[], b: readonly T[], comparer?: (a: T, b: T) => boolean): boolean {
     for (const aItem of a) {
         if (!contains(b, aItem, comparer)) return false;
     }
@@ -175,7 +175,7 @@ export function shallowDiff<T>(a: T, b: T, comparer?: (a: T[keyof T], b: T[keyof
 }
 
 /**Convierte un ArrayLike o Iterable en un arreglo. Si el valor ya es un arreglo devuelve el valor */
-export function toArray<T>(arr: ArrayLike<T> | Iterable<T>): T[] {
+export function toArray<T>(arr: ArrayLike<T> | Iterable<T>): readonly T[] {
     if (arr instanceof Array) {
         return arr;
     }
@@ -212,7 +212,7 @@ export function deepEquals<T>(a: T, b: T): boolean {
 }
 
 /**Convierte un arreglo a un objeto */
-export function toMap<T, TValue>(arr: T[], key: (value: T) => string, value: (value: T) => TValue) {
+export function toMap<T, TValue>(arr: readonly T[], key: (value: T) => string, value: (value: T) => TValue) {
     const ret: { [index: string]: TValue } = {}
     for (const x of arr)
         ret[key(x)] = value(x);
@@ -222,8 +222,8 @@ export function toMap<T, TValue>(arr: T[], key: (value: T) => string, value: (va
 
 
 /**Aplana una colección de colecciones */
-export function flatten<T>(arr: T[][]) {
-    const ret: T[] = [];
+export function flatten<T>(arr: readonly T[][]) {
+    const ret:  T[] = [];
     for (const a of arr)
         ret.push(...a);
     return ret;
@@ -233,7 +233,7 @@ export function flatten<T>(arr: T[][]) {
 /**Devuelve el primer elemento de un arreglo o indefinido si no se encontro ninguno, opcionalmente
  * filtrado por un predicado
  */
-export function first<T>(arr: T[], pred?: (item: T) => boolean): T | undefined {
+export function first<T>(arr: readonly T[], pred?: (item: T) => boolean): T | undefined {
     for (const a of arr) {
         if (!pred || pred(a))
             return a;
@@ -244,7 +244,7 @@ export function first<T>(arr: T[], pred?: (item: T) => boolean): T | undefined {
 /**
  * Devuelve el unico elemento de un arreglo que cumpla con la condición, si no se encontró ninguo o mas de uno devuelve undefined
  */
-export function single<T>(arr: T[], pred?: (item: T) => boolean): T | undefined {
+export function single<T>(arr: readonly T[], pred?: (item: T) => boolean): T | undefined {
     let firstItem: T | undefined = undefined;
     let first: boolean = false;
     for (const a of arr) {
@@ -264,17 +264,17 @@ export function single<T>(arr: T[], pred?: (item: T) => boolean): T | undefined 
 }
 
 /**Devuelve el ultimo elemento de un arreglo */
-export function last<T>(arr: T[]): T | undefined {
+export function last<T>(arr: readonly T[]): T | undefined {
     return arr[arr.length - 1];
 }
 
-export type Grouping<TKey, TItem> = { key: TKey, items: TItem[] };
+export type Grouping<TKey, TItem> = { key: TKey, items:  TItem[] };
 
 /**Agrupa un arreglo por una llave. Se preserva el orden original de los elementos del arreglo, segun los elementos agrupadores que aparezcan primero, tambien
  * el orden adentro del grupo es preservado
  * @param comparer Comparador de la llave por default es un shallowEquals
  */
-export function groupBy<T, TKey>(arr: T[], groupBy: (item: T) => TKey, comparer?: (a: TKey, b: TKey) => boolean) {
+export function groupBy<T, TKey>(arr: readonly T[], groupBy: (item: T) => TKey, comparer?: (a: TKey, b: TKey) => boolean) {
     const ret: Grouping<TKey, T>[] = [];
     const comparerDefault = comparer || shallowEquals;
     for (const x of arr) {
@@ -302,8 +302,8 @@ export function enumObject<T>(obj: T): ({ key: keyof T, value: T[keyof T] })[]
  * @param obj Objeto que se va a enumerar
  * @param selector Función que obtiene cada elemento del arreglo
  */
-export function enumObject<T, TR>(obj: T, selector: (key: keyof T, value: T[keyof T]) => TR): TR[]
-export function enumObject<T, TR>(obj: T, selector?: (key: keyof T, value: T[keyof T]) => TR): TR[] | ({ key: keyof T, value: T[keyof T] })[] {
+export function enumObject<T, TR>(obj: T, selector: (key: keyof T, value: T[keyof T]) => TR): readonly TR[]
+export function enumObject<T, TR>(obj: T, selector?: (key: keyof T, value: T[keyof T]) => TR): readonly TR[] | ({ key: keyof T, value: T[keyof T] })[] {
     const defaultSelector = ((key: keyof T, value: T[keyof T]) => ({ key, value }));
     const effectiveSelector = selector || defaultSelector;
     if (selector) {
@@ -323,8 +323,8 @@ export function arrayToMap<TKey, TValue>(array: { key: TKey, value: TValue }[]):
  * @param array Arreglo de valores
  * @param keySelector Función que obtiene la cadena que se tomada como el "key" de cada elemento
  */
-export function arrayToMap<T, TValue>(array: T[], keySelector: (item: T) => string, valueSelector: (item: T) => TValue): ObjMap<TValue>
-export function arrayToMap<T, TValue>(array: T[], keySelector?: (item: T) => string, valueSelector?: (item: T) => TValue): ObjMap<T[keyof T]> {
+export function arrayToMap<T, TValue>(array: readonly T[], keySelector: (item: T) => string, valueSelector: (item: T) => TValue): ObjMap<TValue>
+export function arrayToMap<T, TValue>(array: readonly T[], keySelector?: (item: T) => string, valueSelector?: (item: T) => TValue): ObjMap<T[keyof T]> {
     const defaultKeySelector = (item: any) => item.key;
     const defaultValueSelector = (item: any) => item.value;
 
@@ -390,7 +390,7 @@ export function pick<T extends {}, Keys extends keyof T>(obj: T, ...props: Keys[
 }
 
 /**Intercambia 2 elementos de un arreglo, si los indices dados estan afuera del arreglo, lanza una excepción */
-export function swapItems<T>(array: T[], a: number, b: number) {
+export function swapItems<T>(array: readonly T[], a: number, b: number) {
     const inside = (x: number) => x >= 0 && x < array.length;
     if (!inside(a) || !inside(b))
         throw new Error("Indice fuera de rango");
@@ -404,7 +404,7 @@ export function swapItems<T>(array: T[], a: number, b: number) {
 /**Mueve un elemento del arreglo de un indice a otro, note que no es igual a swapItems ya que al mover un elemento se conserva el orden de todos los de más elemento, esto no ocurre con el swap que 
  * simplemente intercambia de posición 2 elementos. Si los indices estan fuera de rango lanza uan excepción
 */
-export function moveItem<T>(array: T[], sourceIndex: number, destIndex: number) {
+export function moveItem<T>(array: readonly T[], sourceIndex: number, destIndex: number) {
     const inside = (x: number) => x >= 0 && x < array.length;
     if (!inside(sourceIndex) || !inside(destIndex))
         throw new Error("Indice fuera de rango");
@@ -424,7 +424,7 @@ export function moveItem<T>(array: T[], sourceIndex: number, destIndex: number) 
 }
 
 /**Mueve un elemento hacia array o hacia abajo, si el elemento no se puede mover ya que esta en el borde del arreglo devuelve el arreglo tal cual */
-export function upDownItem<T>(array: T[], index: number, direction: "up" | "down") {
+export function upDownItem<T>(array: readonly T[], index: number, direction: "up" | "down") {
     if ((index == 0 && direction == "up") || (index == array.length - 1 && direction == "down")) {
         return array;
     } else {
@@ -499,14 +499,14 @@ export function awaitObj<T, TKeys extends keyof T>(obj: PromiseLike<T>, include:
 /**Devuelve todos los elementos de un arreglo que no estan repetidos, respetando el orden original en el que aparecen primero.
  * @param comparer Comparador que determina si 2 elementos son iguales. Se usa el operador ===
 */
-export function unique<T>(arr: T[], comparer?: (a: T, b: T) => boolean) {
+export function unique<T>(arr: readonly T[], comparer?: (a: T, b: T) => boolean) {
     return groupBy<T, T>(arr, x => x, referenceEquals).map(x => x.key)
 }
 
 /**Devuelve todos los elementos de todos los arreglos que no esten repetidos.
  * Conserva el orden pero no los elementos repetidos
  */
-export function union<T>(...arr: T[][]) {
+export function union<T>(...arr: readonly T[][]) {
     return unique(concat(...arr));
 }
 
@@ -516,7 +516,7 @@ export function union<T>(...arr: T[][]) {
  * Esto se puede ver como una operacion de INSERT OR UPDATE en A
  * @param comparer Comparador de la llave. Es @see deepEquals por default
  */
-export function unionKey<TA, TB, K>(a: TA[], b: TB[], getKey: (item: TA | TB) => K, comparer?: (a: K, b: K) => boolean): (TA | TB)[] {
+export function unionKey<TA, TB, K>(a: readonly TA[], b: readonly TB[], getKey: (item: TA | TB) => K, comparer?: (a: K, b: K) => boolean): (TA | TB)[] {
     const effComparer = comparer || deepEquals;
     let result: (TA | TB)[] = [];
 
@@ -537,7 +537,7 @@ export function unionKey<TA, TB, K>(a: TA[], b: TB[], getKey: (item: TA | TB) =>
 }
 
 /**Devuelve todos los elementos en A que no esten en B. Es la operacion A-B de conjuntos. Conserva el orden y los elementos repetidos de A */
-export function exclude<TA, TB>(a: TA[], b: TB[], comparer?: (a: TA, b: TB) => boolean) {
+export function exclude<TA, TB>(a: readonly TA[], b: readonly TB[], comparer?: (a: TA, b: TB) => boolean) {
     const comparerEff = comparer && ((b: TB, a: TA) => comparer(a, b));
     return a.filter(aItem => !contains(b, aItem, comparerEff));
 }
@@ -546,18 +546,18 @@ export function exclude<TA, TB>(a: TA[], b: TB[], comparer?: (a: TA, b: TB) => b
  * @param keySelector Obtiene la clave de un elemento
  * @param comparer Comparedor de igualdad. Por default se usa el shallowEquals
  */
-export function excludeKeys<T, TKey>(items: T[], keys: TKey[], keySelector: (item: T) => TKey, comparer?: (a: TKey, b: TKey) => boolean) {
+export function excludeKeys<T, TKey>(items: readonly T[], keys: readonly TKey[], keySelector: (item: T) => TKey, comparer?: (a: TKey, b: TKey) => boolean) {
     const comparerEff = comparer || shallowEquals;
     return exclude(items, keys, (a, b) => comparerEff(keySelector(a), b));
 }
 
 /**Pega todos los elementos de los arreglos */
-export function concat<T>(...arr: T[][]) {
+export function concat<T>(...arr: readonly T[][]) {
     return arr.reduce((acum, curr) => [...acum, ...curr], []);
 }
 
 /**Filtra el arreglo sólo si condition == true, si es false devuelve el arreglo tal cual */
-export function filterIf<T>(arr: T[], predicate: (item: T) => boolean, condition: boolean) {
+export function filterIf<T>(arr: readonly T[], predicate: (item: T) => boolean, condition: boolean) {
     return condition ? arr.filter(predicate) : arr;
 }
 
@@ -568,7 +568,7 @@ export function filterIf<T>(arr: T[], predicate: (item: T) => boolean, condition
  * @param keySelector Obtener la clave de un elemento
  * @param keyComparer Comparador que se usará para determinar si dos claves son iguales. Por default se usa el shallowEquals
  */
-export function mapKeys<T, TKey>(keys: TKey[], values: T[], keySelector: (item: T) => TKey, keyComparer?: (a: TKey, b: TKey) => boolean) {
+export function mapKeys<T, TKey>(keys: readonly TKey[], values: readonly T[], keySelector: (item: T) => TKey, keyComparer?: (a: TKey, b: TKey) => boolean) {
     const effectiveKeyComparer = keyComparer || shallowEquals;
     return keys.map(key => first(values, value => shallowEquals(key, keySelector(value)))!);
 }
@@ -576,7 +576,7 @@ export function mapKeys<T, TKey>(keys: TKey[], values: T[], keySelector: (item: 
 /**Devuelve todos los elementos en "a" que se encuentren también en "b". Conserva el orden original de "a"
  * @param comparer Comparedor de igualdad. Por default se usa el referenceEquals
  */
-export function intersect<T>(a: T[], b: T[], comparer?: (a: T, b: T) => boolean) {
+export function intersect<T>(a: readonly T[], b: readonly T[], comparer?: (a: T, b: T) => boolean) {
     return intersectKeys(a, b, x => x, comparer || referenceEquals);
 }
 
@@ -598,7 +598,7 @@ export function mergeObj<TA, TB, TR>(
 /**Devuelve true si SET contiene todos los elementos en SUBSET. Si los conjuntos son iguales devuelve true.
  * Si los dos arreglos estan vacios devuelve true
  */
-export function isSubset<T>(set: T[], subset: T[], comparer?: (a: T, b: T) => boolean): boolean {
+export function isSubset<T>(set: readonly T[], subset: readonly T[], comparer?: (a: T, b: T) => boolean): boolean {
     //Si por lo menos un elemento en subset no existe en set, ya no es un subset
     return !any(subset, x => !contains(set, x));
 }
@@ -607,7 +607,7 @@ export function isSubset<T>(set: T[], subset: T[], comparer?: (a: T, b: T) => bo
  * @param keySelector Obtiene la clave de un elemento
  * @param comparer Comparedor de igualdad. Por default se usa el shallowEquals
  */
-export function intersectKeys<T, TKey>(items: T[], keys: TKey[], keySelector: (item: T) => TKey, comparer?: (a: TKey, b: TKey) => boolean) {
+export function intersectKeys<T, TKey>(items: readonly T[], keys: readonly TKey[], keySelector: (item: T) => TKey, comparer?: (a: TKey, b: TKey) => boolean) {
     return items.filter(item => contains(keys, keySelector(item), comparer || shallowEquals));
 }
 
@@ -626,24 +626,24 @@ export function range(start: number, count: number, step?: number) {
 /**
  * Devuelve un nuevo arreglo con todo el arreglo original mas el elemento al final
  */
-export function push<T>(arr: T[], item: T) {
+export function push<T>(arr: readonly T[], item: T) {
     return [...arr, item];
 }
 
 /**
  * Remplaza todos los valores del arreglo que cumplan con cierta condicion
  */
-export function replace<T>(arr: T[], condition: (item: T, index: number) => boolean, newValue: T) {
+export function replace<T>(arr: readonly T[], condition: (item: T, index: number) => boolean, newValue: T) {
     return arr.map((x, i) => condition(x, i) ? newValue : x);
 }
 
 /**Elimina un elemento del arreglo */
-export function remove<T>(arr: T[], item: T) {
+export function remove<T>(arr: readonly T[], item: T) {
     return arr.filter(x => x != item);
 }
 
 /**Elimina un elemento del arreglo dado su indice */
-export function removeAt<T>(arr: T[], index: number) {
+export function removeAt<T>(arr: readonly T[], index: number) {
     return arr.filter((x, i) => i != index);
 }
 
@@ -679,7 +679,7 @@ export type ComparerFunction<T> = (a: T, b: T) => number;
 /**Ordena un arreglo de forma estable, a diferencia de con array.sort el arreglo original no es modificado
  * @param comparers Comparadores de ordenamiento, se le da precedencia al primero. Si no se especifica ninguno se usará el comparador por default
  */
-export function sort<T>(arr: T[], ...comparers: (ComparerFunction<T>)[]) {
+export function sort<T>(arr: readonly T[], ...comparers: (ComparerFunction<T>)[]) {
     comparers = comparers.length == 0 ? [defaultComparer] : comparers;
     type T2 = { value: T, index: number };
     const toEffComparer = (func: ComparerFunction<T>) => (a: T2, b: T2) => func(a.value, b.value);
@@ -702,13 +702,13 @@ export function sort<T>(arr: T[], ...comparers: (ComparerFunction<T>)[]) {
 /**
  * Ordena un arreglo de forma estable segun ciertas claves seleccionadas usando el comparador por default
  */
-export function orderBy<T>(arr: T[], ...keySelectors: ((x: T) => any)[]) {
+export function orderBy<T>(arr: readonly T[], ...keySelectors: ((x: T) => any)[]) {
     const comparers = keySelectors.map(selector => (a: T, b: T) => +defaultComparer(selector(a), selector(b)));
     return sort(arr, ...comparers);
 }
 
 /**Ordena un arreglo de forma estable y descendiente segun ciertas claves seleccionadas usando el comparador por default */
-export function orderByDesc<T>(arr: T[], ...keySelectors: ((x: T) => any)[]) {
+export function orderByDesc<T>(arr: readonly T[], ...keySelectors: ((x: T) => any)[]) {
     const comparers = keySelectors.map(selector => (a: T, b: T) => -defaultComparer(selector(a), selector(b)));
     return sort(arr, ...comparers);
 }
@@ -721,20 +721,20 @@ function keysToComparer<T>(keySelectors: ((x: T) => any)[]): ComparerFunction<T>
 }
 
 /**Obtiene el máximo de un arreglo dado un selector de llave */
-export function max<T>(arr: T[], ...keySelectors: ((x: T) => any)[]) {
+export function max<T>(arr: readonly T[], ...keySelectors: ((x: T) => any)[]) {
     const comp = keysToComparer(keySelectors);
     return maxComparer(arr, comp);
 }
 
 /**Obtiene el mínimo de un arreglo dado un selector de llave */
-export function min<T>(arr: T[], ...keySelectors: ((x: T) => any)[]) {
+export function min<T>(arr: readonly T[], ...keySelectors: ((x: T) => any)[]) {
     const comp = keysToComparer(keySelectors);
     const inv = (a: T, b: T) => -comp(a, b);
     return maxComparer(arr, inv);
 }
 
 /**Devuelve el valor máximo de un arreglo dado un comparador o undefined si el arreglo está vacío */
-function maxComparer<T>(arr: T[], comparer: ComparerFunction<T>): T | undefined {
+function maxComparer<T>(arr: readonly T[], comparer: ComparerFunction<T>): T | undefined {
     let first = true;
     let max: T | undefined = undefined;
 
@@ -816,8 +816,8 @@ export function toObservable<T>(value: T | PromiseLike<T> | Observable<T>): Obse
 }
 
 /**Toma los primeros N elementos del arreglo */
-export function take<T>(arr: T[], count: number): T[] {
-    let ret: T[] = [];
+export function take<T>(arr: readonly T[], count: number): readonly T[] {
+    let ret:  T[] = [];
     for (var i = 0; i < Math.min(arr.length, count); i++) {
         ret.push(arr[i]);
     }
@@ -825,8 +825,8 @@ export function take<T>(arr: T[], count: number): T[] {
 }
 
 /**Se salta los primeros N elementos del arreglo */
-export function skip<T>(arr: T[], count: number): T[] {
-    let ret: T[] = [];
+export function skip<T>(arr: readonly T[], count: number): readonly T[] {
+    let ret:  T[] = [];
     for (var i = count; i < arr.length; i++) {
         ret.push(arr[i]);
     }
@@ -834,7 +834,7 @@ export function skip<T>(arr: T[], count: number): T[] {
 }
 
 /**Obtiene le primer elemento mapeado de un arreglo o undefined */
-export function firstMap<T, R>(arr: T[], predicate: (x: T, index: number) => boolean, map: (x: T, i: number) => R): R | undefined {
+export function firstMap<T, R>(arr: readonly T[], predicate: (x: T, index: number) => boolean, map: (x: T, i: number) => R): R | undefined {
     for (let i = 0; i < arr.length; i++) {
         const x = arr[i];
         if (predicate(x, i)) {
@@ -849,7 +849,7 @@ export function firstMap<T, R>(arr: T[], predicate: (x: T, index: number) => boo
  * @param oldValueRef Valor anterior del arreglo
  * @param newValue Nuevo valor del arreglo
  */
-export function duplicatesOnEdit<T, TKey>(arr: T[], oldValue: T, newValue: T, keySelector: (x: T) => TKey) {
+export function duplicatesOnEdit<T, TKey>(arr: readonly T[], oldValue: T, newValue: T, keySelector: (x: T) => TKey) {
     const comparer = (a: T, b: T) => shallowEquals(keySelector(a), keySelector(b));
     let foundOldValue = false;
     for (const item of arr) {
@@ -871,7 +871,7 @@ export function duplicatesOnEdit<T, TKey>(arr: T[], oldValue: T, newValue: T, ke
  * @param newValue 
  * @param comparer  Se usa el shallow equals por default
  */
-export function duplicatesOnAdd<T, TKey>(arr: T[], newValue: T, keySelector: (x: T) => TKey) {
+export function duplicatesOnAdd<T, TKey>(arr: readonly T[], newValue: T, keySelector: (x: T) => TKey) {
     const comparer = (a: T, b: T) => shallowEquals(keySelector(a), keySelector(b));
     return contains(arr, newValue, comparer);
 }
@@ -902,9 +902,9 @@ export function mapPreviousRx<T>(obs: Observable<T>, startWith: T): Observable<{
 }
 
 /**Mapea cada elemento de un arreglo tomando en cuenta el elemento anterior */
-export function mapPrevious<T, TR>(items: T[], map: (prev: T, curr: T) => TR, initial: T) {
+export function mapPrevious<T, TR>(items: readonly T[], map: (prev: T, curr: T) => TR, initial: T) {
     let prev = initial;
-    let ret: TR[] = [];
+    let ret:  TR[] = [];
     for (const it of items) {
         ret.push(map(prev, it));
         prev = it;
@@ -913,8 +913,8 @@ export function mapPrevious<T, TR>(items: T[], map: (prev: T, curr: T) => TR, in
 }
 
 /**Calcula un agregado corrido para cada elemento de un arreglo */
-export function runningTotal<TIn, TState, TOut>(items: TIn[], seed: TState, reduceState: (state: TState, item: TIn) => TState, map: (state: TState, item: TIn) => TOut) {
-    let ret: TOut[] = [];
+export function runningTotal<TIn, TState, TOut>(items: readonly TIn[], seed: TState, reduceState: (state: TState, item: TIn) => TState, map: (state: TState, item: TIn) => TOut) {
+    let ret:  TOut[] = [];
 
     let state = seed;
     for (const it of items) {
@@ -928,8 +928,8 @@ export function runningTotal<TIn, TState, TOut>(items: TIn[], seed: TState, redu
 }
 
 /**Mapea y aplana una colección. Es equivalente a  flatten(items.map(map)) */
-export function mapMany<T, TR>(items: T[], map: (x: T) => TR[]): TR[] {
-    let result: TR[] = [];
+export function mapMany<T, TR>(items: readonly T[], map: (x: T) => TR[]): readonly TR[] {
+    let result:  TR[] = [];
     for (const x of items) {
         const mapResult = map(x);
         result.push(...mapResult);
@@ -938,7 +938,7 @@ export function mapMany<T, TR>(items: T[], map: (x: T) => TR[]): TR[] {
 }
 
 /**Convierte un objeto de arreglos a un arreglo de objetos, si el objeto de arreglos esta vacio, devuelve un arreglo vacio*/
-export function zip<TData>(data: { [K in keyof TData]: TData[K][] }): TData[] {
+export function zip<TData>(data: { [K in keyof TData]: TData[K][] }): readonly TData[] {
     //Checa que todo los arreglos tengan la misma longitud
     const lengths = enumObject(data).map(x => x.value.length);
     if (!allEqual(lengths)) {
@@ -947,7 +947,7 @@ export function zip<TData>(data: { [K in keyof TData]: TData[K][] }): TData[] {
     if (lengths.length == 0) return [];
 
     const count = lengths[0];
-    const ret: TData[] = [];
+    const ret:  TData[] = [];
     for (let i = 0; i < count; i++) {
         const fila = mapObject(data, (value, key) => (value as any[])[i]);
         ret.push(fila);
@@ -1123,7 +1123,7 @@ export function indicesOf<T>(arr: ArrayLike<T>, pred: (x: T) => boolean, startIn
 /**Realiza una busqueda binaria en un arreglo, devuelve el indice del elemento mas cercano y si fue encontrado o no el elemento.
  * En caso de que no encaje devuelve el indice del ultimo elemento que es menor que el valor de busqueda. Si ningun elemento del arreglo es menor al valor de busqueda devuelve -1.
  */
-export function binarySearch<T, TKey>(arr: T[], keySelector: (x: T) => TKey, value: TKey, comparer?: (a: TKey, b: TKey) => number): { index: number, match: boolean } {
+export function binarySearch<T, TKey>(arr: readonly T[], keySelector: (x: T) => TKey, value: TKey, comparer?: (a: TKey, b: TKey) => number): { index: number, match: boolean } {
     const effComparer = comparer || defaultComparer;
     let minIndex = 0;
     let maxIndex = arr.length - 1;
@@ -1157,7 +1157,7 @@ export function binarySearch<T, TKey>(arr: T[], keySelector: (x: T) => TKey, val
  * @param right Arreglo derecho
  * @param where Condicion para filtrar el producto cartesiano
  */
-export function innerJoin<TA, TB>(left: TA[], right: TB[], where: (left: TA, right: TB) => boolean): { left: TA, right: TB }[] {
+export function innerJoin<TA, TB>(left: readonly TA[], right: readonly TB[], where: (left: TA, right: TB) => boolean): { left: TA, right: TB }[] {
     let ret: { left: TA, right: TB }[] = [];
     for (const l of left) {
         for (const r of right) {
@@ -1177,7 +1177,7 @@ export function innerJoin<TA, TB>(left: TA[], right: TB[], where: (left: TA, rig
  * @param right Arreglo derecho
  * @param where Condicion para filtrar el producto cartesiano
  */
-export function leftJoin<TA, TB>(left: TA[], right: TB[], where: (left: TA, right: TB) => boolean): { left: TA, right?: TB }[] {
+export function leftJoin<TA, TB>(left: readonly TA[], right: readonly TB[], where: (left: TA, right: TB) => boolean): { left: TA, right?: TB }[] {
     let ret: { left: TA, right?: TB }[] = [];
     for (const l of left) {
         let anyRight: boolean = false;
@@ -1290,7 +1290,7 @@ export function outOfRange(value: number, range: RangeOptional): RangeCheckResul
 }
 
 /**Barajea un arreglo */
-export function shuffle<T>(arr: T[]): T[] {
+export function shuffle<T>(arr: readonly T[]): readonly T[] {
     function shuffleInPlace(a) {
         let j, x, i;
         for (i = a.length - 1; i > 0; i--) {
@@ -1353,7 +1353,7 @@ export function orRx<T>(...arg: (T | Observable<T>)[]): T | Observable<T> {
 }
 
 /**Recorre una estructura de arbol y la devuelve en forma de arreglo */
-export function treeTraversal<T>(tree: T[], getNodes: (x: T) => T[]): T[] {
+export function treeTraversal<T>(tree: readonly T[], getNodes: (x: T) => T[]): readonly T[] {
     if (tree.length == 0) return [];
 
     const nodes = mapMany(tree, getNodes);
