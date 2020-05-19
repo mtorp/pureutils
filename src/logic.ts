@@ -175,7 +175,7 @@ export function shallowDiff<T>(a: T, b: T, comparer?: (a: T[keyof T], b: T[keyof
 }
 
 /**Convierte un ArrayLike o Iterable en un arreglo. Si el valor ya es un arreglo devuelve el valor */
-export function toArray<T>(arr: ArrayLike<T> | Iterable<T>): readonly T[] {
+export function toArray<T>(arr: ArrayLike<T> | Iterable<T>): T[] {
     if (arr instanceof Array) {
         return arr;
     }
@@ -223,7 +223,7 @@ export function toMap<T, TValue>(arr: readonly T[], key: (value: T) => string, v
 
 /**Aplana una colección de colecciones */
 export function flatten<T>(arr: readonly T[][]) {
-    const ret:  T[] = [];
+    const ret: T[] = [];
     for (const a of arr)
         ret.push(...a);
     return ret;
@@ -268,7 +268,7 @@ export function last<T>(arr: readonly T[]): T | undefined {
     return arr[arr.length - 1];
 }
 
-export type Grouping<TKey, TItem> = { key: TKey, items:  TItem[] };
+export type Grouping<TKey, TItem> = { key: TKey, items: TItem[] };
 
 /**Agrupa un arreglo por una llave. Se preserva el orden original de los elementos del arreglo, segun los elementos agrupadores que aparezcan primero, tambien
  * el orden adentro del grupo es preservado
@@ -302,8 +302,8 @@ export function enumObject<T>(obj: T): ({ key: keyof T, value: T[keyof T] })[]
  * @param obj Objeto que se va a enumerar
  * @param selector Función que obtiene cada elemento del arreglo
  */
-export function enumObject<T, TR>(obj: T, selector: (key: keyof T, value: T[keyof T]) => TR): readonly TR[]
-export function enumObject<T, TR>(obj: T, selector?: (key: keyof T, value: T[keyof T]) => TR): readonly TR[] | ({ key: keyof T, value: T[keyof T] })[] {
+export function enumObject<T, TR>(obj: T, selector: (key: keyof T, value: T[keyof T]) => TR): TR[]
+export function enumObject<T, TR>(obj: T, selector?: (key: keyof T, value: T[keyof T]) => TR): TR[] | ({ key: keyof T, value: T[keyof T] })[] {
     const defaultSelector = ((key: keyof T, value: T[keyof T]) => ({ key, value }));
     const effectiveSelector = selector || defaultSelector;
     if (selector) {
@@ -816,8 +816,8 @@ export function toObservable<T>(value: T | PromiseLike<T> | Observable<T>): Obse
 }
 
 /**Toma los primeros N elementos del arreglo */
-export function take<T>(arr: readonly T[], count: number): readonly T[] {
-    let ret:  T[] = [];
+export function take<T>(arr: readonly T[], count: number): T[] {
+    let ret: T[] = [];
     for (var i = 0; i < Math.min(arr.length, count); i++) {
         ret.push(arr[i]);
     }
@@ -825,8 +825,8 @@ export function take<T>(arr: readonly T[], count: number): readonly T[] {
 }
 
 /**Se salta los primeros N elementos del arreglo */
-export function skip<T>(arr: readonly T[], count: number): readonly T[] {
-    let ret:  T[] = [];
+export function skip<T>(arr: readonly T[], count: number): T[] {
+    let ret: T[] = [];
     for (var i = count; i < arr.length; i++) {
         ret.push(arr[i]);
     }
@@ -904,7 +904,7 @@ export function mapPreviousRx<T>(obs: Observable<T>, startWith: T): Observable<{
 /**Mapea cada elemento de un arreglo tomando en cuenta el elemento anterior */
 export function mapPrevious<T, TR>(items: readonly T[], map: (prev: T, curr: T) => TR, initial: T) {
     let prev = initial;
-    let ret:  TR[] = [];
+    let ret: TR[] = [];
     for (const it of items) {
         ret.push(map(prev, it));
         prev = it;
@@ -914,7 +914,7 @@ export function mapPrevious<T, TR>(items: readonly T[], map: (prev: T, curr: T) 
 
 /**Calcula un agregado corrido para cada elemento de un arreglo */
 export function runningTotal<TIn, TState, TOut>(items: readonly TIn[], seed: TState, reduceState: (state: TState, item: TIn) => TState, map: (state: TState, item: TIn) => TOut) {
-    let ret:  TOut[] = [];
+    let ret: TOut[] = [];
 
     let state = seed;
     for (const it of items) {
@@ -928,8 +928,8 @@ export function runningTotal<TIn, TState, TOut>(items: readonly TIn[], seed: TSt
 }
 
 /**Mapea y aplana una colección. Es equivalente a  flatten(items.map(map)) */
-export function mapMany<T, TR>(items: readonly T[], map: (x: T) => TR[]): readonly TR[] {
-    let result:  TR[] = [];
+export function mapMany<T, TR>(items: readonly T[], map: (x: T) => TR[]): TR[] {
+    let result: TR[] = [];
     for (const x of items) {
         const mapResult = map(x);
         result.push(...mapResult);
@@ -938,7 +938,7 @@ export function mapMany<T, TR>(items: readonly T[], map: (x: T) => TR[]): readon
 }
 
 /**Convierte un objeto de arreglos a un arreglo de objetos, si el objeto de arreglos esta vacio, devuelve un arreglo vacio*/
-export function zip<TData>(data: { [K in keyof TData]: TData[K][] }): readonly TData[] {
+export function zip<TData>(data: { [K in keyof TData]: TData[K][] }): TData[] {
     //Checa que todo los arreglos tengan la misma longitud
     const lengths = enumObject(data).map(x => x.value.length);
     if (!allEqual(lengths)) {
@@ -947,7 +947,7 @@ export function zip<TData>(data: { [K in keyof TData]: TData[K][] }): readonly T
     if (lengths.length == 0) return [];
 
     const count = lengths[0];
-    const ret:  TData[] = [];
+    const ret: TData[] = [];
     for (let i = 0; i < count; i++) {
         const fila = mapObject(data, (value, key) => (value as any[])[i]);
         ret.push(fila);
@@ -1290,7 +1290,7 @@ export function outOfRange(value: number, range: RangeOptional): RangeCheckResul
 }
 
 /**Barajea un arreglo */
-export function shuffle<T>(arr: readonly T[]): readonly T[] {
+export function shuffle<T>(arr: readonly T[]): T[] {
     function shuffleInPlace(a) {
         let j, x, i;
         for (i = a.length - 1; i > 0; i--) {
@@ -1353,7 +1353,7 @@ export function orRx<T>(...arg: (T | Observable<T>)[]): T | Observable<T> {
 }
 
 /**Recorre una estructura de arbol y la devuelve en forma de arreglo */
-export function treeTraversal<T>(tree: readonly T[], getNodes: (x: T) => T[]): readonly T[] {
+export function treeTraversal<T>(tree: readonly T[], getNodes: (x: T) => T[]): T[] {
     if (tree.length == 0) return [];
 
     const nodes = mapMany(tree, getNodes);
