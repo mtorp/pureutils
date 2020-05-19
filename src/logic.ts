@@ -41,7 +41,7 @@ export function allEqual<T>(arr: T[], comparer?: (a: T, b: T) => boolean): boole
 /**Devuelve true si por lo menos un elemento del arreglo encaja con el predicado, o si existe por lo menos un elemento en caso
  * de que el predicado este indefinido
  */
-export function any<T>(arr: T[], pred?: (x: T) => boolean): boolean {
+export function any<T>(arr: readonly T[], pred?: (x: T) => boolean): boolean {
     if (pred) {
         for (const x of arr) {
             if (pred(x)) return true;
@@ -53,7 +53,7 @@ export function any<T>(arr: T[], pred?: (x: T) => boolean): boolean {
 }
 
 /**Devuelve true si el valor existe en el arreglo */
-export function contains<TA, TB>(arr: TA[], value: TB, comparer?: (a: TA, b: TB) => boolean): boolean {
+export function contains<TA, TB>(arr: readonly TA[], value: TB, comparer?: (a: TA, b: TB) => boolean): boolean {
     const effectiveComparer = comparer || referenceEquals;
     return any(arr, x => effectiveComparer(x, value as any));
 }

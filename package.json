@@ -9,8 +9,8 @@
     "rxjs": "^6.5.1"
   },
   "repository": {
-    "type" : "git",
-    "url" : "https://github.com/RafaelSalguero/pureutils"
+    "type": "git",
+    "url": "https://github.com/RafaelSalguero/pureutils"
   },
   "devDependencies": {
     "@types/jest": "^21.1.4",

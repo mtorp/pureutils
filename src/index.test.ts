@@ -14,6 +14,17 @@ import * as rxOps from "rxjs/operators";
 import { pipe } from "./pipe";
 
 
+test("contains", () => {
+    expect(contains([1,2,3], 4)).toBe(false);
+    expect(contains([1,2,3], 3)).toBe(true);
+
+
+    const arr : readonly number[] = [1,2,3];
+
+    expect(contains(arr, 4)).toBe(false);
+
+})
+
 test("orRx", async () => {
     const a = 10;
     const b = rx.from(delay(100)).pipe(rxOps.map(x => 20));
