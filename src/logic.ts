@@ -1437,4 +1437,70 @@ export function obsToPromise<T>(obs: Observable<T>): PromiseLike<T> {
         return ret.promise;
     }
 }
+/**Determina si un numero es equivalente a cierta cadena formateada de otro numer0o */
+function numberEqStr(num: number, str: string) {
 
+
+
+    //Checa cuantos decimales tiene:
+    const split = str.split(",");
+    if (split.length < 1 || split.length > 2)
+        return false; //no es un numero
+
+    const intPartStr = split[0];
+    const fracPartStr = split[1] ?? "";
+
+    formatNumber(num, 0)
+}
+
+/**Quita todas las apariciones de @param patt a la izquierda de string */
+export function trimLeft(str: string, patt: string) {
+    while (str.startsWith(patt)) {
+        str = str.substr(patt.length);
+    }
+    return str;
+}
+
+function floatEqFloat(a: number, b: number, epsilon: number) {
+    return Math.abs(a - b) < epsilon;
+}
+
+function replaceAll(str: string, searchValue: string | RegExp, replaceValue: string) {
+    while(true) {
+        const next = str.replace(searchValue, replaceValue);
+        if(next == str) {
+            return next;
+        }
+        str = next;
+    }
+}
+
+/**True si un numero es igual a su representación de cadena formateada */
+export function numEqStr(num: number, str: string) {
+    str = replaceAll(str, ",", "");
+    const match = /^(\+|-)?(\d*)(?:\.(\d*))?$/.exec(str);
+    if (match == null) return false;
+
+    const minus = match[1] == "-";
+    const int = Number.parseInt(match[2]);
+    const fracStr = match[3] ?? "0";
+    const frac = Number.parseFloat(fracStr);
+
+    if (minus && num > 0)
+        return false;
+    if (!minus && num < 0)
+        return false;
+
+    num = Math.abs(num);
+
+    const nInt = Math.floor(num);
+    const nFrac = num - nInt;
+    if (int != nInt)
+        return false;
+
+    const nFracI = nFrac * Math.pow(10, fracStr.length);
+    if (!floatEqFloat(frac, nFracI, 0.0001))
+        return false;
+
+    return true;
+}
