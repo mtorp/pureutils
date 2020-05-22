@@ -1,5 +1,5 @@
 import { syncResolve } from "./promise";
-import { asyncThunkToObservable, numEqStr } from "./logic";
+import { asyncThunkToObservable, numEqStr, parseFormattedNumber } from "./logic";
 import { delay } from "rxjs/operators";
 
 
@@ -110,4 +110,13 @@ test("numEqStr", () => {
     expect(numEqStr(-1000020.1300000001, "-1,000,020.13")).toBe(true); 
     expect(numEqStr(-1000020.1300000001, "+1,000,020.13")).toBe(false); 
 
+});
+
+test("parseFormattedNumber", () => {
+    expect(parseFormattedNumber("1")).toBe(1);
+    expect(parseFormattedNumber("100.1343")).toBe(100.1343);
+    expect(parseFormattedNumber("-100.1343")).toBe(-100.1343);
+    expect(parseFormattedNumber("-1,000.1343")).toBe(-1000.1343);
+    expect(parseFormattedNumber("-1,000,020.1343")).toBe(-1000020.1343);
+    expect(parseFormattedNumber("$-1,000,020.1343")).toBe(-1000020.1343);
 });

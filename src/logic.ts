@@ -1465,7 +1465,8 @@ function floatEqFloat(a: number, b: number, epsilon: number) {
     return Math.abs(a - b) < epsilon;
 }
 
-function replaceAll(str: string, searchValue: string | RegExp, replaceValue: string) {
+/**Remplaza todas las apariciones de @see searchValue */
+export function replaceAll(str: string, searchValue: string | RegExp, replaceValue: string) {
     while(true) {
         const next = str.replace(searchValue, replaceValue);
         if(next == str) {
@@ -1473,6 +1474,15 @@ function replaceAll(str: string, searchValue: string | RegExp, replaceValue: str
         }
         str = next;
     }
+}
+
+/**Convierte a numero una cadena que puede tener prefijos (ej. $) y separador de miles */
+export function parseFormattedNumber(val: string) : number {
+    //Quita los simbolos:
+    val =  val.replace(/[^\d|\+|\-|\.](.*)/, "$1");
+    //las comas:
+    val = replaceAll(val, ",", "");
+    return Number.parseFloat(val);
 }
 
 /**True si un numero es igual a su representación de cadena formateada */
