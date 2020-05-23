@@ -323,17 +323,18 @@ export function arrayToMap<TKey, TValue>(array: { key: TKey, value: TValue }[]):
  * @param array Arreglo de valores
  * @param keySelector Función que obtiene la cadena que se tomada como el "key" de cada elemento
  */
-export function arrayToMap<T, TValue>(array: T[], keySelector: (item: T) => string, valueSelector: (item: T) => TValue): ObjMap<TValue>
-export function arrayToMap<T, TValue>(array: T[], keySelector?: (item: T) => string, valueSelector?: (item: T) => TValue): ObjMap<T[keyof T]> {
+export function arrayToMap<T, TValue>(array: T[], keySelector: (item: T, index: number) => string, valueSelector: (item: T, index: number) => TValue): ObjMap<TValue>
+export function arrayToMap<T, TValue>(array: T[], keySelector?: (item: T, index: number) => string, valueSelector?: (item: T, index: number) => TValue): ObjMap<T[keyof T]> {
     const defaultKeySelector = (item: any) => item.key;
     const defaultValueSelector = (item: any) => item.value;
 
     const effectiveKeySelector = keySelector || defaultKeySelector;
     const effectiveValueSelector = valueSelector || defaultValueSelector;
     const ret = {};
-    for (const a of array) {
-        const key = effectiveKeySelector(a);
-        const value = effectiveValueSelector(a);
+    for (let i = 0; i < array.length; i++) {
+        const a = array[i];
+        const key = effectiveKeySelector(a, i);
+        const value = effectiveValueSelector(a, i);
         ret[key] = value;
     }
     return ret;
