@@ -93,6 +93,5 @@ test("reorder rec", () => {
         expect(act > min).toBe(true);
         expect(act < max).toBe(true);
     }
-    console.log(act);
 });
 
