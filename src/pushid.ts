@@ -1,46 +1,23 @@
-import { NumericSystem } from "./bignum";
+import { NumericSystem, createBase, random, toBaseN, minValue, maxValue, midpoint, zeroPad } from "./bignum";
 
 
 /**ASCII ordered base64 */
-const base: NumericSystem = {
-    base: 64,
-    first: "-"
-};
+const system = createBase('-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz');
 
-const pushIdLen = 8 * 3;
-
-/**Convierte una numero a un string codificado ASCII-ordenable */
-function numToChars(n: number, size: number = 8) {
-    let ret = new Array<string>(size);
-    for (let i = (size - 1); i >= 0; i--) {
-        ret[i] = pushChars.charAt(n % pushChars.length);
-        // NOTE: Can't use << here because javascript will convert to int and lose the upper bits.
-        n = Math.floor(n / pushChars.length);
-    }
-    return ret.join("");
-}
-
-function ranChars(size: number) {
-    let ret = new Array<string>(size);
-    for (let i = 0; i < size; i++) {
-        ret[i] = pushChars.charAt(Math.floor(Math.random() * pushChars.length))
-    }
-    return ret.join("");
-}
+const ranLen = 8;
+const pushIdLen = 8  + 8 + ranLen;
+const minPushId = minValue(pushIdLen, system);
+const maxPushId = maxValue(pushIdLen, system);
 
 function timestampToChars() {
-    return numToChars(new Date().getTime());
+    return toBaseN(new Date().getTime(), 8, system);
 }
 
 let lastTimestamp = timestampToChars();
 let lastConsec = 0;
 
-/**Genera un pushId con la siguiente estructura:
- * timestamp(8) - consec(8) - random(8)
- * consec incrementa en 1 si se generan 2 pushId en el mismo timestamp
- * 
- * Son similares a los de firebase, pero en este se separa la parte consecutiva de la parte aleatoria con el propósito de poder hacer
- * reordenamiento en el lado del cliente
+/**Genera un id único y ordenado cronológicamente en el lado del cliente de tal manera que sea posible
+ * reordenarlos en el lado del cliente, note que debido al reordenamiento los ids son de longitud variable
  */
 export function generatePushId() {
     const timestamp = timestampToChars();
@@ -52,7 +29,7 @@ export function generatePushId() {
         lastConsec += 1;
     }
 
-    return timestamp + numToChars(lastConsec, 8) + ranChars(8);
+    return timestamp + toBaseN(lastConsec, 8, system) + random(ranLen, system);
 }
 
 const max = (a: string, b: string) => a > b ? a : b;
@@ -69,51 +46,50 @@ function avg(a: string, b: string) {
 
     return String.fromCharCode((a.charCodeAt(0) + b.charCodeAt(0)) / 2);
 }
-/**Modifica @param value de tal manera que quede ordenado entre @param min y @param max */
-export function reoderPushId(value: string, minValue: string | null, maxValue: string | null) {
+/**Obtiene un pushId entre @param minValue y @param maxValue con la mayor cantidad de digitos aleatorios posible, esto permite
+ * reordenar ids en el lado del cliente
+*/
+export function reoderPushId(minValue: string | null, maxValue: string | null) {
     minValue = minValue ?? minPushId;
     maxValue = maxValue ?? maxPushId;
+    
+    minValue = zeroPad(minValue, Math.max(minValue.length, maxValue.length), system);
+    maxValue = zeroPad(maxValue, Math.max(minValue.length, maxValue.length), system);
+    
+    const mid = midpoint(minValue, maxValue, system);
 
-    if (value.length != minValue.length || value.length != maxValue.length)
-        throw new Error("lens not equal");
+    //La parte que no sea necesaria para el orden la volvemos a poner aleatoria, para que no haya colisiones si 
+    //2 clientes reordenan a la misma posición:
+    let i = 0;
+    let gtMin = false;
+    let ltMax = false;
+    for (; i < mid.length; i++) {
+        const curr = mid[i];
+        const min = minValue[i];
+        const max = maxValue[i];
 
-    let ret = value.split("");
-    for (let i = 0; i < value.length; i++) {
-        const minChar = min(minValue[i], maxValue[i]);
-        const maxChar = max(minValue[i], maxValue[i]);
-        const valChar = ret[i];
-        //Distancia entre esta posición min y max
-        const maxMinDelta = delta(maxChar, minChar);
-        const valMinDelta = delta(valChar, minChar);
-        const valMaxDelta = delta(valChar, maxChar);
-        const minNear = Math.abs(valMinDelta) < Math.abs(valMaxDelta);
-        //Debido a que max > min, nunca puede ser esta condición:
-        if (maxMinDelta < 0)
-            throw new Error("unreachable");
-
-        if (maxMinDelta == 0) {
-            //Esta posición no la podemos sumar o restar ya que es la misma entre los 2
-            ret[i] = minChar;
-            continue;
-        }
-        if (maxMinDelta == 1) {
-            //Si hay una distancia de 1, no existe ningun valor intermedio entre estas 2 posiciones,
-            //asi que escojemos el mas cercano al value:
-            ret[i] = minNear ? minChar : maxChar;
-            continue;
+        if (curr > min) {
+            gtMin = true;
         }
 
-        //En este punto existe una distancia mayor a 2 entre min y max
-        const valBetween = valMinDelta > 0 && valMaxDelta < 0; //Si el valor esta entre el rango exclusivo (min, max)
-        if (valBetween) {
-            //El valor ya esta en el rango, se devuelve tal cual
-            return ret.join("");
+        if (curr < max) {
+            ltMax = true;
         }
 
-        //Note que debido a la distancia >= 2 entre min y max, al sacar el promedio es seguro obtener un valor dentro del rango exclusivo
-        ret[i] = avg(minChar, maxChar);
-        return ret.join("");
+        if (gtMin && ltMax) {
+            break;
+        }
     }
 
-    throw new Error(`No hay espacio para reordenar entre ${minValue} y ${maxValue}`);
+    if (!gtMin || !ltMax) {
+        //No hay espacio para reordenar, se tiene que aumentar la longitud:
+        return minValue + random(ranLen, system);
+    }
+
+    const orderCount = i + 1;
+     //Mantiene un minimo de caracteres aleatorios para evitar colisiones entre clientes reordenando a la misma posición
+    const randCount = Math.max(mid.length - orderCount, ranLen);
+
+    const ret = mid.substr(0, orderCount) + random(randCount, system);
+    return ret;
 }

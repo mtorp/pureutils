@@ -5,12 +5,12 @@ const dec = createNumericSystem(digits.substr(0, 10));
 const bin = createNumericSystem(digits.substr(0, 2));
 const hex = createNumericSystem(digits.substr(0, 16));
 
- 
+
 
 test("add", () => {
     const ret = add("973", "01428", dec);
 
-    expect(ret).toEqual("02401");
+    expect(ret).toEqual("002401");
 });
 
 test("half", () => {
@@ -29,8 +29,15 @@ test("midpoint", () => {
 test("toBase", () => {
     const num = 3142;
 
-    expect(toBase(num, 12, bin )).toEqual("110001000110");
-    expect(toBase(num, 4, hex )).toEqual("0C46");
-    expect(toBase(num, 4, dec )).toEqual("3142");
+    expect(toBase(num, 12, bin)).toEqual("110001000110");
+    expect(toBase(num, 4, hex)).toEqual("0C46");
+    expect(toBase(num, 4, dec)).toEqual("3142");
+});
+
+
+
+test("mid2", () => {
+    const act = midpoint("1111", "9999", dec);
+    expect(act).toBe("5555");
 });
 

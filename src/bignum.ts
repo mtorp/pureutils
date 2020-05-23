@@ -1,4 +1,4 @@
-import { arrayToMap } from "./logic";
+import { arrayToMap, nullOrEmpty } from "./logic";
 
 
 export interface NumericSystem {
@@ -52,9 +52,9 @@ export function halfAdder(a: string, b: string, carry: boolean, system: NumericS
     }
 }
 
-/**Agrega dos numeros baseN */
+/**Agrega dos numeros baseN, note que devuelve un numero con un digito de mas para que quepa toda la suma */
 export function add(a: string, b: string, system: NumericSystem) {
-    var ret = new Array<string>((a.length > b.length ? a.length : b.length));
+    var ret = new Array<string>((a.length > b.length ? a.length : b.length) + 1);
 
     let carry = false;
     for (let i = ret.length - 1; i >= 0; i--) {
@@ -95,7 +95,7 @@ export function half(a: string, system: NumericSystem) {
 }
 
 export function midpoint(a: string, b: string, system: NumericSystem) {
-    return half(add(a, b, system), system);
+    return half(add(a, b, system), system).substr(1); //Le quita el digito extra que agrego el add
 }
 
 export function toBaseN(n: number, size: number, system: NumericSystem) {
@@ -106,4 +106,24 @@ export function toBaseN(n: number, size: number, system: NumericSystem) {
         n = Math.floor(n / base(system));
     }
     return ret.join("");
+}
+
+export function random(size: number, system: NumericSystem) {
+    let ret = new Array<string>(size);
+    for (let i = 0; i < size; i++) {
+        ret[i] = toChar(Math.floor(Math.random() * base(system)), system);
+    }
+    return ret.join("");
+}
+
+export function minValue(size: number, system: NumericSystem) {
+    return system.charMap[0].repeat(size);
+}
+
+export function maxValue(size: number, system: NumericSystem) {
+    return system.charMap[system.charMap.length - 1].repeat(size);
+}
+
+export function zeroPad(num: string, size: number, system: NumericSystem) {
+    return zero(system).repeat(size - num.length ) + num;
 }
