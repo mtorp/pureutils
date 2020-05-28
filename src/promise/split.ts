@@ -1,4 +1,5 @@
-import { isPromiseLike } from "./logic";
+import { isPromiseLike } from "./is";
+
 
 interface ThenArg<T> {
     onfulfilled: ((value: T) => any | PromiseLike<any>) | undefined | null,
