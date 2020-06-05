@@ -1,6 +1,5 @@
 import { isPromiseLike } from "./is";
 
-
 interface ThenArg<T> {
     onfulfilled: ((value: T) => any | PromiseLike<any>) | undefined | null,
     onrejected: ((reason: any) => any | PromiseLike<any>) | undefined | null

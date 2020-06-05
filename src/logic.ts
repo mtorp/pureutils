@@ -1511,3 +1511,8 @@ export function numEqStr(num: number, str: string) {
 
     return true;
 }
+
+/**Interpolación lineal entre 2 numeros */
+export function lerp(a: number, b: number, x: number) : number {
+    return a + (b - a) * x;
+}
