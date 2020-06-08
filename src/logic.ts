@@ -512,6 +512,15 @@ export function union<T>(...arr: readonly T[][]) {
 }
 
 /**
+ * Devuelve todos los elementos en @param a que no estén en @param b, y 
+ * todos los elementos en @param b que no estén en @param a. 
+ * Es equivalente a la operación XOR / diferencia simétrica de conjuntos
+ */
+export function xor<T>(a: T[], b: T[]) {
+    return union(exclude(a, b), exclude(b, a));
+}
+
+/**
  * Devuelve todos los elementos en A que su llave no se encuentre en B las llaves de B y todos los elementos en B, en ese orden
  * esto equivale a unir los conjuntos A+B, pero dandole prioridad a los elementos en B si es que esa llave se encuentra en los dos conjuntos.
  * Esto se puede ver como una operacion de INSERT OR UPDATE en A

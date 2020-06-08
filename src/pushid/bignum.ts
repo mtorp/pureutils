@@ -1,4 +1,4 @@
-import { arrayToMap, nullOrEmpty } from "./logic";
+import { arrayToMap } from "../logic";
 
 
 export interface NumericSystem {
@@ -34,6 +34,10 @@ function zero(system: NumericSystem) {
     return system.charMap[0];
 }
 
+function one(system: NumericSystem) {
+    return system.charMap[1];
+}
+
 export function halfAdder(a: string, b: string, carry: boolean, system: NumericSystem): { ret: string, carry: boolean } {
     if (a.length != 1 || b.length != 1)
         throw new Error();
@@ -52,9 +56,11 @@ export function halfAdder(a: string, b: string, carry: boolean, system: NumericS
     }
 }
 
-/**Agrega dos numeros baseN, note que devuelve un numero con un digito de mas para que quepa toda la suma */
-export function add(a: string, b: string, system: NumericSystem) {
-    var ret = new Array<string>((a.length > b.length ? a.length : b.length) + 1);
+/**Agrega dos numeros baseN, note que devuelve un numero con un digito de mas para que quepa toda la suma
+ * @param small No agregar un digito extra al resultado, puede ser que el resultado no quepa
+ */
+export function add(a: string, b: string, system: NumericSystem, small: boolean = false) {
+    var ret = new Array<string>((a.length > b.length ? a.length : b.length) + (small ? 0 : 1));
 
     let carry = false;
     for (let i = ret.length - 1; i >= 0; i--) {
@@ -69,6 +75,11 @@ export function add(a: string, b: string, system: NumericSystem) {
         carry = half.carry;
     }
     return ret.join("");
+}
+
+/**Incrementa en 1, note que no cambia el tamaño del numero */
+export function increment(a: string ,system: NumericSystem) {
+    return add(a, one(system), system, true);
 }
 
 
@@ -126,4 +137,8 @@ export function maxValue(size: number, system: NumericSystem) {
 
 export function zeroPad(num: string, size: number, system: NumericSystem) {
     return zero(system).repeat(size - num.length ) + num;
+}
+
+export function maxDigit(system: NumericSystem) {
+    return system.charMap[system.charMap.length - 1];
 }

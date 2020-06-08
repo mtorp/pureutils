@@ -1,4 +1,4 @@
-import { NumericSystem, createBase, random, toBaseN, minValue, maxValue, midpoint, zeroPad } from "./bignum";
+import { NumericSystem, createBase, random, toBaseN, minValue, maxValue, midpoint, zeroPad } from "./pushid/bignum";
 
 
 /**ASCII ordered base64 */
@@ -7,7 +7,6 @@ const system = createBase('-0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmno
 const ranLen = 8;
 const pushIdLen = 8  + 8 + ranLen;
 const minPushId = minValue(pushIdLen, system);
-const maxPushId = maxValue(pushIdLen, system);
 
 function timestampToChars() {
     return toBaseN(new Date().getTime(), 8, system);
@@ -51,7 +50,7 @@ function avg(a: string, b: string) {
 */
 export function reoderPushId(minValue: string | null, maxValue: string | null) {
     minValue = minValue ?? minPushId;
-    maxValue = maxValue ?? maxPushId;
+    maxValue = maxValue ?? generatePushId();
     
     minValue = zeroPad(minValue, Math.max(minValue.length, maxValue.length), system);
     maxValue = zeroPad(maxValue, Math.max(minValue.length, maxValue.length), system);

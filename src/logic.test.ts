@@ -1,5 +1,5 @@
 import { syncResolve } from "./promise";
-import { asyncThunkToObservable, numEqStr, parseFormattedNumber } from "./logic";
+import { asyncThunkToObservable, numEqStr, parseFormattedNumber, xor } from "./logic";
 import { delay } from "rxjs/operators";
 
 
@@ -64,10 +64,10 @@ test("asyncThunkToObs async", async () => {
     expect(a).toBe(0);
     expect(b).toBe(0);
 
-    const c = await  obs.toPromise();
-    
+    const c = await obs.toPromise();
+
     //Ya se resolvieron todos los valores:
-    
+
     expect(a).toBe(10);
     expect(b).toBe(10);
     expect(c).toBe(10);
@@ -95,20 +95,20 @@ test("numEqStr", () => {
     expect(numEqStr(120.1200001, "120.12")).toBe(true); //debido al epsilon se consideran iguales
     expect(numEqStr(120.1200001, "+120.12")).toBe(true); //debido al epsilon se consideran iguales
     expect(numEqStr(120.1200001, "120.1200000")).toBe(false); //como la cadena es mas larga la comparación es de mas precisión
-    expect(numEqStr(120.1200001, "120.1200001")).toBe(true); 
-    expect(numEqStr(-120.1200001, "120.1200001")).toBe(false); 
-    expect(numEqStr(120.1200001, "120.13")).toBe(false); 
+    expect(numEqStr(120.1200001, "120.1200001")).toBe(true);
+    expect(numEqStr(-120.1200001, "120.1200001")).toBe(false);
+    expect(numEqStr(120.1200001, "120.13")).toBe(false);
 
-    expect(numEqStr(1000020.13, "1000020.13")).toBe(true); 
-    expect(numEqStr(1000020.13, "1,000,020.13")).toBe(true); 
-    expect(numEqStr(1000020.1300000001, "1,000,020.13")).toBe(true); 
-    expect(numEqStr(1000020.1300000001, "1,000,021.13")).toBe(false); 
+    expect(numEqStr(1000020.13, "1000020.13")).toBe(true);
+    expect(numEqStr(1000020.13, "1,000,020.13")).toBe(true);
+    expect(numEqStr(1000020.1300000001, "1,000,020.13")).toBe(true);
+    expect(numEqStr(1000020.1300000001, "1,000,021.13")).toBe(false);
 
 
-    expect(numEqStr(1000020.1300000001, "+1,000,020.13")).toBe(true); 
-    expect(numEqStr(1000020.1300000001, "-1,000,020.13")).toBe(false); 
-    expect(numEqStr(-1000020.1300000001, "-1,000,020.13")).toBe(true); 
-    expect(numEqStr(-1000020.1300000001, "+1,000,020.13")).toBe(false); 
+    expect(numEqStr(1000020.1300000001, "+1,000,020.13")).toBe(true);
+    expect(numEqStr(1000020.1300000001, "-1,000,020.13")).toBe(false);
+    expect(numEqStr(-1000020.1300000001, "-1,000,020.13")).toBe(true);
+    expect(numEqStr(-1000020.1300000001, "+1,000,020.13")).toBe(false);
 
 });
 
@@ -119,4 +119,14 @@ test("parseFormattedNumber", () => {
     expect(parseFormattedNumber("-1,000.1343")).toBe(-1000.1343);
     expect(parseFormattedNumber("-1,000,020.1343")).toBe(-1000020.1343);
     expect(parseFormattedNumber("$-1,000,020.1343")).toBe(-1000020.1343);
+});
+
+test("xor test", () => {
+    expect(xor([1, 2, 3], [2, 3, 4, 5])).toEqual([1, 4, 5]);
+    expect(xor([], [2, 3, 4, 5])).toEqual([2, 3, 4, 5]);
+    expect(xor([3, 2, 5], [2])).toEqual([3, 5]);
+    expect(xor([3, 2, 5], [])).toEqual([3, 2, 5]);
+    expect(xor([3, 2, 5], [5, 2, 3])).toEqual([]);
+    expect(xor([3, 2, 5], [5, 2, 1, 3])).toEqual([1]);
+    expect(xor([3, 2, 5, 0], [5, 2, 1, 3])).toEqual([0, 1]);
 });
