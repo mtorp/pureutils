@@ -3,7 +3,7 @@ import { map as mapRx, concatAll as concatAllRx, scan as scanRx, startWith as st
 
 import { interopRequireDefault } from "./interop";
 import { defer } from "rxjs";
-import { syncResolve, splitPromise } from "./promise";
+import { syncResolve, splitPromise, isPromiseLike } from "./promise";
 import { pipe } from "./pipe";
 
 /**Devuelve true si todos los elementos de un arreglo encajan con el predicado
@@ -886,10 +886,6 @@ export function duplicatesOnAdd<T, TKey>(arr: readonly T[], newValue: T, keySele
     return contains(arr, newValue, comparer);
 }
 
-/**Devuelve true si x tiene el metodo then, lo que indica que es una promesa */
-export function isPromiseLike(x: any): x is PromiseLike<any> {
-    return x != null && (typeof (x as PromiseLike<any>).then) == "function";
-}
 
 /**Devuelve true si x es un observable */
 export function isObservable(x: any): x is Observable<any> {
@@ -1523,4 +1519,9 @@ export function numEqStr(num: number, str: string) {
         return false;
 
     return true;
+}
+
+/**Interpolación lineal entre 2 numeros */
+export function lerp(a: number, b: number, x: number) : number {
+    return a + (b - a) * x;
 }
