@@ -1,4 +1,4 @@
-import { add, half, midpoint, toBaseN as toBase, createBase as createNumericSystem } from "./bignum";
+import { add, half, midpoint, toBaseN as toBase, createBase as createNumericSystem } from "./pushid/bignum";
 
 const digits = "0123456789ABCDEF"
 const dec = createNumericSystem(digits.substr(0, 10));
