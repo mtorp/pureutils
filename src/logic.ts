@@ -990,13 +990,23 @@ export function formatCurrency(number: number | null | undefined | string) {
  * @param decimals Cantidad de zeros a la derecha en la parte desimal
  * @param thousep Usar separador de miles. Por default es false
  * @param prefix Prefijo del numero, ejemplo $ o %. Por default es ""
+ * @param sign True para mostrar signo + si el valor > 0, si no, sólo se muestra si valor < 0
  */
-export function formatNumber(number: number | null | undefined | string, integer: number = 0, decimals: number = 0, thousep: boolean = false, prefix: string = "") {
+export function formatNumber(
+    number: number | null | undefined | string, 
+    integer: number = 0, 
+    decimals: number = 0, 
+    thousep: boolean = false, 
+    prefix: string = "",
+    sign: boolean= false,
+    ) {
     if (number == null) return "";
     number = Number(number);
 
     const zeroes = "00000000000000000000";
-    const sign = number < 0 ? "-" : "";
+    const numSign = 
+        number < 0 ? "-" :
+        (number > 0 && sign) ? "+" : "";
     const x = Math.abs(number);
     const int = Math.trunc(x);
     const frac = x - int;
@@ -1008,14 +1018,14 @@ export function formatNumber(number: number | null | undefined | string, integer
     const intPart = thousep ? aplicarSepMiles(intPartSinSep) : intPartSinSep;
 
     if (decimals == 0)
-        return sign + prefix + intPart;
+        return numSign + prefix + intPart;
 
     const fracText = "" + Math.trunc(Math.round(frac * 1000 * Math.pow(10, decimals)) / 1000);
     const leftFracZeroes = zeroes.substr(0, decimals - fracText.length);
     const fracZeroStr = leftFracZeroes + fracText + zeroes;
     const fracPart = fracZeroStr.substring(0, decimals);
 
-    return sign + prefix + intPart + "." + fracPart;
+    return numSign + prefix + intPart + "." + fracPart;
 }
 
 /**Devuelve true si la cadena es null, undefined o string */
@@ -1525,3 +1535,4 @@ export function numEqStr(num: number, str: string) {
 export function lerp(a: number, b: number, x: number) : number {
     return a + (b - a) * x;
 }
+
