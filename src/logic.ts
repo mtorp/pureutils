@@ -1536,3 +1536,7 @@ export function lerp(a: number, b: number, x: number) : number {
     return a + (b - a) * x;
 }
 
+/**Pega todos los classNames, separandolos con espacios, ignorando los null / undefined */
+export function mixClasses(...classNames: (string | null | undefined)[]) : string {
+    return classNames.filter(x => x != null).join(" ");
+}
