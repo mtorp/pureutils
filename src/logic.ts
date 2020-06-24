@@ -501,7 +501,7 @@ export function awaitObj<T, TKeys extends keyof T>(obj: PromiseLike<T>, include:
  * @param comparer Comparador que determina si 2 elementos son iguales. Se usa el operador ===
 */
 export function unique<T>(arr: readonly T[], comparer?: (a: T, b: T) => boolean) {
-    return groupBy<T, T>(arr, x => x, referenceEquals).map(x => x.key)
+    return groupBy<T, T>(arr, x => x, comparer ?? referenceEquals).map(x => x.key)
 }
 
 /**Devuelve todos los elementos de todos los arreglos que no esten repetidos.

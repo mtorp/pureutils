@@ -443,6 +443,14 @@ test("unique", () => {
     expect(shallowEquals(expected, result)).toBe(true);
 });
 
+test("unique 2", () => {
+    const input = ["A", "a", "b", "B", "B"]
+    const expected = ["A", "b"]
+
+    const result = unique(input, (a,b) => a.toLowerCase() === b.toLowerCase());
+    expect(result).toEqual(expected);
+});
+
 test("filterIf", () => {
     const input = [1, 2, 3, 4, 5];
     const expected = [3, 4, 5];
