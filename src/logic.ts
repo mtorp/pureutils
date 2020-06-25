@@ -943,16 +943,30 @@ export function mapMany<T, TR>(items: readonly T[], map: (x: T) => TR[]): TR[] {
     return result;
 }
 
-/**Convierte un objeto de arreglos a un arreglo de objetos, si el objeto de arreglos esta vacio, devuelve un arreglo vacio*/
-export function zip<TData>(data: { [K in keyof TData]: TData[K][] }): TData[] {
+
+/**Convierte un objeto de arreglos a un arreglo de objetos, si el objeto de arreglos esta vacio, devuelve un arreglo vacio
+ * @param length 
+ *  undefined = Todos los arreglos deben de tener la misma longitud
+ *  min = La longitud de retorno será la minima
+ *  max = La longitud de retorno será la máxima, pueden haber elementos indefinidos
+*/
+export function zip<TData>(data: { [K in keyof TData]: TData[K][] }, length?: "min"  ): TData[]
+export function zip<TData>(data: { [K in keyof TData]: TData[K][] }, length: "max" ): Partial<TData>[]
+export function zip<TData>(data: { [K in keyof TData]: TData[K][] }, length?: "min" | "max"): Partial<TData>[] {
     //Checa que todo los arreglos tengan la misma longitud
     const lengths = enumObject(data).map(x => x.value.length);
-    if (!allEqual(lengths)) {
+
+    if (length == null && !allEqual(lengths)) {
         throw new Error("Todos los arreglos deben de tener la misma longitud");
     }
+
     if (lengths.length == 0) return [];
 
-    const count = lengths[0];
+    const count =
+        length == null ? lengths[0] :
+            length == "min" ? Math.min(...lengths) :
+                Math.max(...lengths);
+
     const ret: TData[] = [];
     for (let i = 0; i < count; i++) {
         const fila = mapObject(data, (value, key) => (value as any[])[i]);
@@ -993,20 +1007,20 @@ export function formatCurrency(number: number | null | undefined | string) {
  * @param sign True para mostrar signo + si el valor > 0, si no, sólo se muestra si valor < 0
  */
 export function formatNumber(
-    number: number | null | undefined | string, 
-    integer: number = 0, 
-    decimals: number = 0, 
-    thousep: boolean = false, 
+    number: number | null | undefined | string,
+    integer: number = 0,
+    decimals: number = 0,
+    thousep: boolean = false,
     prefix: string = "",
-    sign: boolean= false,
-    ) {
+    sign: boolean = false,
+) {
     if (number == null) return "";
     number = Number(number);
 
     const zeroes = "00000000000000000000";
-    const numSign = 
+    const numSign =
         number < 0 ? "-" :
-        (number > 0 && sign) ? "+" : "";
+            (number > 0 && sign) ? "+" : "";
     const x = Math.abs(number);
     const int = Math.trunc(x);
     const frac = x - int;
@@ -1483,9 +1497,9 @@ function floatEqFloat(a: number, b: number, epsilon: number) {
 
 /**Remplaza todas las apariciones de @see searchValue */
 export function replaceAll(str: string, searchValue: string | RegExp, replaceValue: string) {
-    while(true) {
+    while (true) {
         const next = str.replace(searchValue, replaceValue);
-        if(next == str) {
+        if (next == str) {
             return next;
         }
         str = next;
@@ -1493,9 +1507,9 @@ export function replaceAll(str: string, searchValue: string | RegExp, replaceVal
 }
 
 /**Convierte a numero una cadena que puede tener prefijos (ej. $) y separador de miles */
-export function parseFormattedNumber(val: string) : number {
+export function parseFormattedNumber(val: string): number {
     //Quita los simbolos:
-    val =  val.replace(/[^\d|\+|\-|\.](.*)/, "$1");
+    val = val.replace(/[^\d|\+|\-|\.](.*)/, "$1");
     //las comas:
     val = replaceAll(val, ",", "");
     return Number.parseFloat(val);
@@ -1532,11 +1546,11 @@ export function numEqStr(num: number, str: string) {
 }
 
 /**Interpolación lineal entre 2 numeros */
-export function lerp(a: number, b: number, x: number) : number {
+export function lerp(a: number, b: number, x: number): number {
     return a + (b - a) * x;
 }
 
 /**Pega todos los classNames, separandolos con espacios, ignorando los null / undefined */
-export function mixClasses(...classNames: (string | null | undefined)[]) : string {
+export function mixClasses(...classNames: (string | null | undefined)[]): string {
     return classNames.filter(x => x != null).join(" ");
 }

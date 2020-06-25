@@ -1035,6 +1035,31 @@ test("zip", () => {
     ])
 });
 
+test("zip min", () => {
+    const x = [1,2,3,4];
+    const y = ["a", "b", "c"];
+
+    const ret = zip({x, y}, "min");
+    expect(ret).toEqual([
+        {x: 1, y: "a"},
+        {x: 2, y: "b"},
+        {x: 3, y: "c"},
+    ])
+});
+
+test("zip max", () => {
+    const x = [1,2,3,4];
+    const y = ["a", "b", "c"];
+
+    const ret = zip({x, y}, "max");
+    expect(ret).toEqual([
+        {x: 1, y: "a"},
+        {x: 2, y: "b"},
+        {x: 3, y: "c"},
+        {x: 4}
+    ])
+});
+
 test("binary search", () => {
     const arr = [10, 20, 30, 40, 50];
     expect(binarySearch(arr, x => x, 10)).toEqual({ index: 0, match: true });
