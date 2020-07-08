@@ -1,5 +1,5 @@
 import { syncResolve } from "./promise";
-import { asyncThunkToObservable, numEqStr, parseFormattedNumber, xor } from "./logic";
+import { asyncThunkToObservable, numEqStr, parseFormattedNumber, xor, groupByCount } from "./logic";
 import { delay } from "rxjs/operators";
 
 
@@ -130,3 +130,19 @@ test("xor test", () => {
     expect(xor([3, 2, 5], [5, 2, 1, 3])).toEqual([1]);
     expect(xor([3, 2, 5, 0], [5, 2, 1, 3])).toEqual([0, 1]);
 });
+
+test("group by count", () => {
+    expect(groupByCount([], 0)).toEqual([]);
+    expect(groupByCount([], 3)).toEqual([]);
+    expect(groupByCount([1], 3)).toEqual([[1]]);
+    expect(groupByCount([1, 2, 3], 3)).toEqual([[1, 2, 3]]);
+    expect(groupByCount([1, 2, 3, 4, 5, 6], 3)).toEqual([[1, 2, 3], [4, 5, 6]]);
+    expect(groupByCount([1, 2, 3, 4, 5, 6, 7], 3)).toEqual([[1, 2, 3], [4, 5, 6], [7]]);
+    expect(groupByCount([1, 2, 3, 4, 5, 6, 7, 8, 9], 3)).toEqual([[1, 2, 3], [4, 5, 6], [7, 8, 9]]);
+
+    expect(groupByCount([1, 2, 3], 1)).toEqual([[1], [2], [3]]);
+    expect(() => {
+        groupByCount([1, 2, 3], 0);
+    }).toThrow();
+
+})

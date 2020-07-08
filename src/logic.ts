@@ -943,6 +943,27 @@ export function mapMany<T, TR>(items: readonly T[], map: (x: T) => TR[]): TR[] {
     return result;
 }
 
+/**Divide @param arr en bloques de longitud máxima @param count,
+ * si @param arr está vacío, devuelve un arreglo vacío
+ */
+export function groupByCount<T>(arr: T[], count: number): T[][] {
+    if (arr.length == 0) return [];
+    if (count == 0)
+        throw new Error("count debe de ser mayor que 0");
+
+    let ret: T[][] = [[]];
+    for (let i = 0; i < arr.length; i++) {
+        let curr = ret[ret.length - 1];
+        if (curr.length == count) {
+            curr = [];
+            ret.push(curr);
+        }
+        curr.push(arr[i]);
+    }
+
+    return ret;
+}
+
 
 /**Convierte un objeto de arreglos a un arreglo de objetos, si el objeto de arreglos esta vacio, devuelve un arreglo vacio
  * @param length 
@@ -950,8 +971,8 @@ export function mapMany<T, TR>(items: readonly T[], map: (x: T) => TR[]): TR[] {
  *  min = La longitud de retorno será la minima
  *  max = La longitud de retorno será la máxima, pueden haber elementos indefinidos
 */
-export function zip<TData>(data: { [K in keyof TData]: TData[K][] }, length?: "min"  ): TData[]
-export function zip<TData>(data: { [K in keyof TData]: TData[K][] }, length: "max" ): Partial<TData>[]
+export function zip<TData>(data: { [K in keyof TData]: TData[K][] }, length?: "min"): TData[]
+export function zip<TData>(data: { [K in keyof TData]: TData[K][] }, length: "max"): Partial<TData>[]
 export function zip<TData>(data: { [K in keyof TData]: TData[K][] }, length?: "min" | "max"): Partial<TData>[] {
     //Checa que todo los arreglos tengan la misma longitud
     const lengths = enumObject(data).map(x => x.value.length);
