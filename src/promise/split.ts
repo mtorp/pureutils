@@ -23,7 +23,7 @@ export class SyncPromise<T> implements PromiseLike<T>  {
     }
 
     resolve: (value?: T | PromiseLike<T>) => void = value => {
-        if(isPromiseLike(value)){
+        if (isPromiseLike(value)) {
             value.then(this.resolve, this.reject);
             return;
         }
@@ -137,3 +137,6 @@ export function syncFail(reason: any): PromiseLike<any>
 export function syncFail(reason: any): PromiseLike<any> {
     return new SyncPromise<any>((resolve, reject) => reject(reason));
 }
+
+/**Una promesa que nunca se resuleve */
+export const never = new Promise<never>(() => { });
