@@ -1536,7 +1536,9 @@ export function parseFormattedNumber(val: string): number {
     return Number.parseFloat(val);
 }
 
-/**True si un numero es igual a su representación de cadena formateada */
+/**True si un numero es igual a su representación de cadena formateada, la comparación de decimales se hace
+ * basandose en la cantidad de decimales de la cadena
+ */
 export function numEqStr(num: number, str: string) {
     str = replaceAll(str, ",", "");
     const match = /^(\+|-)?(\d*)(?:\.(\d*))?$/.exec(str);
@@ -1559,7 +1561,7 @@ export function numEqStr(num: number, str: string) {
     if (int != nInt)
         return false;
 
-    const nFracI = nFrac * Math.pow(10, fracStr.length);
+    const nFracI = Math.round (nFrac * Math.pow(10, fracStr.length));
     if (!floatEqFloat(frac, nFracI, 0.0001))
         return false;
 

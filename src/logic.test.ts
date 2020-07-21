@@ -91,7 +91,7 @@ test("numEqStr", () => {
     expect(numEqStr(120.1, "120.12")).toBe(false);
     expect(numEqStr(-120.1, "-120.1")).toBe(true);
 
-    expect(numEqStr(120.1201, "120.12")).toBe(false);
+    expect(numEqStr(120.1201, "120.12")).toBe(true);
     expect(numEqStr(120.1200001, "120.12")).toBe(true); //debido al epsilon se consideran iguales
     expect(numEqStr(120.1200001, "+120.12")).toBe(true); //debido al epsilon se consideran iguales
     expect(numEqStr(120.1200001, "120.1200000")).toBe(false); //como la cadena es mas larga la comparación es de mas precisión
@@ -109,6 +109,13 @@ test("numEqStr", () => {
     expect(numEqStr(1000020.1300000001, "-1,000,020.13")).toBe(false);
     expect(numEqStr(-1000020.1300000001, "-1,000,020.13")).toBe(true);
     expect(numEqStr(-1000020.1300000001, "+1,000,020.13")).toBe(false);
+    
+    expect(numEqStr(0.001999, "0.002")).toBe(true);
+    expect(numEqStr(0.0004999, "0.00")).toBe(true);
+    expect(numEqStr(0.0004999, "0.000")).toBe(true);
+    expect(numEqStr(0.0004999, "0.0000")).toBe(false);
+    expect(numEqStr(0.0004999, "0.0004")).toBe(false);
+    expect(numEqStr(0.0004999, "0.0005")).toBe(true);
 
 });
 
