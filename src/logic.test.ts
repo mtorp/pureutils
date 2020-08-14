@@ -1,5 +1,5 @@
 import { syncResolve } from "./promise";
-import { asyncThunkToObservable, numEqStr, parseFormattedNumber, xor, groupByCount } from "./logic";
+import { asyncThunkToObservable, numEqStr, parseFormattedNumber, xor, groupByCount, leftJoin, formatNumber } from "./logic";
 import { delay } from "rxjs/operators";
 
 
@@ -33,6 +33,21 @@ test("asyncThunkToObs sync", async () => {
     expect(count).toBe(1);
 
 });
+
+test("formatNum", () => {
+    expect(formatNumber(10.1234, undefined, 2)).toBe("10.12");
+    expect(formatNumber(10.1299, undefined, 2)).toBe("10.13"); 
+    expect(formatNumber(10.12999, undefined, 2)).toBe("10.13"); 
+    expect(formatNumber(10.129999, undefined, 2)).toBe("10.13"); 
+
+    expect(formatNumber(10.4, undefined)).toBe("10"); 
+    expect(formatNumber(10.5, undefined)).toBe("11"); 
+
+    expect(formatNumber(10.99, undefined, 2)).toBe("10.99"); 
+    expect(formatNumber(10.999999, undefined, 2)).toBe("11.00"); 
+
+    
+})
 
 test("asyncThunkToObs async", async () => {
     let count = 0;
@@ -109,13 +124,24 @@ test("numEqStr", () => {
     expect(numEqStr(1000020.1300000001, "-1,000,020.13")).toBe(false);
     expect(numEqStr(-1000020.1300000001, "-1,000,020.13")).toBe(true);
     expect(numEqStr(-1000020.1300000001, "+1,000,020.13")).toBe(false);
-    
+
     expect(numEqStr(0.001999, "0.002")).toBe(true);
     expect(numEqStr(0.0004999, "0.00")).toBe(true);
     expect(numEqStr(0.0004999, "0.000")).toBe(true);
     expect(numEqStr(0.0004999, "0.0000")).toBe(false);
     expect(numEqStr(0.0004999, "0.0004")).toBe(false);
     expect(numEqStr(0.0004999, "0.0005")).toBe(true);
+
+
+    expect(numEqStr(10.1234, "10.12")).toBe(true);
+
+    expect(numEqStr(10.1299, "10.13")).toBe(true); 
+    expect(numEqStr(10.12999,"10.13")).toBe(true); 
+    expect(numEqStr(10.129999, "10.13")).toBe(true); 
+    expect(numEqStr(10.4,"10")).toBe(true); 
+    expect(numEqStr(10.5, "11")).toBe(true); 
+    expect(numEqStr(10.99, "10.99")).toBe(true); 
+    expect(numEqStr(10.999999, "11.00")).toBe(true); 
 
 });
 
@@ -152,4 +178,4 @@ test("group by count", () => {
         groupByCount([1, 2, 3], 0);
     }).toThrow();
 
-})
+});

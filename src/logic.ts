@@ -1035,6 +1035,7 @@ export function formatNumber(
     prefix: string = "",
     sign: boolean = false,
 ) {
+
     if (number == null) return "";
     number = Number(number);
 
@@ -1042,9 +1043,11 @@ export function formatNumber(
     const numSign =
         number < 0 ? "-" :
             (number > 0 && sign) ? "+" : "";
-    const x = Math.abs(number);
+    const absX =  Math.abs(number);
+    const decInt = Math.pow(10, decimals);
+    const x = Math.round(absX * decInt) / decInt;
+
     const int = Math.trunc(x);
-    const frac = x - int;
 
     const intText = "" + int;
     const intZeroStr = zeroes + intText;
@@ -1055,6 +1058,7 @@ export function formatNumber(
     if (decimals == 0)
         return numSign + prefix + intPart;
 
+    const frac = x - int;
     const fracText = "" + Math.trunc(Math.round(frac * 1000 * Math.pow(10, decimals)) / 1000);
     const leftFracZeroes = zeroes.substr(0, decimals - fracText.length);
     const fracZeroStr = leftFracZeroes + fracText + zeroes;
@@ -1546,8 +1550,8 @@ export function numEqStr(num: number, str: string) {
 
     const minus = match[1] == "-";
     const int = Number.parseInt(match[2]);
-    const fracStr = match[3] ?? "0";
-    const frac = Number.parseFloat(fracStr);
+    const fracStr = match[3] ?? "";
+    const frac = fracStr =="" ? 0 : Number.parseFloat(fracStr);
 
     if (minus && num > 0)
         return false;
@@ -1555,13 +1559,15 @@ export function numEqStr(num: number, str: string) {
         return false;
 
     num = Math.abs(num);
+    const decMul = Math.pow(10,fracStr.length );
+    num = Math.round (num * decMul) / decMul;
 
     const nInt = Math.floor(num);
     const nFrac = num - nInt;
     if (int != nInt)
         return false;
 
-    const nFracI = Math.round (nFrac * Math.pow(10, fracStr.length));
+    const nFracI = Math.round(nFrac * decMul);
     if (!floatEqFloat(frac, nFracI, 0.0001))
         return false;
 
