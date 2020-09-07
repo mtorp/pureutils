@@ -8,11 +8,19 @@ export type UrlParameters = {
 
 /**Codifica el valor de un query parameter*/
 export function encodeUrlParameterValue(parameter: UrlParameterScalar) {
-    const str =
-        (typeof (parameter) == "number") ? "" + parameter :
-            (typeof (parameter) == "boolean") ? "" + parameter :
-                (typeof (parameter) == "string") ? parameter :
-                    (parameter.toISOString());
+    const type = typeof (parameter);
+    let str: string | null = null;
+    if (type == "number" || type == "boolean" || type == "string") {
+        str = parameter.toString();
+    }
+
+    if (parameter instanceof Date) {
+        str = parameter.toISOString();
+    }
+
+    if (str == null) {
+        throw new Error("All URL parameters must be a number, boolean, string, Date or null");
+    }
 
     return encodeURIComponent(str);
 }
@@ -56,12 +64,12 @@ export function appendEncodedUrlParameters(url: string, paramStr: string) {
 /**Determina si una URL es absoluta */
 export function isUrlAbsolute(url) {
     //Origen: https://stackoverflow.com/questions/10687099/how-to-test-if-a-url-string-is-absolute-or-relative
-    
-    if (url.indexOf('//') === 0) {return true;} // URL is protocol-relative (= absolute)
-    if (url.indexOf('://') === -1) {return false;} // URL has no protocol (= relative)
-    if (url.indexOf('.') === -1) {return false;} // URL does not contain a dot, i.e. no TLD (= relative, possibly REST)
-    if (url.indexOf('/') === -1) {return false;} // URL does not contain a single slash (= relative)
-    if (url.indexOf(':') > url.indexOf('/')) {return false;} // The first colon comes after the first slash (= relative)
-    if (url.indexOf('://') < url.indexOf('.')) {return true;} // Protocol is defined before first dot (= absolute)
+
+    if (url.indexOf('//') === 0) { return true; } // URL is protocol-relative (= absolute)
+    if (url.indexOf('://') === -1) { return false; } // URL has no protocol (= relative)
+    if (url.indexOf('.') === -1) { return false; } // URL does not contain a dot, i.e. no TLD (= relative, possibly REST)
+    if (url.indexOf('/') === -1) { return false; } // URL does not contain a single slash (= relative)
+    if (url.indexOf(':') > url.indexOf('/')) { return false; } // The first colon comes after the first slash (= relative)
+    if (url.indexOf('://') < url.indexOf('.')) { return true; } // Protocol is defined before first dot (= absolute)
     return false; // Anything else must be relative
 }
