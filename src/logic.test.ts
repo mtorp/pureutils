@@ -1,5 +1,5 @@
 import { syncResolve } from "./promise";
-import { asyncThunkToObservable, numEqStr, parseFormattedNumber, xor, groupByCount, leftJoin, formatNumber } from "./logic";
+import { asyncThunkToObservable, numEqStr, parseFormattedNumber, xor, groupByCount, leftJoin, formatNumber, groupByAdjacent, Grouping } from "./logic";
 import { delay } from "rxjs/operators";
 
 
@@ -178,4 +178,44 @@ test("group by count", () => {
         groupByCount([1, 2, 3], 0);
     }).toThrow();
 
+});
+
+test("group by adjacent", () => {
+
+    expect(groupByAdjacent([], x => x)).toEqual([]);
+    
+    expect(groupByAdjacent([1, 1, 1, 2, 1, 1, 3, 3, 2, 2, 1, 1], x => x)).toEqual([
+            {
+                key: 1,
+                items: [1,1,1]
+            }, {
+                key: 2,
+                items: [2]
+            }, {
+                key: 1,
+                items: [1,1]
+            }, {
+                key: 3,
+                items: [3, 3]
+            }, {
+                key: 2,
+                items: [2 ,2]
+            }, {
+                key: 1,
+                items: [1, 1]
+            }
+    ] as Grouping<number, number>[]);
+
+    expect(groupByAdjacent( ["ra", "rb", "aa", "ab", "ra", "rc"], x => x.substr(0, 1))).toEqual([
+        {
+            key: "r",
+            items: ["ra", "rb"]
+        }, {
+            key: "a",
+            items: ["aa", "ab"]
+        }, {
+            key: "r",
+            items: ["ra", "rc"]
+        }
+    ]as Grouping<string, string>[]);
 });

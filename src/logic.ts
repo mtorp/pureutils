@@ -274,11 +274,12 @@ export type Grouping<TKey, TItem> = { key: TKey, items: TItem[] };
  * el orden adentro del grupo es preservado
  * @param comparer Comparador de la llave por default es un shallowEquals
  */
-export function groupBy<T, TKey>(arr: readonly T[], groupBy: (item: T) => TKey, comparer?: (a: TKey, b: TKey) => boolean) {
+export function groupBy<T, TKey>(arr: readonly T[], keySelector: (item: T) => TKey, comparer?: (a: TKey, b: TKey) => boolean)  : Grouping<TKey, T>[]{
     const ret: Grouping<TKey, T>[] = [];
     const comparerDefault = comparer || shallowEquals;
+    
     for (const x of arr) {
-        const key = groupBy(x);
+        const key = keySelector(x);
         const firstItem = first(ret, x => comparerDefault(x.key, key));
         if (firstItem === undefined) {
             ret.push({ key: key, items: [x] });
@@ -286,6 +287,31 @@ export function groupBy<T, TKey>(arr: readonly T[], groupBy: (item: T) => TKey, 
             firstItem.items.push(x);
         }
     }
+    return ret;
+}
+
+/**Agrupa un arreglo por una llave, siempre y cuando los elementos sean adjacentes en el arreglo, es decir, pueden existir 2 o mas grupos con la 
+ * misma clave si estan separados en el arreglo.
+ * En caso de que @param arr este ordenado en funcion de @param keySelector, es equivalente pero mas eficiente que @see groupBy
+ */
+export function groupByAdjacent<T, TKey>(arr: readonly T[], keySelector: (item: T) => TKey, comparer?: (a: TKey, b: TKey) => boolean ) : Grouping<TKey, T>[]{
+    let ret: Grouping<TKey, T>[] = [];
+    const comparerDefault = comparer || shallowEquals;
+    for(const x of arr) {
+        const currentKey = ret.length == 0? null : { value: ret[ret.length - 1].key};
+
+        const itemKey = keySelector(x);
+        if(currentKey == null || comparerDefault(currentKey.value , itemKey ) == false) {
+            ret.push({
+                key: itemKey, 
+                items: [x]
+            });
+        }
+        else {
+            ret[ret.length - 1].items.push(x);
+        }
+    }
+
     return ret;
 }
 
