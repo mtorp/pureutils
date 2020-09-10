@@ -290,8 +290,9 @@ export function groupBy<T, TKey>(arr: readonly T[], keySelector: (item: T) => TK
     return ret;
 }
 
-/**Agrupa un arreglo por una llave, siempre y cuando los elementos sean adjacentes en el arreglo, es decir, pueden existir 2 o mas grupos con la 
- * misma clave si estan separados en el arreglo.
+/**Agrupa un arreglo por una llave, siempre y cuando los elementos sean contiguos en el arreglo, es decir, si un grupo es interrumpido por un elemento con otra
+ * clave se temrinara ese grupo y comenzará otro con la nueva clave, por lo que pueden existir multiples grupos no contiguos con la misma clave
+ * 
  * En caso de que @param arr este ordenado en funcion de @param keySelector, es equivalente pero mas eficiente que @see groupBy
  */
 export function groupByAdjacent<T, TKey>(arr: readonly T[], keySelector: (item: T) => TKey, comparer?: (a: TKey, b: TKey) => boolean ) : Grouping<TKey, T>[]{
