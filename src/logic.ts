@@ -1594,7 +1594,7 @@ export function numEqStr(num: number, str: string) {
     if (int != nInt)
         return false;
 
-    const nFracI = Math.round(nFrac * decMul);
+    const nFracI = Math.trunc(Math.round(nFrac * decMul * 1000) / 1000);
     if (!floatEqFloat(frac, nFracI, 0.0001))
         return false;
 

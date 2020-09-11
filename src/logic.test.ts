@@ -142,6 +142,10 @@ test("numEqStr", () => {
     expect(numEqStr(10.5, "11")).toBe(true); 
     expect(numEqStr(10.99, "10.99")).toBe(true); 
     expect(numEqStr(10.999999, "11.00")).toBe(true); 
+    
+    expect(numEqStr(10.999999, "11.00")).toBe(true); 
+    
+    expect(numEqStr(123456789.12345679, "123,456,789.12345")).toBe(true); 
 
 });
 
