@@ -1089,9 +1089,8 @@ export function formatNumber(
             (number > 0 && sign) ? "+" : "";
     const absX = Math.abs(number);
     const decInt = Math.pow(10, decimals);
-    const x = Math.round(absX * decInt) / decInt;
 
-    const int = Math.trunc(absX);
+    const int = Math.trunc(Math.round(absX * decInt * 1000) / decInt / 1000);
 
     const intText = "" + int;
     const intZeroStr = zeroes + intText;
@@ -1640,14 +1639,17 @@ export function numEqStr(num: number, str: string) {
 
     num = Math.abs(num);
     const decMul = Math.pow(10, fracStr.length);
-    num = Math.round(num * decMul) / decMul;
+    num = Math.trunc(Math.round(num * decMul * 1000)  )/ 1000 / decMul ;
 
     const nInt = Math.floor(num);
     const nFrac = num - nInt;
     if (int != nInt)
         return false;
 
-    const nFracI = Math.trunc(Math.round(nFrac * decMul * 1000) / 1000);
+        const nFracI = Math.trunc(Math.round(nFrac * decMul * 1000) / 1000);
+    
+
+
     if (!floatEqFloat(frac, nFracI, 0.0001))
         return false;
 
