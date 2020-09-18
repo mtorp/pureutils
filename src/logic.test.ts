@@ -1,5 +1,5 @@
 import { syncResolve } from "./promise";
-import { asyncThunkToObservable, numEqStr, parseFormattedNumber, xor, groupByCount, leftJoin, formatNumber, groupByAdjacent, Grouping } from "./logic";
+import { asyncThunkToObservable, numEqStr, parseFormattedNumber, xor, groupByCount, leftJoin, formatNumber, groupByAdjacent, Grouping, getDecimalCount } from "./logic";
 import { delay } from "rxjs/operators";
 
 
@@ -32,6 +32,23 @@ test("asyncThunkToObs sync", async () => {
     expect(result).toBe(10);
     expect(count).toBe(1);
 
+});
+
+test("getDecimalCount", () => {
+
+        expect(getDecimalCount("1.1234e3")).toEqual(1);
+        expect(getDecimalCount("1.123e3")).toEqual(0);
+        expect(getDecimalCount("100")).toEqual(0);
+        expect(getDecimalCount("0")).toEqual(0);
+        expect(getDecimalCount("0.00")).toEqual(2);
+        expect(getDecimalCount("0.01")).toEqual(2);
+        expect(getDecimalCount("0.000001")).toEqual(6);
+        expect(getDecimalCount("0.99")).toEqual(2);
+        expect(getDecimalCount("1e-7")).toEqual(7);
+        expect(getDecimalCount("1.99e-7")).toEqual(9);
+        expect(getDecimalCount("99.999e-7")).toEqual(10);
+
+        
 });
 
 test("formatNum", () => {

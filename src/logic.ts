@@ -1062,6 +1062,8 @@ export function formatCurrency(number: number | null | undefined | string) {
     return formatNumber(number, 0, 2, true, "$");
 }
 
+
+
 /**
  * Formatea un número
  * @param number El numero
@@ -1619,6 +1621,28 @@ export function parseFormattedNumber(val: string): number {
     return Number.parseFloat(val);
 }
 
+/**Obtiene la precision de decimales de un numero en forma de cadena, soporta la notación exponencial */
+export function getDecimalCount(str: string): number {
+    if (str.indexOf("e") != -1) {
+        //Notación exponencial
+        const regex = /^(\d+)(?:\.?(\d+))?e((?:\+|\-)?(?:\d+))$/;
+        const result = regex.exec(str);
+
+        if (result == null)
+            throw new Error("Invalid number: " + str);
+
+        const decPart = result[2];
+        const exp = Number.parseInt(result[3]);
+
+        return Math.max( -exp + (decPart?.length ?? 0), 0);
+    }
+
+    const split = str.split(".");
+
+    return split[1]?.length ?? 0;
+}
+
+
 /**True si un numero es igual a su representación de cadena formateada, la comparación de decimales se hace
  * basandose en la cantidad de decimales de la cadena
  */
@@ -1639,15 +1663,15 @@ export function numEqStr(num: number, str: string) {
 
     num = Math.abs(num);
     const decMul = Math.pow(10, fracStr.length);
-    num = Math.trunc(Math.round(num * decMul * 1000)  )/ 1000 / decMul ;
+    num = Math.trunc(Math.round(num * decMul * 1000)) / 1000 / decMul;
 
     const nInt = Math.floor(num);
     const nFrac = num - nInt;
     if (int != nInt)
         return false;
 
-        const nFracI = Math.trunc(Math.round(nFrac * decMul * 1000) / 1000);
-    
+    const nFracI = Math.trunc(Math.round(nFrac * decMul * 1000) / 1000);
+
 
 
     if (!floatEqFloat(frac, nFracI, 0.0001))
