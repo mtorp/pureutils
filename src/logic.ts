@@ -275,10 +275,10 @@ export type Grouping<TKey, TItem> = { key: TKey, items: TItem[] };
  * el orden adentro del grupo es preservado
  * @param comparer Comparador de la llave por default es un shallowEquals
  */
-export function groupBy<T, TKey>(arr: readonly T[], keySelector: (item: T) => TKey, comparer?: (a: TKey, b: TKey) => boolean)  : Grouping<TKey, T>[]{
+export function groupBy<T, TKey>(arr: readonly T[], keySelector: (item: T) => TKey, comparer?: (a: TKey, b: TKey) => boolean): Grouping<TKey, T>[] {
     const ret: Grouping<TKey, T>[] = [];
     const comparerDefault = comparer || shallowEquals;
-    
+
     for (const x of arr) {
         const key = keySelector(x);
         const firstItem = first(ret, x => comparerDefault(x.key, key));
@@ -296,16 +296,16 @@ export function groupBy<T, TKey>(arr: readonly T[], keySelector: (item: T) => TK
  * 
  * En caso de que @param arr este ordenado en funcion de @param keySelector, es equivalente pero mas eficiente que @see groupBy
  */
-export function groupByAdjacent<T, TKey>(arr: readonly T[], keySelector: (item: T) => TKey, comparer?: (a: TKey, b: TKey) => boolean ) : Grouping<TKey, T>[]{
+export function groupByAdjacent<T, TKey>(arr: readonly T[], keySelector: (item: T) => TKey, comparer?: (a: TKey, b: TKey) => boolean): Grouping<TKey, T>[] {
     let ret: Grouping<TKey, T>[] = [];
     const comparerDefault = comparer || shallowEquals;
-    for(const x of arr) {
-        const currentKey = ret.length == 0? null : { value: ret[ret.length - 1].key};
+    for (const x of arr) {
+        const currentKey = ret.length == 0 ? null : { value: ret[ret.length - 1].key };
 
         const itemKey = keySelector(x);
-        if(currentKey == null || comparerDefault(currentKey.value , itemKey ) == false) {
+        if (currentKey == null || comparerDefault(currentKey.value, itemKey) == false) {
             ret.push({
-                key: itemKey, 
+                key: itemKey,
                 items: [x]
             });
         }
@@ -961,6 +961,22 @@ export function runningTotal<TIn, TState, TOut>(items: readonly TIn[], seed: TSt
     return ret;
 }
 
+/**Calcula el agregado corrido para cada elemento, recorriendo el arreglo al revez */
+export function runningTotalRight<TIn, TState, TOut>(items: readonly TIn[], seed: TState, reduceState: (state: TState, item: TIn) => TState, map: (state: TState, item: TIn) => TOut) {
+    let ret: TOut[] = [];
+
+    let state = seed;
+    for (let i = items.length - 1; i >= 0; i--) {
+        const it = items[i];
+        const proj = reduceState(state, it);
+        state = proj;
+        const output = map(state, it);
+
+        ret.push(output);
+    }
+    return ret;
+}
+
 /**Mapea y aplana una colección. Es equivalente a  flatten(items.map(map)) */
 export function mapMany<T, TR>(items: readonly T[], map: (x: T) => TR[]): TR[] {
     let result: TR[] = [];
@@ -1071,7 +1087,7 @@ export function formatNumber(
     const numSign =
         number < 0 ? "-" :
             (number > 0 && sign) ? "+" : "";
-    const absX =  Math.abs(number);
+    const absX = Math.abs(number);
     const decInt = Math.pow(10, decimals);
     const x = Math.round(absX * decInt) / decInt;
 
@@ -1345,23 +1361,23 @@ export function sum(arr: (number | null | undefined)[]): number {
 */
 export function nextToPromise<T>(obs: Observable<T>): PromiseLike<T> {
     return new SyncPromise<T>((resolve, reject) => {
-        type Event = { type: "resolve", value: T} | { type: "reject", error: any};
+        type Event = { type: "resolve", value: T } | { type: "reject", error: any };
 
-        let syncResult : Event | null = null;
+        let syncResult: Event | null = null;
         let subscription: Subscription | null = null;
         let sync = true;
 
         /**Llama ya sea a resolve o reject */
         const commit = (ev: Event) => {
-            switch(ev.type) {
+            switch (ev.type) {
                 case "resolve": return resolve(ev.value);
-                case "reject" : return reject(ev.error);
+                case "reject": return reject(ev.error);
                 default: assertUnreachable(ev);
             }
         }
 
         const onEvent = (ev: Event) => {
-            if(subscription) {
+            if (subscription) {
                 subscription.unsubscribe();
                 commit(ev);
                 return;
@@ -1371,10 +1387,10 @@ export function nextToPromise<T>(obs: Observable<T>): PromiseLike<T> {
         }
         subscription = obs
             .pipe(rxOps.take(1))
-            .subscribe(x => onEvent({type: "resolve", value: x}), x => onEvent({type: "reject", error: x}));
+            .subscribe(x => onEvent({ type: "resolve", value: x }), x => onEvent({ type: "reject", error: x }));
 
         sync = false;
-        if(syncResult) {
+        if (syncResult) {
             subscription.unsubscribe();
             commit(syncResult);
         }
@@ -1615,7 +1631,7 @@ export function numEqStr(num: number, str: string) {
     const minus = match[1] == "-";
     const int = Number.parseInt(match[2]);
     const fracStr = match[3] ?? "";
-    const frac = fracStr =="" ? 0 : Number.parseFloat(fracStr);
+    const frac = fracStr == "" ? 0 : Number.parseFloat(fracStr);
 
     if (minus && num > 0)
         return false;
@@ -1623,8 +1639,8 @@ export function numEqStr(num: number, str: string) {
         return false;
 
     num = Math.abs(num);
-    const decMul = Math.pow(10,fracStr.length );
-    num = Math.round (num * decMul) / decMul;
+    const decMul = Math.pow(10, fracStr.length);
+    num = Math.round(num * decMul) / decMul;
 
     const nInt = Math.floor(num);
     const nFrac = num - nInt;

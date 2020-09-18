@@ -12,6 +12,7 @@ import {
 import * as rx from "rxjs";
 import * as rxOps from "rxjs/operators";
 import { pipe } from "./pipe";
+import { runningTotalRight } from "./logic";
 
 
 test("contains", () => {
@@ -852,6 +853,19 @@ test("running total", () => {
 
     const actual = runningTotal(arr, 0, (state, it) => state + it.value, (state, item) => ({ ...item, value: state }));
     expect(actual).toEqual(expected);
+});
+
+test("running total right", () => {
+    const arr = [1, 3, 5, 10];
+    
+    const expected = [24, 21, 16, 6];
+    const expectedRight = [15, 10, 7, 6];
+
+    const actual = runningTotal(arr, 25, (a,b) => a - b, x => x);
+    const actualRight = runningTotalRight(arr, 25, (a,b) => a - b, x => x);
+
+    expect(actual).toEqual(expected);
+    expect(actualRight).toEqual(expectedRight);
 });
 
 test("running total s", () => {
