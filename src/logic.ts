@@ -963,7 +963,7 @@ export function runningTotal<TIn, TState, TOut>(items: readonly TIn[], seed: TSt
 
 /**Calcula el agregado corrido para cada elemento, recorriendo el arreglo al revez */
 export function runningTotalRight<TIn, TState, TOut>(items: readonly TIn[], seed: TState, reduceState: (state: TState, item: TIn) => TState, map: (state: TState, item: TIn) => TOut) {
-    let ret: TOut[] = [];
+    let ret: TOut[] = new Array(items.length);
 
     let state = seed;
     for (let i = items.length - 1; i >= 0; i--) {
@@ -972,7 +972,7 @@ export function runningTotalRight<TIn, TState, TOut>(items: readonly TIn[], seed
         state = proj;
         const output = map(state, it);
 
-        ret.push(output);
+        ret[i] = output;
     }
     return ret;
 }

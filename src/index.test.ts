@@ -4,7 +4,7 @@ import {
     unique, filterIf, mapKeys, intersect, omitUndefined, single, awaitObj, shallowDiff, range, sort, defaultComparer, orderBy, orderByDesc,
     truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd, toObservable, isArray, isArrayLike, isPromiseLike, isObservable,
     search, removeDiacritics, containsAll, containsAny, mapPreviousRx, mapMany, runningTotal, mapPrevious, formatNumber, formatDate, formatDateExcel,
-    delay,  allEqual, pick, zip, binarySearch, exclude,
+    delay, allEqual, pick, zip, binarySearch, exclude,
     isSubset, innerJoin, leftJoin, unionKey, combinePath, sum, excludeKeys, nextToPromise, objRxToRxObj, outOfRange, RangeOptional,
     base64ToString, stringToBase64, max, min, enumKeys, toIsoDate, debounceSync, syncResolve, mergeObj, orRx, treeTraversal, isSyncPromise, syncPromiseValue
 } from "./index";
@@ -16,11 +16,11 @@ import { runningTotalRight } from "./logic";
 
 
 test("contains", () => {
-    expect(contains([1,2,3], 4)).toBe(false);
-    expect(contains([1,2,3], 3)).toBe(true);
+    expect(contains([1, 2, 3], 4)).toBe(false);
+    expect(contains([1, 2, 3], 3)).toBe(true);
 
 
-    const arr : readonly number[] = [1,2,3];
+    const arr: readonly number[] = [1, 2, 3];
 
     //Accepts readonly:
     expect(contains(arr, 4)).toBe(false);
@@ -448,7 +448,7 @@ test("unique 2", () => {
     const input = ["A", "a", "b", "B", "B"]
     const expected = ["A", "b"]
 
-    const result = unique(input, (a,b) => a.toLowerCase() === b.toLowerCase());
+    const result = unique(input, (a, b) => a.toLowerCase() === b.toLowerCase());
     expect(result).toEqual(expected);
 });
 
@@ -857,12 +857,12 @@ test("running total", () => {
 
 test("running total right", () => {
     const arr = [1, 3, 5, 10];
-    
-    const expected = [24, 21, 16, 6];
-    const expectedRight = [15, 10, 7, 6];
 
-    const actual = runningTotal(arr, 25, (a,b) => a - b, x => x);
-    const actualRight = runningTotalRight(arr, 25, (a,b) => a - b, x => x);
+    const expected = [24, 21, 16, 6];
+    const expectedRight = [6, 7, 10, 15];
+
+    const actual = runningTotal(arr, 25, (a, b) => a - b, x => x);
+    const actualRight = runningTotalRight(arr, 25, (a, b) => a - b, x => x);
 
     expect(actual).toEqual(expected);
     expect(actualRight).toEqual(expectedRight);
@@ -1050,27 +1050,27 @@ test("zip", () => {
 });
 
 test("zip min", () => {
-    const x = [1,2,3,4];
+    const x = [1, 2, 3, 4];
     const y = ["a", "b", "c"];
 
-    const ret = zip({x, y}, "min");
+    const ret = zip({ x, y }, "min");
     expect(ret).toEqual([
-        {x: 1, y: "a"},
-        {x: 2, y: "b"},
-        {x: 3, y: "c"},
+        { x: 1, y: "a" },
+        { x: 2, y: "b" },
+        { x: 3, y: "c" },
     ])
 });
 
 test("zip max", () => {
-    const x = [1,2,3,4];
+    const x = [1, 2, 3, 4];
     const y = ["a", "b", "c"];
 
-    const ret = zip({x, y}, "max");
+    const ret = zip({ x, y }, "max");
     expect(ret).toEqual([
-        {x: 1, y: "a"},
-        {x: 2, y: "b"},
-        {x: 3, y: "c"},
-        {x: 4}
+        { x: 1, y: "a" },
+        { x: 2, y: "b" },
+        { x: 3, y: "c" },
+        { x: 4 }
     ])
 });
 
@@ -1272,7 +1272,7 @@ test("nextToPromise sync", () => {
 
     let subsCount = 0;
     let unsubsCount = 0;
-    const orig = rx.from([2,3,4]);
+    const orig = rx.from([2, 3, 4]);
 
     const obs = new rx.Observable(observer => {
         subsCount++;
@@ -1312,7 +1312,7 @@ test("nextToPromise async", async () => {
         };
     });
 
-    const value =  await  nextToPromise(obs);
+    const value = await nextToPromise(obs);
 
     expect(value).toEqual(2);
 
