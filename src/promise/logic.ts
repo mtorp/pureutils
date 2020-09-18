@@ -11,7 +11,7 @@ interface SyncPromiseResult<T> {
     status: "resolved" | "error" | "pending"
 }
 
-/**Devuelve un objeto con el valor de la promesa si es síncrona, si no, devuelve undefined*/
+/**Devuelve un objeto con el valor de la promesa si es síncrona, si no, devuelve un objeto indicando que no se pudo obtener su valor*/
 export function syncPromiseValue<T>(x: PromiseLike<T>): SyncPromiseResult<T> {
     let sync: SyncPromiseResult<T> = {
         status: "pending"

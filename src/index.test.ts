@@ -1252,7 +1252,59 @@ test("nextToPromise", async () => {
 
     const b = await nextToPromise(obs);
     expect(b).toBe(2);
-})
+});
+
+test("nextToPromise sync", () => {
+
+    let subsCount = 0;
+    let unsubsCount = 0;
+    const orig = rx.from([2,3,4]);
+
+    const obs = new rx.Observable(observer => {
+        subsCount++;
+        const ss = orig.subscribe(observer);
+
+        return () => {
+            ss.unsubscribe();
+            unsubsCount++;
+        };
+    });
+
+    const syncProm = nextToPromise(obs);
+    const value = syncPromiseValue(syncProm);
+
+    expect(value).toEqual({
+        status: "resolved",
+        value: 2
+    });
+
+    expect(subsCount).toBe(1);
+    expect(unsubsCount).toBe(1);
+});
+
+test("nextToPromise async", async () => {
+
+    let subsCount = 0;
+    let unsubsCount = 0;
+    const orig = rx.from(delay(100).then(x => 2))
+
+    const obs = new rx.Observable(observer => {
+        subsCount++;
+        const ss = orig.subscribe(observer);
+
+        return () => {
+            ss.unsubscribe();
+            unsubsCount++;
+        };
+    });
+
+    const value =  await  nextToPromise(obs);
+
+    expect(value).toEqual(2);
+
+    expect(subsCount).toBe(1);
+    expect(unsubsCount).toBe(1);
+});
 
 test("rx Obj", () => {
 

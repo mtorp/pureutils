@@ -1,9 +1,10 @@
-import { Observable, pipe as pipeRx, combineLatest as combineLatestRx, from as fromRx, isObservable as isObservableRx, ReplaySubject, from } from "rxjs";
+import { Observable, pipe as pipeRx, combineLatest as combineLatestRx, from as fromRx, isObservable as isObservableRx, ReplaySubject, from, Subscription } from "rxjs";
 import { map as mapRx, concatAll as concatAllRx, scan as scanRx, startWith as startWithRx, filter as filterRx, switchAll } from "rxjs/operators";
 
 import { interopRequireDefault } from "./interop";
 import { defer } from "rxjs";
-import { syncResolve, splitPromise, isPromiseLike } from "./promise";
+import * as rxOps from "rxjs/operators";
+import { syncResolve, splitPromise, isPromiseLike, SyncPromise } from "./promise";
 import { pipe } from "./pipe";
 
 /**Devuelve true si todos los elementos de un arreglo encajan con el predicado
@@ -1074,7 +1075,7 @@ export function formatNumber(
     const decInt = Math.pow(10, decimals);
     const x = Math.round(absX * decInt) / decInt;
 
-    const int = Math.trunc(x);
+    const int = Math.trunc(absX);
 
     const intText = "" + int;
     const intZeroStr = zeroes + intText;
@@ -1085,7 +1086,7 @@ export function formatNumber(
     if (decimals == 0)
         return numSign + prefix + intPart;
 
-    const frac = x - int;
+    const frac = absX - int;
     const fracText = "" + Math.trunc(Math.round(frac * 1000 * Math.pow(10, decimals)) / 1000);
     const leftFracZeroes = zeroes.substr(0, decimals - fracText.length);
     const fracZeroStr = leftFracZeroes + fracText + zeroes;
@@ -1338,10 +1339,46 @@ export function sum(arr: (number | null | undefined)[]): number {
 }
 
 /**Convierte un observable a una promesa que se resuelve en el siguiente onNext del observable, esto es diferente a la función
- * @see Observable.toPromise() que se resueve hasta que el observable es completado
+ * @see Observable.toPromise() que se resueve hasta que el observable es completado.
+ * 
+ * Si el observable devuelve un elemento de inmediato, la promesa devuelta se resuelve síncronamiente
 */
-export function nextToPromise<T>(obs: Observable<T>): Promise<T> {
-    return new Promise<T>((resolve, reject) => obs.subscribe(resolve, reject));
+export function nextToPromise<T>(obs: Observable<T>): PromiseLike<T> {
+    return new SyncPromise<T>((resolve, reject) => {
+        type Event = { type: "resolve", value: T} | { type: "reject", error: any};
+
+        let syncResult : Event | null = null;
+        let subscription: Subscription | null = null;
+        let sync = true;
+
+        /**Llama ya sea a resolve o reject */
+        const commit = (ev: Event) => {
+            switch(ev.type) {
+                case "resolve": return resolve(ev.value);
+                case "reject" : return reject(ev.error);
+                default: assertUnreachable(ev);
+            }
+        }
+
+        const onEvent = (ev: Event) => {
+            if(subscription) {
+                subscription.unsubscribe();
+                commit(ev);
+                return;
+            }
+
+            syncResult = ev;
+        }
+        subscription = obs
+            .pipe(rxOps.take(1))
+            .subscribe(x => onEvent({type: "resolve", value: x}), x => onEvent({type: "reject", error: x}));
+
+        sync = false;
+        if(syncResult) {
+            subscription.unsubscribe();
+            commit(syncResult);
+        }
+    });
 }
 
 
