@@ -14,6 +14,7 @@ import * as rxOps from "rxjs/operators";
 import { pipe } from "./pipe";
 import { runningTotalRight } from "./logic";
 
+jest.setTimeout(10000);
 
 test("contains", () => {
     expect(contains([1, 2, 3], 4)).toBe(false);
@@ -1621,7 +1622,6 @@ test("syncPromise", () => {
     });
 });
 
-jasmine.DEFAULT_TIMEOUT_INTERVAL = 10000;
 
 test("debounce", async () => {
     return;

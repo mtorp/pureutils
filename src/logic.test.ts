@@ -52,6 +52,10 @@ test("getDecimalCount", () => {
 });
 
 test("formatNum", () => {
+    expect(formatNumber(Number.NaN, undefined, 2, true, "$", true)).toBe("NaN");
+    expect(formatNumber(Number.POSITIVE_INFINITY, undefined, 2, true, "$", true)).toBe("Infinity");
+    expect(formatNumber(Number.NEGATIVE_INFINITY, undefined, 2, true, "$", true)).toBe("-Infinity");
+
     expect(formatNumber(10.1234, undefined, 2)).toBe("10.12");
     expect(formatNumber(10.1299, undefined, 2)).toBe("10.12"); 
     expect(formatNumber(10.12999, undefined, 2)).toBe("10.12"); 
@@ -106,6 +110,10 @@ test("asyncThunkToObs async", async () => {
 })
 
 test("numEqStr", () => {
+    expect(numEqStr(Number.NaN, "NaN")).toBe(true);
+    expect(numEqStr(Number.NEGATIVE_INFINITY, "-Infinity")).toBe(true);
+    expect(numEqStr(Number.POSITIVE_INFINITY, "Infinity")).toBe(true);
+
     expect(numEqStr(1.458, "1.4")).toBe(true);
 
     expect(numEqStr(1, "")).toBe(false);
@@ -172,6 +180,11 @@ test("numEqStr", () => {
 });
 
 test("parseFormattedNumber", () => {
+    expect(parseFormattedNumber("NaN")).toBe(Number.NaN);
+    expect(parseFormattedNumber("-Infinity")).toBe(Number.NEGATIVE_INFINITY);
+    expect(parseFormattedNumber("Infinity")).toBe(Number.POSITIVE_INFINITY);
+
+
     expect(parseFormattedNumber("1")).toBe(1);
     expect(parseFormattedNumber("100.1343")).toBe(100.1343);
     expect(parseFormattedNumber("-100.1343")).toBe(-100.1343);

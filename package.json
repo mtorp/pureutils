@@ -1,6 +1,6 @@
 {
   "name": "simple-pure-utils",
-  "version": "2.0.30",
+  "version": "2.0.31",
   "description": "Funciones puras para manipulación de objetos, arreglos, promesas y observables",
   "main": "dist/commonjs/index.js",
   "module": "dist/esm/index.js",
@@ -15,9 +15,9 @@
   "devDependencies": {
     "@types/jest": "^21.1.4",
     "coveralls": "^3.1.0",
-    "jest": "^26.0.1",
-    "jest-cli": "^26.0.1",
-    "ts-jest": "^24.0.2",
+    "jest": "27",
+    "jest-cli": "27",
+    "ts-jest": "^27",
     "typescript": "^3.8.3"
   },
   "scripts": {

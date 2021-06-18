@@ -1062,8 +1062,6 @@ export function formatCurrency(number: number | null | undefined | string) {
     return formatNumber(number, 0, 2, true, "$");
 }
 
-
-
 /**
  * Formatea un número
  * @param number El numero
@@ -1083,7 +1081,11 @@ export function formatNumber(
 ) {
 
     if (number == null) return "";
+
     number = Number(number);
+    if(Number.isNaN(number) || !Number.isFinite(number)) {
+        return number.toString();
+    }
 
     const zeroes = "00000000000000000000";
     const numSign =
@@ -1614,6 +1616,14 @@ export function replaceAll(str: string, searchValue: string | RegExp, replaceVal
 
 /**Convierte a numero una cadena que puede tener prefijos (ej. $) y separador de miles */
 export function parseFormattedNumber(val: string): number {
+    if(
+        val == Number.NaN.toString() ||
+        val == Number.NEGATIVE_INFINITY.toString() ||
+        val == Number.POSITIVE_INFINITY.toString()
+    ) { 
+        return Number(val);
+    }
+
     //Quita los simbolos:
     val = val.replace(/[^\d|\+|\-|\.](.*)/, "$1");
     //las comas:
@@ -1647,6 +1657,11 @@ export function getDecimalCount(str: string): number {
  * basandose en la cantidad de decimales de la cadena
  */
 export function numEqStr(num: number, str: string) {
+    if(num.toString() == str) {
+        //Encaja con los casos de NaN e infinities
+        return true;
+    }
+
     str = replaceAll(str, ",", "");
     const match = /^(\+|-)?(\d*)(?:\.(\d*))?$/.exec(str);
     if (match == null) return false;

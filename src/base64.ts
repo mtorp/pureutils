@@ -22,13 +22,21 @@ export function blobToBase64(archivo: Blob): Promise<string> {
 
 /**Decodifica una cadena a base64 */
 export function base64ToString(base64: string): string {
-    return atob(base64);
-}
+    if(typeof(atob) != "undefined") {
+        return atob(base64);
+    } else {
+        return Buffer.from(base64, 'base64').toString()
+    }
+ }
 
 /**Codifica una cadena a base64 */
 export function stringToBase64(str: string): string {
-    return btoa(str);
-}
+    if(typeof(btoa) != "undefined") {
+        return btoa(str);
+    } else {
+        return  Buffer.from(str).toString('base64');
+    }
+ }
 
 /**Convierte una cadena base64 a un blob */
 export function base64ToBlob(base64: string, contentType?: string): Blob {
