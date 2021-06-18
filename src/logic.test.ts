@@ -1,5 +1,5 @@
 import { syncResolve } from "./promise";
-import { asyncThunkToObservable, numEqStr, parseFormattedNumber, xor, groupByCount, leftJoin, formatNumber, groupByAdjacent, Grouping, getDecimalCount } from "./logic";
+import { asyncThunkToObservable, numEqStr, parseFormattedNumber, xor, groupByCount, leftJoin, formatNumber, groupByAdjacent, Grouping, getDecimalCount, reorder } from "./logic";
 import { delay } from "rxjs/operators";
 
 
@@ -257,4 +257,61 @@ test("group by adjacent", () => {
             items: ["ra", "rc"]
         }
     ]as Grouping<string, string>[]);
+});
+
+test("reorder", () => {
+    const items = [
+        {key: "b"},
+        {key: "c"},
+        {key: "a"},
+        {key: "d", value: 1},
+        {key: "d", value: 2},
+    ];
+
+    expect(reorder(items, [], x => x.key)).toEqual([]);
+    expect(reorder(items, ["x", "y", "z"], x => x.key)).toEqual([]);
+    
+    expect(reorder(items, ["a", "a"], x => x.key)).toEqual([
+        {key: "a"},
+        {key: "a"}
+    ]);
+
+    expect(reorder(items, ["a", "b", "c"], x => x.key)).toEqual([
+        {key: "a"},
+        {key: "b"},
+        {key: "c"},
+    ]);
+
+    expect(reorder(items, ["c", "b", "a"], x => x.key)).toEqual([
+        {key: "c"},
+        {key: "b"},
+        {key: "a"},
+    ]);
+
+    expect(reorder(items, ["c", "b", "b"], x => x.key)).toEqual([
+        {key: "c"},
+        {key: "b"},
+        {key: "b"},
+    ]);
+
+    expect(reorder(items, ["d"], x => x.key)).toEqual([
+        {key: "d", value: 1},
+        {key: "d", value: 2},
+    ]);
+
+    expect(reorder(items, ["a", "d", "x", "d", "b", "d", "x"], x => x.key)).toEqual([
+        {key: "a"},
+        {key: "d", value: 1},
+        {key: "d", value: 2},
+
+        {key: "d", value: 1},
+        {key: "d", value: 2},
+
+        {key: "b"},
+        
+
+        {key: "d", value: 1},
+        {key: "d", value: 2},
+
+    ]);
 });

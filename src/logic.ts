@@ -618,6 +618,7 @@ export function intersect<T>(a: readonly T[], b: readonly T[], comparer?: (a: T,
     return intersectKeys(a, b, x => x, comparer || referenceEquals);
 }
 
+
 /**Mapea cada una de las propiedades en A que encajen en B y viceversa */
 export function mergeObj<TA, TB, TR>(
     a: TA,
@@ -643,11 +644,29 @@ export function isSubset<T>(set: readonly T[], subset: readonly T[], comparer?: 
 
 /**Devuelve todos los elementos en "items" tal que su key se encuentre una o mas veces en "keys". Conserva el orden original de "items".
  * @param keySelector Obtiene la clave de un elemento
- * @param comparer Comparedor de igualdad. Por default se usa el shallowEquals
+ * @param comparer Comparador de igualdad. Por default se usa el shallowEquals
  */
 export function intersectKeys<T, TKey>(items: readonly T[], keys: readonly TKey[], keySelector: (item: T) => TKey, comparer?: (a: TKey, b: TKey) => boolean) {
     return items.filter(item => contains(keys, keySelector(item), comparer || shallowEquals));
 }
+
+/**
+ * Reordena items segun las claves en keys.
+ * Si hay claves repetidas en el arreglo de keys, resulta en apariciones repetidas de ese elemento.
+ * Si hay varios elementos con la misma clave, todos esos elementos aparecen en el orden original al aparecer su clave
+ * Si no hay ningun elemento con cierta clave, esa clave se ignora
+ * @param items Arreglo a reordenar
+ * @param keys Arreglo de claves
+ * @param keySelector Obtiene la clave de un elemento
+ * @param comparer Comparador de igualdad. Por default se usa el shallowEquals
+ */
+export function reorder<T, TKey>(items: readonly T[], keys: readonly TKey[], keySelector: (item: T) => TKey, comparer?: (a: TKey, b: TKey) => boolean) {
+    const comparerEff = comparer || shallowEquals;
+    return mapMany(keys, key => 
+            items.filter( y => comparerEff(keySelector(y), key)  )
+        );
+}
+
 
 /**Devuelve un rango de numeros */
 export function range(start: number, count: number, step?: number) {
