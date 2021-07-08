@@ -347,7 +347,7 @@ export function enumObject<T, TR>(obj: T, selector?: (key: keyof T, value: T[key
  */
 export function arrayToMap<TKey, TValue>(array: { key: TKey, value: TValue }[]): ObjMap<TValue>
 /**
- * Convierte un arreglo a un objeto
+ * Convierte un arreglo a un objeto. Si el arreglo tiene varios elementos con la misma clave toma precedencia el ultimo
  * @param array Arreglo de valores
  * @param keySelector Función que obtiene la cadena que se tomada como el "key" de cada elemento
  */
