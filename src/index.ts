@@ -11,3 +11,4 @@ export * from "./promise";
 export * from "./strings";
 export * from "./compare";
 export * from "./pushid";
+export * from "./optional";
