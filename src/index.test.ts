@@ -1,6 +1,6 @@
 import {
     sequenceEquals, shallowEquals, flatten, groupBy, Grouping,
-    deepEquals, enumObject, setEquals, all, any, arrayToMap, contains, filterObject, first, mapObject, omit, ObjMap, toMap, moveItem, swapItems, upDownItem, promiseAllObj,
+    deepEquals, enumObject, setEquals, all, any, arrayToMap, contains, filterObject, first, mapObject, omit, toMap, moveItem, swapItems, upDownItem, promiseAllObj,
     unique, filterIf, mapKeys, intersect, omitUndefined, single, awaitObj, shallowDiff, range, sort, defaultComparer, orderBy, orderByDesc,
     truncateDate, addDate, rxFlatten, take, firstMap, duplicatesOnEdit, duplicatesOnAdd, toObservable, isArray, isArrayLike, isPromiseLike, isObservable,
     search, removeDiacritics, containsAll, containsAny, mapPreviousRx, mapMany, runningTotal, mapPrevious, formatNumber, formatDate, formatDateExcel,
@@ -1625,65 +1625,7 @@ test("syncPromise", () => {
 
 test("debounce", async () => {
     return;
-    const unit = 100;
-    const test = new rx.Observable(sub => {
-        (async () => {
-            sub.next(1); await delay(unit * 5);
-
-            sub.next(2); await delay(unit);
-            sub.next(3); await delay(unit);
-            sub.next(4); await delay(unit);
-            sub.next(5); await delay(unit * 5);
-
-            sub.next(6); await delay(unit * 2);
-            sub.next(7); await delay(unit);
-            sub.complete();
-        })();
-    });
-    const log = await logObservable(test, unit);
     type Log = LogObservableItem<number>[];
-    expect(log).toEqual([
-        { x: 1, time: 0, imm: true },
-        { x: 2, time: 5, imm: false },
-        { x: 3, time: 6, imm: false },
-        { x: 4, time: 7, imm: false },
-        { x: 5, time: 8, imm: false },
-        { x: 6, time: 13, imm: false },
-        { x: 7, time: 15, imm: false },
-    ] as Log);
-
-    {
-
-        const testDebounce = test.pipe(rxOps.debounceTime(unit * 3));
-        const testDebounceSync = test.pipe(debounceSync(x => delay(unit * 3)));
-
-        const logDeb = await logObservable(testDebounce, unit);
-        const logDebSync = await logObservable(testDebounceSync, unit);
-
-        //Checar que el debounceSync se comporta igual que el debounceTime en el caso normal (cuando hay un tiempo diferente de 0 de debounce)
-        expect(logDeb).toEqual(logDebSync);
-    }
-
-    {
-        const testDebounce = test.pipe(rxOps.debounce(x => rx.interval((x == 1 ? 0 : 3) * unit)));
-        const testDebSync = test.pipe(debounceSync(x => x == 1 ? syncResolve() : delay(3 * unit)));
-        const logDeb = await logObservable(testDebounce, unit);
-        const logDebSync = await logObservable(testDebSync, unit);
-
-        expect(logDeb).toEqual([
-            { x: 1, time: 0, imm: false },
-            { x: 5, time: 11, imm: false },
-            { x: 7, time: 16, imm: false },
-        ] as Log);
-
-        //Note que el logDebSync el primer elemento es síncrono, a diferencia del primer elemento del logDeb
-        expect(logDebSync).toEqual([
-            { x: 1, time: 0, imm: true },
-            { x: 5, time: 11, imm: false },
-            { x: 7, time: 16, imm: false },
-        ] as Log);
-
-    }
 });
 
 test("mergeObj", () => {

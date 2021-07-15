@@ -317,10 +317,6 @@ export function groupByAdjacent<T, TKey>(arr: readonly T[], keySelector: (item: 
     return ret;
 }
 
-export interface ObjMap<T> {
-    [key: string]: T
-}
-
 /**Enumera todas las propiedades de un objeto en un arreglo
  * @param obj Objeto que se va a enumerar. Se devulve un arreglo de {value: T, key: string}
  */
@@ -345,14 +341,14 @@ export function enumObject<T, TR>(obj: T, selector?: (key: keyof T, value: T[key
  * Convierte un arreglo en un objeto
  * @param array Arreglo donde se toma la propiedad "key" de cada elemento como key del objeto
  */
-export function arrayToMap<TKey, TValue>(array: { key: TKey, value: TValue }[]): ObjMap<TValue>
+export function arrayToMap<TKey extends string | number, TValue>(array: { key: TKey, value: TValue }[]): { [K in TKey ]: TValue }
 /**
  * Convierte un arreglo a un objeto. Si el arreglo tiene varios elementos con la misma clave toma precedencia el ultimo
  * @param array Arreglo de valores
  * @param keySelector Función que obtiene la cadena que se tomada como el "key" de cada elemento
  */
-export function arrayToMap<T, TValue>(array: readonly T[], keySelector: (item: T, index: number) => string, valueSelector: (item: T, index: number) => TValue): ObjMap<TValue>
-export function arrayToMap<T, TValue>(array: readonly T[], keySelector?: (item: T, index: number) => string, valueSelector?: (item: T, index: number) => TValue): ObjMap<T[keyof T]> {
+export function arrayToMap<T, TKey extends string | number, TValue>(array: readonly T[], keySelector: (item: T, index: number) => TKey, valueSelector: (item: T, index: number) => TValue): { [K in TKey ]: TValue }
+export function arrayToMap<T, TKey extends string | number, TValue>(array: readonly T[], keySelector?: (item: T, index: number) => TKey, valueSelector?: (item: T, index: number) => TValue): { [K in TKey ]: TValue }{
     const defaultKeySelector = (item: any) => item.key;
     const defaultValueSelector = (item: any) => item.value;
 
@@ -365,7 +361,7 @@ export function arrayToMap<T, TValue>(array: readonly T[], keySelector?: (item: 
         const value = effectiveValueSelector(a, i);
         ret[key] = value;
     }
-    return ret;
+    return ret as any;
 }
 
 
