@@ -341,14 +341,14 @@ export function enumObject<T, TR>(obj: T, selector?: (key: keyof T, value: T[key
  * Convierte un arreglo en un objeto
  * @param array Arreglo donde se toma la propiedad "key" de cada elemento como key del objeto
  */
-export function arrayToMap<TKey extends string | number, TValue>(array: { key: TKey, value: TValue }[]): { [K in TKey ]: TValue }
+export function arrayToMap<TKey extends string | number | symbol, TValue>(array: { key: TKey, value: TValue }[]): { [K in TKey ]: TValue }
 /**
  * Convierte un arreglo a un objeto. Si el arreglo tiene varios elementos con la misma clave toma precedencia el ultimo
  * @param array Arreglo de valores
  * @param keySelector Función que obtiene la cadena que se tomada como el "key" de cada elemento
  */
-export function arrayToMap<T, TKey extends string | number, TValue>(array: readonly T[], keySelector: (item: T, index: number) => TKey, valueSelector: (item: T, index: number) => TValue): { [K in TKey ]: TValue }
-export function arrayToMap<T, TKey extends string | number, TValue>(array: readonly T[], keySelector?: (item: T, index: number) => TKey, valueSelector?: (item: T, index: number) => TValue): { [K in TKey ]: TValue }{
+export function arrayToMap<T, TKey extends string | number | symbol, TValue>(array: readonly T[], keySelector: (item: T, index: number) => TKey, valueSelector: (item: T, index: number) => TValue): { [K in TKey ]: TValue }
+export function arrayToMap<T, TKey extends string | number | symbol, TValue>(array: readonly T[], keySelector?: (item: T, index: number) => TKey, valueSelector?: (item: T, index: number) => TValue): { [K in TKey ]: TValue }{
     const defaultKeySelector = (item: any) => item.key;
     const defaultValueSelector = (item: any) => item.value;
 
