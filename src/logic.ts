@@ -1667,6 +1667,9 @@ export function getDecimalCount(str: string): number {
     return split[1]?.length ?? 0;
 }
 
+function onlyZeroes(str: string) {
+  return /^0*$/.test(str);
+}
 
 /**True si un numero es igual a su representación de cadena formateada, la comparación de decimales se hace
  * basandose en la cantidad de decimales de la cadena
@@ -1678,36 +1681,24 @@ export function numEqStr(num: number, str: string) {
     }
 
     str = replaceAll(str, ",", "");
+
     const match = /^(\+|-)?(\d*)(?:\.(\d*))?$/.exec(str);
     if (match == null) return false;
 
-    const minus = match[1] == "-";
-    const int = Number.parseInt(match[2]);
+    const minusStr = match[1] == "-";
+    const intStr = match[2];
     const fracStr = match[3] ?? "";
-    const frac = fracStr == "" ? 0 : Number.parseFloat(fracStr);
 
-    if (minus && num > 0)
-        return false;
-    if (!minus && num < 0)
-        return false;
+    const isZero = onlyZeroes(intStr) && onlyZeroes(fracStr);
 
-    num = Math.abs(num);
-    const decMul = Math.pow(10, fracStr.length);
-    num = Math.trunc(Math.round(num * decMul * 1000)) / 1000 / decMul;
+    // Si es cero no pone el minus sign
+    const minus = minusStr && !isZero;
 
-    const nInt = Math.floor(num);
-    const nFrac = num - nInt;
-    if (int != nInt)
-        return false;
+    const reformatInt = `${minus ? "-" :""}${intStr}`;
+    const reformatFrac = fracStr ? `.${fracStr}` : "";
+    const reformat = reformatInt + reformatFrac;
 
-    const nFracI = Math.trunc(Math.round(nFrac * decMul * 1000) / 1000);
-
-
-
-    if (!floatEqFloat(frac, nFracI, 0.0001))
-        return false;
-
-    return true;
+    return reformat == formatNumber(num, intStr.length, fracStr.length, false, "", false);
 }
 
 /**Interpolación lineal entre 2 numeros */

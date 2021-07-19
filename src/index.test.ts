@@ -885,6 +885,7 @@ test("map previous", () => {
 })
 
 test("format number", () => {
+
     expect(formatNumber(0, 1, 2)).toEqual("0.00");
     expect(formatNumber(1, 1, 2)).toEqual("1.00");
     expect(formatNumber(1.2, 1, 2)).toEqual("1.20");

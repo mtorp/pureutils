@@ -114,6 +114,8 @@ test("numEqStr", () => {
     expect(numEqStr(Number.NEGATIVE_INFINITY, "-Infinity")).toBe(true);
     expect(numEqStr(Number.POSITIVE_INFINITY, "Infinity")).toBe(true);
 
+    expect(numEqStr(0.005044383, "0.005044383000000001")).toBe(true);
+    
     expect(numEqStr(1.458, "1.4")).toBe(true);
 
     expect(numEqStr(1, "")).toBe(false);
@@ -123,10 +125,35 @@ test("numEqStr", () => {
     expect(numEqStr(1, "2")).toBe(false);
     expect(numEqStr(1, "1.1")).toBe(false);
 
+    expect(numEqStr(0, "0")).toBe(true);
+    expect(numEqStr(0, "00000")).toBe(true);
+    expect(numEqStr(+0, "0")).toBe(true);
+    expect(numEqStr(-0, "0")).toBe(true);
+
+    expect(numEqStr(0, "+0")).toBe(true);
+    expect(numEqStr(0, "-0")).toBe(true);
+    expect(numEqStr(0, "-000")).toBe(true);
+    expect(numEqStr(0, "+000.000")).toBe(true);
+    expect(numEqStr(0, "-0.00")).toBe(true);
+    expect(numEqStr(0, "0.00")).toBe(true);
+    expect(numEqStr(0, "0.00000000")).toBe(true);
+
+    expect(numEqStr(0, "+000.0001")).toBe(false);
+    expect(numEqStr(0, "-0.0001")).toBe(false);
+
+    expect(numEqStr(0.0001, "0.0001")).toBe(true);
+    expect(numEqStr(0.0001, "+0.0001")).toBe(true);
+    expect(numEqStr(0.0001, "-0.0001")).toBe(false);
+
     expect(numEqStr(1, "1")).toBe(true);
     expect(numEqStr(1, "+1")).toBe(true);
     expect(numEqStr(1, "-1")).toBe(false);
+    
     expect(numEqStr(120, "120")).toBe(true);
+    expect(numEqStr(120, "+120")).toBe(true);
+    expect(numEqStr(-120, "-120")).toBe(true);
+    expect(numEqStr(-120, "120")).toBe(false);
+
     expect(numEqStr(120, "120.1")).toBe(false);
     expect(numEqStr(120.1, "120.1")).toBe(true);
     expect(numEqStr(120.1, "120.2")).toBe(false);
