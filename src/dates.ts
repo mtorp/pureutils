@@ -59,3 +59,71 @@ export function addDate(date: Date, units: DateUnits, value: number): Date {
             }
     }
 }
+
+
+type TimeAmountType = "zero" | "one" | "few" | "half" | "number";
+interface TimeInterval {
+    amount: number;
+    type: TimeAmountType;
+    units: DateUnits;
+}
+
+/** Returns a user friendly scale for the given time interval */
+export function getTimeIntervalScale(seconds: number): TimeInterval {
+    if (seconds < 60) {
+        return {
+            amount: seconds, units: "seconds", type:
+                seconds < 1 ? "zero" :
+                    seconds == 1 ? "one" :
+                        seconds < 10 ? "few" : "number"
+        };
+    }
+
+    const minutes = Math.floor(seconds / 60);
+
+    if (minutes < 30) {
+        return {
+            amount: minutes, units: "minutes", type:
+                minutes < 2 ? "one" : "number"
+        };
+    }
+
+    const hours = Math.floor(minutes / 60);
+
+    if (hours < 24) {
+        return {
+            amount: hours, units: "hours", type:
+                minutes <= 30 ? "half" :
+                    hours < 2 ? "one" : "number"
+        };
+    }
+
+
+    const daysInYear = 364.25;
+    const daysInMonth = daysInYear / 12;
+
+    const days = Math.floor(hours / 24);
+
+    if (days < daysInMonth) {
+        return {
+            amount: days, units: "days", type:
+                days < 2 ? "one" : "number"
+        };
+    }
+
+    const months = Math.floor(days / daysInMonth);
+
+    if (months < 12) {
+        return {
+            amount: months, units: "months", type:
+                months < 2 ? "one" : "number"
+        };
+    }
+
+    const years = Math.floor(days / daysInYear);
+
+    return {
+        amount: years, units: "years", type:
+            years < 2 ? "one" : "number"
+    };
+}

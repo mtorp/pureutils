@@ -1,6 +1,7 @@
 import { syncResolve } from "./promise";
 import { asyncThunkToObservable, numEqStr, parseFormattedNumber, xor, groupByCount, leftJoin, formatNumber, groupByAdjacent, Grouping, getDecimalCount, reorder } from "./logic";
 import { delay } from "rxjs/operators";
+import { getTimeIntervalScale } from "./dates";
 
 
 
@@ -36,19 +37,19 @@ test("asyncThunkToObs sync", async () => {
 
 test("getDecimalCount", () => {
 
-        expect(getDecimalCount("1.1234e3")).toEqual(1);
-        expect(getDecimalCount("1.123e3")).toEqual(0);
-        expect(getDecimalCount("100")).toEqual(0);
-        expect(getDecimalCount("0")).toEqual(0);
-        expect(getDecimalCount("0.00")).toEqual(2);
-        expect(getDecimalCount("0.01")).toEqual(2);
-        expect(getDecimalCount("0.000001")).toEqual(6);
-        expect(getDecimalCount("0.99")).toEqual(2);
-        expect(getDecimalCount("1e-7")).toEqual(7);
-        expect(getDecimalCount("1.99e-7")).toEqual(9);
-        expect(getDecimalCount("99.999e-7")).toEqual(10);
+    expect(getDecimalCount("1.1234e3")).toEqual(1);
+    expect(getDecimalCount("1.123e3")).toEqual(0);
+    expect(getDecimalCount("100")).toEqual(0);
+    expect(getDecimalCount("0")).toEqual(0);
+    expect(getDecimalCount("0.00")).toEqual(2);
+    expect(getDecimalCount("0.01")).toEqual(2);
+    expect(getDecimalCount("0.000001")).toEqual(6);
+    expect(getDecimalCount("0.99")).toEqual(2);
+    expect(getDecimalCount("1e-7")).toEqual(7);
+    expect(getDecimalCount("1.99e-7")).toEqual(9);
+    expect(getDecimalCount("99.999e-7")).toEqual(10);
 
-        
+
 });
 
 test("formatNum", () => {
@@ -57,17 +58,17 @@ test("formatNum", () => {
     expect(formatNumber(Number.NEGATIVE_INFINITY, undefined, 2, true, "$", true)).toBe("-Infinity");
 
     expect(formatNumber(10.1234, undefined, 2)).toBe("10.12");
-    expect(formatNumber(10.1299, undefined, 2)).toBe("10.12"); 
-    expect(formatNumber(10.12999, undefined, 2)).toBe("10.12"); 
-    expect(formatNumber(10.129999, undefined, 2)).toBe("10.13"); 
+    expect(formatNumber(10.1299, undefined, 2)).toBe("10.12");
+    expect(formatNumber(10.12999, undefined, 2)).toBe("10.12");
+    expect(formatNumber(10.129999, undefined, 2)).toBe("10.13");
 
-    expect(formatNumber(10.4, undefined)).toBe("10"); 
-    expect(formatNumber(10.5, undefined)).toBe("10"); 
+    expect(formatNumber(10.4, undefined)).toBe("10");
+    expect(formatNumber(10.5, undefined)).toBe("10");
 
-    expect(formatNumber(10.99, undefined, 2)).toBe("10.99"); 
-    expect(formatNumber(10.999999, undefined, 2)).toBe("11.00"); 
+    expect(formatNumber(10.99, undefined, 2)).toBe("10.99");
+    expect(formatNumber(10.999999, undefined, 2)).toBe("11.00");
 
-    
+
 })
 
 test("asyncThunkToObs async", async () => {
@@ -115,7 +116,7 @@ test("numEqStr", () => {
     expect(numEqStr(Number.POSITIVE_INFINITY, "Infinity")).toBe(true);
 
     expect(numEqStr(0.005044383, "0.005044383000000001")).toBe(true);
-    
+
     expect(numEqStr(1.458, "1.4")).toBe(true);
 
     expect(numEqStr(1, "")).toBe(false);
@@ -148,7 +149,7 @@ test("numEqStr", () => {
     expect(numEqStr(1, "1")).toBe(true);
     expect(numEqStr(1, "+1")).toBe(true);
     expect(numEqStr(1, "-1")).toBe(false);
-    
+
     expect(numEqStr(120, "120")).toBe(true);
     expect(numEqStr(120, "+120")).toBe(true);
     expect(numEqStr(-120, "-120")).toBe(true);
@@ -192,17 +193,17 @@ test("numEqStr", () => {
 
     expect(numEqStr(10.1234, "10.12")).toBe(true);
 
-    expect(numEqStr(10.1299, "10.12")).toBe(true); 
-    expect(numEqStr(10.12999,"10.12")).toBe(true); 
-    expect(numEqStr(10.129999, "10.13")).toBe(true); 
-    expect(numEqStr(10.4,"10")).toBe(true); 
-    expect(numEqStr(10.5, "10")).toBe(true); 
-    expect(numEqStr(10.99, "10.99")).toBe(true); 
-    expect(numEqStr(10.999999, "11.00")).toBe(true); 
-    
-    expect(numEqStr(10.999999, "11.00")).toBe(true); 
-    
-    expect(numEqStr(123456789.12345679, "123,456,789.12345")).toBe(true); 
+    expect(numEqStr(10.1299, "10.12")).toBe(true);
+    expect(numEqStr(10.12999, "10.12")).toBe(true);
+    expect(numEqStr(10.129999, "10.13")).toBe(true);
+    expect(numEqStr(10.4, "10")).toBe(true);
+    expect(numEqStr(10.5, "10")).toBe(true);
+    expect(numEqStr(10.99, "10.99")).toBe(true);
+    expect(numEqStr(10.999999, "11.00")).toBe(true);
+
+    expect(numEqStr(10.999999, "11.00")).toBe(true);
+
+    expect(numEqStr(123456789.12345679, "123,456,789.12345")).toBe(true);
 
 });
 
@@ -249,30 +250,30 @@ test("group by count", () => {
 test("group by adjacent", () => {
 
     expect(groupByAdjacent([], x => x)).toEqual([]);
-    
+
     expect(groupByAdjacent([1, 1, 1, 2, 1, 1, 3, 3, 2, 2, 1, 1], x => x)).toEqual([
-            {
-                key: 1,
-                items: [1,1,1]
-            }, {
-                key: 2,
-                items: [2]
-            }, {
-                key: 1,
-                items: [1,1]
-            }, {
-                key: 3,
-                items: [3, 3]
-            }, {
-                key: 2,
-                items: [2 ,2]
-            }, {
-                key: 1,
-                items: [1, 1]
-            }
+        {
+            key: 1,
+            items: [1, 1, 1]
+        }, {
+            key: 2,
+            items: [2]
+        }, {
+            key: 1,
+            items: [1, 1]
+        }, {
+            key: 3,
+            items: [3, 3]
+        }, {
+            key: 2,
+            items: [2, 2]
+        }, {
+            key: 1,
+            items: [1, 1]
+        }
     ] as Grouping<number, number>[]);
 
-    expect(groupByAdjacent( ["ra", "rb", "aa", "ab", "ra", "rc"], x => x.substr(0, 1))).toEqual([
+    expect(groupByAdjacent(["ra", "rb", "aa", "ab", "ra", "rc"], x => x.substr(0, 1))).toEqual([
         {
             key: "r",
             items: ["ra", "rb"]
@@ -283,62 +284,154 @@ test("group by adjacent", () => {
             key: "r",
             items: ["ra", "rc"]
         }
-    ]as Grouping<string, string>[]);
+    ] as Grouping<string, string>[]);
 });
 
 test("reorder", () => {
     const items = [
-        {key: "b"},
-        {key: "c"},
-        {key: "a"},
-        {key: "d", value: 1},
-        {key: "d", value: 2},
+        { key: "b" },
+        { key: "c" },
+        { key: "a" },
+        { key: "d", value: 1 },
+        { key: "d", value: 2 },
     ];
 
     expect(reorder(items, [], x => x.key)).toEqual([]);
     expect(reorder(items, ["x", "y", "z"], x => x.key)).toEqual([]);
-    
+
     expect(reorder(items, ["a", "a"], x => x.key)).toEqual([
-        {key: "a"},
-        {key: "a"}
+        { key: "a" },
+        { key: "a" }
     ]);
 
     expect(reorder(items, ["a", "b", "c"], x => x.key)).toEqual([
-        {key: "a"},
-        {key: "b"},
-        {key: "c"},
+        { key: "a" },
+        { key: "b" },
+        { key: "c" },
     ]);
 
     expect(reorder(items, ["c", "b", "a"], x => x.key)).toEqual([
-        {key: "c"},
-        {key: "b"},
-        {key: "a"},
+        { key: "c" },
+        { key: "b" },
+        { key: "a" },
     ]);
 
     expect(reorder(items, ["c", "b", "b"], x => x.key)).toEqual([
-        {key: "c"},
-        {key: "b"},
-        {key: "b"},
+        { key: "c" },
+        { key: "b" },
+        { key: "b" },
     ]);
 
     expect(reorder(items, ["d"], x => x.key)).toEqual([
-        {key: "d", value: 1},
-        {key: "d", value: 2},
+        { key: "d", value: 1 },
+        { key: "d", value: 2 },
     ]);
 
     expect(reorder(items, ["a", "d", "x", "d", "b", "d", "x"], x => x.key)).toEqual([
-        {key: "a"},
-        {key: "d", value: 1},
-        {key: "d", value: 2},
+        { key: "a" },
+        { key: "d", value: 1 },
+        { key: "d", value: 2 },
 
-        {key: "d", value: 1},
-        {key: "d", value: 2},
+        { key: "d", value: 1 },
+        { key: "d", value: 2 },
 
-        {key: "b"},
-        
+        { key: "b" },
 
-        {key: "d", value: 1},
-        {key: "d", value: 2},
+
+        { key: "d", value: 1 },
+        { key: "d", value: 2 },
 
     ]);
+});
+
+test("time interval scale", () => {
+    expect(getTimeIntervalScale(0)).toEqual({
+        amount: 0,
+        type: "zero",
+        units: "seconds"
+    });
+
+    expect(getTimeIntervalScale(1)).toEqual({
+        amount: 1,
+        type: "one",
+        units: "seconds"
+    });
+
+    expect(getTimeIntervalScale(2)).toEqual({
+        amount: 2,
+        type: "few",
+        units: "seconds"
+    });
+
+    expect(getTimeIntervalScale(11)).toEqual({
+        amount: 11,
+        type: "number",
+        units: "seconds"
+    });
+
+    expect(getTimeIntervalScale(60)).toEqual({
+        amount: 1,
+        type: "one",
+        units: "minutes"
+    });
+
+    expect(getTimeIntervalScale(120)).toEqual({
+        amount: 2,
+        type: "number",
+        units: "minutes"
+    });
+
+    expect(getTimeIntervalScale(3600 / 2)).toEqual({
+        amount: 0,
+        type: "half",
+        units: "hours"
+    });
+
+    expect(getTimeIntervalScale(3600)).toEqual({
+        amount: 1,
+        type: "one",
+        units: "hours"
+    });
+
+    expect(getTimeIntervalScale(3600 * 2)).toEqual({
+        amount: 2,
+        type: "number",
+        units: "hours"
+    });
+
+    expect(getTimeIntervalScale(3600 * 24)).toEqual({
+        amount: 1,
+        type: "one",
+        units: "days"
+    });
+
+    expect(getTimeIntervalScale(3600 * 24 * 3)).toEqual({
+        amount: 3,
+        type: "number",
+        units: "days"
+    });
+
+    expect(getTimeIntervalScale(3600 * 24 * 40)).toEqual({
+        amount: 1,
+        type: "one",
+        units: "months"
+    });
+
+    expect(getTimeIntervalScale(3600 * 24 * 70)).toEqual({
+        amount: 2,
+        type: "number",
+        units: "months"
+    });
+
+    expect(getTimeIntervalScale(3600 * 24 * 400)).toEqual({
+        amount: 1,
+        type: "one",
+        units: "years"
+    });
+
+    expect(getTimeIntervalScale(3600 * 24 * 750)).toEqual({
+        amount: 2,
+        type: "number",
+        units: "years"
+    });
 });

@@ -1,4 +1,4 @@
-export { addDate, DateUnits, truncateDate } from "./dates";
+export { addDate, DateUnits, truncateDate, getTimeIntervalScale } from "./dates";
 export { search } from "./search";
 export { removeDiacritics } from "./diacritics";
 export { interopRequireDefault } from "./interop";

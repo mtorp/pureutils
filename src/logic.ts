@@ -341,14 +341,14 @@ export function enumObject<T, TR>(obj: T, selector?: (key: keyof T, value: T[key
  * Convierte un arreglo en un objeto
  * @param array Arreglo donde se toma la propiedad "key" de cada elemento como key del objeto
  */
-export function arrayToMap<TKey extends string | number | symbol, TValue>(array: { key: TKey, value: TValue }[]): { [K in TKey ]: TValue }
+export function arrayToMap<TKey extends string | number | symbol, TValue>(array: { key: TKey, value: TValue }[]): { [K in TKey]: TValue }
 /**
  * Convierte un arreglo a un objeto. Si el arreglo tiene varios elementos con la misma clave toma precedencia el ultimo
  * @param array Arreglo de valores
  * @param keySelector Función que obtiene la cadena que se tomada como el "key" de cada elemento
  */
-export function arrayToMap<T, TKey extends string | number | symbol, TValue>(array: readonly T[], keySelector: (item: T, index: number) => TKey, valueSelector: (item: T, index: number) => TValue): { [K in TKey ]: TValue }
-export function arrayToMap<T, TKey extends string | number | symbol, TValue>(array: readonly T[], keySelector?: (item: T, index: number) => TKey, valueSelector?: (item: T, index: number) => TValue): { [K in TKey ]: TValue }{
+export function arrayToMap<T, TKey extends string | number | symbol, TValue>(array: readonly T[], keySelector: (item: T, index: number) => TKey, valueSelector: (item: T, index: number) => TValue): { [K in TKey]: TValue }
+export function arrayToMap<T, TKey extends string | number | symbol, TValue>(array: readonly T[], keySelector?: (item: T, index: number) => TKey, valueSelector?: (item: T, index: number) => TValue): { [K in TKey]: TValue } {
     const defaultKeySelector = (item: any) => item.key;
     const defaultValueSelector = (item: any) => item.value;
 
@@ -658,9 +658,9 @@ export function intersectKeys<T, TKey>(items: readonly T[], keys: readonly TKey[
  */
 export function reorder<T, TKey>(items: readonly T[], keys: readonly TKey[], keySelector: (item: T) => TKey, comparer?: (a: TKey, b: TKey) => boolean) {
     const comparerEff = comparer || shallowEquals;
-    return mapMany(keys, key => 
-            items.filter( y => comparerEff(keySelector(y), key)  )
-        );
+    return mapMany(keys, key =>
+        items.filter(y => comparerEff(keySelector(y), key))
+    );
 }
 
 
@@ -1098,7 +1098,7 @@ export function formatNumber(
     if (number == null) return "";
 
     number = Number(number);
-    if(Number.isNaN(number) || !Number.isFinite(number)) {
+    if (Number.isNaN(number) || !Number.isFinite(number)) {
         return number.toString();
     }
 
@@ -1197,6 +1197,7 @@ export function toIsoDate(x: Date): string {
     const offset = offsetSign + offsetHours + ":" + offsetMin;
     return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}${offset}`;
 }
+
 
 /**Formatea una fecha de tal manera que sea compatible con el excel */
 export function formatDateExcel(x: Date): string {
@@ -1631,11 +1632,11 @@ export function replaceAll(str: string, searchValue: string | RegExp, replaceVal
 
 /**Convierte a numero una cadena que puede tener prefijos (ej. $) y separador de miles */
 export function parseFormattedNumber(val: string): number {
-    if(
+    if (
         val == Number.NaN.toString() ||
         val == Number.NEGATIVE_INFINITY.toString() ||
         val == Number.POSITIVE_INFINITY.toString()
-    ) { 
+    ) {
         return Number(val);
     }
 
@@ -1659,7 +1660,7 @@ export function getDecimalCount(str: string): number {
         const decPart = result[2];
         const exp = Number.parseInt(result[3]);
 
-        return Math.max( -exp + (decPart?.length ?? 0), 0);
+        return Math.max(-exp + (decPart?.length ?? 0), 0);
     }
 
     const split = str.split(".");
@@ -1668,14 +1669,14 @@ export function getDecimalCount(str: string): number {
 }
 
 function onlyZeroes(str: string) {
-  return /^0*$/.test(str);
+    return /^0*$/.test(str);
 }
 
 /**True si un numero es igual a su representación de cadena formateada, la comparación de decimales se hace
  * basandose en la cantidad de decimales de la cadena
  */
 export function numEqStr(num: number, str: string) {
-    if(num.toString() == str) {
+    if (num.toString() == str) {
         //Encaja con los casos de NaN e infinities
         return true;
     }
@@ -1694,7 +1695,7 @@ export function numEqStr(num: number, str: string) {
     // Si es cero no pone el minus sign
     const minus = minusStr && !isZero;
 
-    const reformatInt = `${minus ? "-" :""}${intStr}`;
+    const reformatInt = `${minus ? "-" : ""}${intStr}`;
     const reformatFrac = fracStr ? `.${fracStr}` : "";
     const reformat = reformatInt + reformatFrac;
 
