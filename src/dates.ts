@@ -1,3 +1,5 @@
+import { assertUnreachable } from ".";
+
 export type DateUnits = "milliseconds" | "seconds" | "minutes" | "hours" | "days" | "months" | "years";
 /**Trunca la parte menos significativa de una fecha */
 export function truncateDate(value: Date, precision: DateUnits): Date {
@@ -58,6 +60,26 @@ export function addDate(date: Date, units: DateUnits, value: number): Date {
                 return a;
             }
     }
+}
+/**
+ * Returns a - b
+ */
+export function dateDiff(a: Date, b: Date, units: Extract<DateUnits, "milliseconds" | "seconds" | "minutes" | "hours" | "days">) {
+    let x = a.valueOf() - b.valueOf();
+    if (units == "milliseconds") return x;
+
+    x /= 1000;
+    if (units == "seconds") return x;
+
+    x /= 60;
+    if (units == "minutes") return x;
+
+    x /= 60;
+    if (units == "hours") return x;
+
+    x /= 24;
+    if (units == "days") return x;
+    assertUnreachable(units);
 }
 
 

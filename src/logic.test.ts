@@ -1,7 +1,7 @@
 import { syncResolve } from "./promise";
 import { asyncThunkToObservable, numEqStr, parseFormattedNumber, xor, groupByCount, leftJoin, formatNumber, groupByAdjacent, Grouping, getDecimalCount, reorder } from "./logic";
 import { delay } from "rxjs/operators";
-import { getTimeIntervalScale } from "./dates";
+import { dateDiff, getTimeIntervalScale } from "./dates";
 
 
 
@@ -434,4 +434,11 @@ test("time interval scale", () => {
         type: "number",
         units: "years"
     });
+});
+
+test("dateDiff", () => {
+
+    expect(dateDiff(new Date(2021, 0, 26), new Date(2021, 0, 25), "days")).toEqual(1);
+    expect(dateDiff(new Date(2021, 0, 26), new Date(2021, 0, 25), "seconds")).toEqual(3600 * 24);
+    expect(dateDiff(new Date(2021, 0, 25, 3), new Date(2021, 0, 25), "hours")).toEqual(3);
 });
