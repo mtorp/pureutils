@@ -1711,3 +1711,18 @@ export function lerp(a: number, b: number, x: number): number {
 export function mixClasses(...classNames: (string | false | null | undefined)[]): string {
     return classNames.filter(x => !!x).join(" ");
 }
+
+/**Converts a hex string to ascii, if the string starts with 0x, this is ignored */
+export function hexToAscii(hex: string) {
+    const start = hex.startsWith("0x") ? 2 : 0;
+
+    var str = '';
+    for (var i = start; i < hex.length; i += 2) {
+
+        const x = parseInt(hex.substr(i, 2), 16);
+        if (x != 0) {
+            str += String.fromCharCode(x);
+        }
+    }
+    return str;
+}

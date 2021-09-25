@@ -2,6 +2,7 @@ import { syncResolve } from "./promise";
 import { asyncThunkToObservable, numEqStr, parseFormattedNumber, xor, groupByCount, leftJoin, formatNumber, groupByAdjacent, Grouping, getDecimalCount, reorder } from "./logic";
 import { delay } from "rxjs/operators";
 import { dateDiff, getTimeIntervalScale } from "./dates";
+import { hexToAscii } from ".";
 
 
 
@@ -441,4 +442,14 @@ test("dateDiff", () => {
     expect(dateDiff(new Date(2021, 0, 26), new Date(2021, 0, 25), "days")).toEqual(1);
     expect(dateDiff(new Date(2021, 0, 26), new Date(2021, 0, 25), "seconds")).toEqual(3600 * 24);
     expect(dateDiff(new Date(2021, 0, 25, 3), new Date(2021, 0, 25), "hours")).toEqual(3);
+});
+
+test("hexToAscii", () => {
+    expect(hexToAscii("0x72656e7461310000000000000000000000000000000000000000000000000000")).toEqual("renta1");
+    expect(hexToAscii("72656e7461310000000000000000000000000000000000000000000000000000")).toEqual("renta1");
+    expect(hexToAscii("72656e746131")).toEqual("renta1");
+
+    expect(hexToAscii("0x0000000000000000000000000000000035323034313634393937373237343937")).toEqual("5204164997727497");
+    expect(hexToAscii("0x35323034313634393937373237343937")).toEqual("5204164997727497");
+    expect(hexToAscii("35323034313634393937373237343937")).toEqual("5204164997727497");
 });
