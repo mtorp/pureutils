@@ -51,7 +51,7 @@ export function halfAdder(a: string, b: string, carry: boolean, system: NumericS
     } else {
         return {
             carry: false,
-            ret: toChar(ret , system),
+            ret: toChar(ret, system),
         };
     }
 }
@@ -67,7 +67,7 @@ export function add(a: string, b: string, system: NumericSystem, small: boolean 
 
         const aIndex = i - ret.length + a.length;
         const bIndex = i - ret.length + b.length;
-        const aDigit = aIndex < 0 ? zero(system): a.substr(aIndex, 1);
+        const aDigit = aIndex < 0 ? zero(system) : a.substr(aIndex, 1);
         const bDigit = bIndex < 0 ? zero(system) : b.substr(bIndex, 1);
 
         const half = halfAdder(aDigit, bDigit, carry, system);
@@ -78,7 +78,7 @@ export function add(a: string, b: string, system: NumericSystem, small: boolean 
 }
 
 /**Incrementa en 1, note que no cambia el tamaño del numero */
-export function increment(a: string ,system: NumericSystem) {
+export function increment(a: string, system: NumericSystem) {
     return add(a, one(system), system, true);
 }
 
@@ -136,7 +136,7 @@ export function maxValue(size: number, system: NumericSystem) {
 }
 
 export function zeroPad(num: string, size: number, system: NumericSystem) {
-    return zero(system).repeat(size - num.length ) + num;
+    return zero(system).repeat(size - num.length) + num;
 }
 
 export function maxDigit(system: NumericSystem) {

@@ -1717,7 +1717,7 @@ export function hexToAscii(hex: string) {
     const start = hex.startsWith("0x") ? 2 : 0;
 
     var str = '';
-    for (var i = start; i < hex.length; i += 2) {
+    for (let i = start; i < hex.length; i += 2) {
 
         const x = parseInt(hex.substr(i, 2), 16);
         if (x != 0) {
@@ -1725,4 +1725,27 @@ export function hexToAscii(hex: string) {
         }
     }
     return str;
+}
+
+/** Returns hex representation of "ascii", does not includes "0x" */
+export function asciiToHex(ascii: string): string {
+    let ret = "";
+    for (let i = 0; i < ascii.length; i++) {
+        const code = ascii.charCodeAt(i).toString(16);
+        if (code.length == 1) {
+            ret += "0";
+        }
+        ret += code;
+    }
+    return ret;
+}
+
+/** Left padds "text" with repeated "char" until result is of lenght "len", if text length > len, text is returned*/
+export function padLeft(text: string, char: string, len: number): string {
+    return char.repeat(Math.max(len - text.length, 0)) + text;
+}
+
+/** Right padds "text" with repeated "char" until result is of lenght "len", if text length > len, text is returned*/
+export function padRight(text: string, char: string, len: number): string {
+    return text + char.repeat(Math.max(len - text.length, 0));
 }

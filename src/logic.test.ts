@@ -2,7 +2,7 @@ import { syncResolve } from "./promise";
 import { asyncThunkToObservable, numEqStr, parseFormattedNumber, xor, groupByCount, leftJoin, formatNumber, groupByAdjacent, Grouping, getDecimalCount, reorder } from "./logic";
 import { delay } from "rxjs/operators";
 import { dateDiff, getTimeIntervalScale } from "./dates";
-import { hexToAscii } from ".";
+import { asciiToHex, hexToAscii, padLeft, padRight } from ".";
 
 
 
@@ -453,3 +453,23 @@ test("hexToAscii", () => {
     expect(hexToAscii("0x35323034313634393937373237343937")).toEqual("5204164997727497");
     expect(hexToAscii("35323034313634393937373237343937")).toEqual("5204164997727497");
 });
+
+test("asciiToHex", () => {
+    expect(asciiToHex("A")).toEqual("41");
+    expect(asciiToHex("ABC")).toEqual("414243");
+    expect(asciiToHex("\t")).toEqual("09");
+    expect(asciiToHex("\r\n")).toEqual("0d0a");
+});
+
+test("pad", () => {
+    expect(padLeft("1", "0", 3)).toEqual("001");
+    expect(padLeft("12", "0", 3)).toEqual("012");
+    expect(padLeft("123", "0", 3)).toEqual("123");
+    expect(padLeft("1234", "0", 3)).toEqual("1234");
+
+    expect(padRight("1", "0", 3)).toEqual("100");
+    expect(padRight("12", "0", 3)).toEqual("120");
+    expect(padRight("123", "0", 3)).toEqual("123");
+    expect(padRight("1234", "0", 3)).toEqual("1234");
+
+})
