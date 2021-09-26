@@ -1741,11 +1741,11 @@ export function asciiToHex(ascii: string): string {
 }
 
 /** Left padds "text" with repeated "char" until result is of lenght "len", if text length > len, text is returned*/
-export function padLeft(text: string, char: string, len: number): string {
+export function padLeft(text: string, len: number, char: string = "0"): string {
     return char.repeat(Math.max(len - text.length, 0)) + text;
 }
 
 /** Right padds "text" with repeated "char" until result is of lenght "len", if text length > len, text is returned*/
-export function padRight(text: string, char: string, len: number): string {
+export function padRight(text: string, len: number, char: string = "0"): string {
     return text + char.repeat(Math.max(len - text.length, 0));
 }

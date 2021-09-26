@@ -462,14 +462,14 @@ test("asciiToHex", () => {
 });
 
 test("pad", () => {
-    expect(padLeft("1", "0", 3)).toEqual("001");
-    expect(padLeft("12", "0", 3)).toEqual("012");
-    expect(padLeft("123", "0", 3)).toEqual("123");
-    expect(padLeft("1234", "0", 3)).toEqual("1234");
+    expect(padLeft("1", 3, "0")).toEqual("001");
+    expect(padLeft("12", 3, "0")).toEqual("012");
+    expect(padLeft("123", 3, "0")).toEqual("123");
+    expect(padLeft("1234", 3, "0")).toEqual("1234");
 
-    expect(padRight("1", "0", 3)).toEqual("100");
-    expect(padRight("12", "0", 3)).toEqual("120");
-    expect(padRight("123", "0", 3)).toEqual("123");
-    expect(padRight("1234", "0", 3)).toEqual("1234");
+    expect(padRight("1", 3, "0")).toEqual("100");
+    expect(padRight("12", 3, "0")).toEqual("120");
+    expect(padRight("123", 3, "0")).toEqual("123");
+    expect(padRight("1234", 3, "0")).toEqual("1234");
 
 })
