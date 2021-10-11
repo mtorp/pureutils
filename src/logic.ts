@@ -1214,7 +1214,7 @@ export function delay(ms: number): PromiseLike<void> {
 
 /**Una funcion que siempre lanza una excepción al ser llamada. Sirve para implementar cases exhaustivos, tal como esta descrito en https://stackoverflow.com/questions/39419170/how-do-i-check-that-a-switch-block-is-exhaustive-in-typescript*/
 export function assertUnreachable(x: never): never {
-    throw new Error("Se llamó a la función assertUnreachable, esto puede indicar un tipo inesperado en una discriminación de tips");
+    throw new Error(`Assert unreachable called with value ${x}`);
 }
 
 /**Devuelve el indice de la primera aparición de un elemento que cumpla con @see pred */
@@ -1613,6 +1613,18 @@ export function trimLeft(str: string, patt: string) {
         str = str.substr(patt.length);
     }
     return str;
+}
+
+/**Quita todas las apariciones de @param patt a la derecha de string */
+export function trimRight(str: string, patt: string) {
+    while (str.endsWith(patt)) {
+        str = str.substr(0, str.length - patt.length);
+    }
+    return str;
+}
+
+export function trim(str: string, patt: string) {
+    return trimLeft(trimRight(str, patt), patt);
 }
 
 function floatEqFloat(a: number, b: number, epsilon: number) {

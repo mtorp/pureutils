@@ -1,8 +1,8 @@
 import { syncResolve } from "./promise";
-import { asyncThunkToObservable, numEqStr, parseFormattedNumber, xor, groupByCount, leftJoin, formatNumber, groupByAdjacent, Grouping, getDecimalCount, reorder } from "./logic";
+import { asyncThunkToObservable, numEqStr, parseFormattedNumber, xor, groupByCount, leftJoin, formatNumber, groupByAdjacent, Grouping, getDecimalCount, reorder, trimLeft } from "./logic";
 import { delay } from "rxjs/operators";
 import { dateDiff, getTimeIntervalScale } from "./dates";
-import { asciiToHex, hexToAscii, padLeft, padRight } from ".";
+import { asciiToHex, hexToAscii, padLeft, padRight, trim, trimRight } from ".";
 
 
 
@@ -471,5 +471,27 @@ test("pad", () => {
     expect(padRight("12", 3, "0")).toEqual("120");
     expect(padRight("123", 3, "0")).toEqual("123");
     expect(padRight("1234", 3, "0")).toEqual("1234");
+
+})
+
+test("trim", () => {
+
+    expect(trimLeft("1", "0")).toEqual("1");
+    expect(trimLeft("001", "0")).toEqual("1");
+    expect(trimLeft("0010", "0")).toEqual("10");
+    expect(trimLeft("00100", "0")).toEqual("100");
+    expect(trimLeft("100", "0")).toEqual("100");
+
+    expect(trimRight("1", "0")).toEqual("1");
+    expect(trimRight("01", "0")).toEqual("01");
+    expect(trimRight("010", "0")).toEqual("01");
+    expect(trimRight("0100", "0")).toEqual("01");
+    expect(trimRight("00100", "0")).toEqual("001");
+
+    expect(trim("1", "0")).toEqual("1");
+    expect(trim("10", "0")).toEqual("1");
+    expect(trim("100", "0")).toEqual("1");
+    expect(trim("0100", "0")).toEqual("1");
+    expect(trim("00100", "0")).toEqual("1");
 
 })
