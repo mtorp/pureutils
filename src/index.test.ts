@@ -42,7 +42,7 @@ test("orRx", async () => {
         //ret es observable
         expect(isObservable(ret)).toBeTruthy();
         const retRx = ret as rx.Observable<number>;
-        expect(await retRx.toPromise()).toEqual(20);
+        expect(await rx.lastValueFrom(retRx)).toEqual(20);
     }
 
     {
@@ -50,7 +50,7 @@ test("orRx", async () => {
         //ret es observable
         expect(isObservable(ret)).toBeTruthy();
         const retRx = ret as rx.Observable<null>;
-        expect(await retRx.toPromise()).toEqual(null);
+        expect(await rx.lastValueFrom(retRx)).toEqual(null);
     }
 
     {
@@ -58,7 +58,7 @@ test("orRx", async () => {
         //ret es observable
         expect(isObservable(ret)).toBeTruthy();
         const retRx = ret as rx.Observable<null>;
-        expect(await retRx.toPromise()).toEqual(20);
+        expect(await rx.lastValueFrom(retRx)).toEqual(20);
     }
 
     {
@@ -66,7 +66,7 @@ test("orRx", async () => {
         //ret es observable
         expect(isObservable(ret)).toBeTruthy();
         const retRx = ret as rx.Observable<null>;
-        expect(await retRx.toPromise()).toEqual(20);
+        expect(await rx.lastValueFrom(retRx)).toEqual(20);
     }
 
     {
@@ -74,7 +74,7 @@ test("orRx", async () => {
         //ret es observable
         expect(isObservable(ret)).toBeTruthy();
         const retRx = ret as any;
-        expect(await retRx.toPromise()).toEqual(20);
+        expect(await rx.lastValueFrom(retRx)).toEqual(20);
     }
 
     {
@@ -700,7 +700,7 @@ test("rx flatten", async () => {
         rx.from([8, 9]),
     ]);
 
-    const flat = await rxFlatten(arr).pipe(rxOps.toArray()).toPromise();
+    const flat = await rx.lastValueFrom(rxFlatten(arr).pipe(rxOps.toArray()));
     expect(flat).toEqual([1, 2, 3, 4, 5, 6, 7, 8, 9]);
 });
 
@@ -709,9 +709,9 @@ test("to observable", async () => {
     const prom = Promise.resolve(30);
     const obs = rx.from([1, 2, 3]);
 
-    expect(await toObservable(value).pipe(rxOps.toArray()).toPromise()).toEqual([10]);
-    expect(await toObservable(prom).pipe(rxOps.toArray()).toPromise()).toEqual([30]);
-    expect(await toObservable(obs).pipe(rxOps.toArray()).toPromise()).toEqual([1, 2, 3]);
+    expect(await rx.lastValueFrom(toObservable(value).pipe(rxOps.toArray()))).toEqual([10]);
+    expect(await rx.lastValueFrom(toObservable(prom).pipe(rxOps.toArray()))).toEqual([30]);
+    expect(await rx.lastValueFrom(toObservable(obs).pipe(rxOps.toArray()))).toEqual([1, 2, 3]);
 });
 
 test("take firstMap", async () => {
@@ -819,7 +819,7 @@ test("contains any", () => {
 test("map prev rx", async () => {
     const arr = [1, 4, 7, 10, 20];
     const obs = rx.from(arr);
-    const ret = await mapPreviousRx(obs, 0).pipe(rxOps.toArray()).toPromise();
+    const ret = await rx.lastValueFrom(mapPreviousRx(obs, 0).pipe(rxOps.toArray()));
 
     expect(ret).toEqual([
         { prev: 0, curr: 1 },
@@ -1566,7 +1566,7 @@ async function logObservable<T>(rx: rx.Observable<T>, unitMs: number): Promise<L
     const start = new Date();
 
     let inmediato = true;
-    const prom = rx
+    const prom = rx.lastValueFrom(rx
         .pipe(
             rxOps.tap(x => {
                 const now = new Date();
@@ -1578,8 +1578,7 @@ async function logObservable<T>(rx: rx.Observable<T>, unitMs: number): Promise<L
                     imm: inmediato
                 });
             })
-        )
-        .toPromise();
+        ));
 
     inmediato = false;
     await prom;

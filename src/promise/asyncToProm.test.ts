@@ -29,7 +29,7 @@ test("observable to prom async", async () => {
     const obs1 = rx.from(delay(10).then(x => 20)).pipe(doOnSubscribe(() => sub1++));
     const obs2 = rx.from(delay(10).then(x => 20)).pipe(doOnSubscribe(() => sub2++));
 
-    const prom1 = obs1.toPromise();
+    const prom1 = rx.lastValueFrom(obs1);
     const prom2 = obsToPromise(obs2);
 
     expect(sub1).toBe(sub2);
