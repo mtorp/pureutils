@@ -1,3 +1,4 @@
+import { lastValueFrom } from 'rxjs';
 import { syncResolve } from "./promise";
 import { asyncThunkToObservable, numEqStr, parseFormattedNumber, xor, groupByCount, leftJoin, formatNumber, groupByAdjacent, Grouping, getDecimalCount, reorder, trimLeft } from "./logic";
 import { delay } from "rxjs/operators";
@@ -102,7 +103,7 @@ test("asyncThunkToObs async", async () => {
     expect(a).toBe(0);
     expect(b).toBe(0);
 
-    const c = await obs.toPromise();
+    const c = await lastValueFrom(obs);
 
     //Ya se resolvieron todos los valores:
 

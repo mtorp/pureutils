@@ -1,8 +1,17 @@
-import { Observable, pipe as pipeRx, combineLatest as combineLatestRx, from as fromRx, isObservable as isObservableRx, ReplaySubject, from, Subscription } from "rxjs";
 import { map as mapRx, concatAll as concatAllRx, scan as scanRx, startWith as startWithRx, filter as filterRx, switchAll } from "rxjs/operators";
 
 import { interopRequireDefault } from "./interop";
-import { defer } from "rxjs";
+import {
+    Observable,
+    pipe as pipeRx,
+    combineLatest as combineLatestRx,
+    from as fromRx,
+    isObservable as isObservableRx,
+    ReplaySubject,
+    from,
+    Subscription,
+    defer,
+} from "rxjs";
 import * as rxOps from "rxjs/operators";
 import { syncResolve, splitPromise, isPromiseLike, SyncPromise } from "./promise";
 import { pipe } from "./pipe";
